@@ -1,0 +1,211 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "LogicApp.Name": {
+            "type": "string",
+            "maxLength": 80,
+            "metadata": {
+                "description": "Name of the Logic App that will handle new Docker Hub webhooks"
+            }
+        },
+        "Event.Type": {
+            "type": "string",
+            "metadata": {
+                "description": "Type of the event to emit"
+            }
+        },
+        "Event.Subject": {
+            "type": "string",
+            "defaultValue": "/",
+            "metadata": {
+                "description": "Subject of the event to emit"
+            }
+        },
+        "EventGrid.Endpoint": {
+            "type": "string",
+            "metadata": {
+                "description": "Endpoint to which events need to be sent"
+            }
+        },
+        "EventGrid.ApiKey": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Api key to authenticate with before sending events"
+            }
+        },
+        "EventGrid.Connection.Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Event Grid connection"
+            }
+        },
+        "ServiceBus.Queue.Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Service Bus queue to process"
+            }
+        },
+        "ServiceBus.Connection.Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Service Bus connection"
+            }
+        },
+        "ServiceBus.Connection.String": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Connection string of the Service Bus namespace"
+            }
+        }
+    },
+    "variables": {
+        "Connections.ManagedApis.BaseUri": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/')]",
+        "Connections.ManagedApis.ServiceBus": "[concat(variables('Connections.ManagedApis.BaseUri'), 'servicebus')]",
+        "Connections.ManagedApis.EventGrid": "[concat(variables('Connections.ManagedApis.BaseUri'), 'azureeventgridpublish')]",
+        "LogicAps.Paths.PeekMessageFromQueue": "[concat('/@{encodeURIComponent(encodeURIComponent(''', parameters('ServiceBus.Queue.Name'), '''))}/messages/head/peek')]",
+        "LogicAps.Paths.CompleteMessageFromQueue": "[concat('/@{encodeURIComponent(encodeURIComponent(''', parameters('ServiceBus.Queue.Name'), '''))}/messages/complete')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2018-07-01-preview",
+            "name": "[parameters('LogicApp.Name')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "actions": {
+                        "Complete_the_message_in_a_queue": {
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['servicebus']['connectionId']"
+                                    }
+                                },
+                                "method": "delete",
+                                "path": "[variables('LogicAps.Paths.CompleteMessageFromQueue')]",
+                                "queries": {
+                                    "lockToken": "@triggerBody()?['LockToken']",
+                                    "queueType": "Main",
+                                    "sessionId": ""
+                                }
+                            },
+                            "runAfter": {
+                                "Publish_Event": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection"
+                        },
+                        "Publish_Event": {
+                            "inputs": {
+                                "body": [
+                                    {
+                                        "data": "@json(decodeBase64(triggerBody()?['ContentData']))",
+                                        "eventType": "[parameters('Event.Type')]",
+                                        "id": "@{guid()}",
+                                        "subject": "[parameters('Event.Subject')]"
+                                    }
+                                ],
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['azureeventgridpublish']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/eventGrid/api/events"
+                            },
+                            "runAfter": {},
+                            "type": "ApiConnection"
+                        }
+                    },
+                    "contentVersion": "1.0.0.0",
+                    "outputs": {},
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        }
+                    },
+                    "triggers": {
+                        "When_a_message_is_received_in_a_queue_(peek-lock)": {
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['servicebus']['connectionId']"
+                                    }
+                                },
+                                "method": "get",
+                                "path": "[variables('LogicAps.Paths.PeekMessageFromQueue')]",
+                                "queries": {
+                                    "queueType": "Main",
+                                    "sessionId": "None"
+                                }
+                            },
+                            "recurrence": {
+                                "frequency": "Minute",
+                                "interval": 5
+                            },
+                            "type": "ApiConnection"
+                        }
+                    }
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "servicebus": {
+                                "connectionName": "[parameters('ServiceBus.Connection.Name')]",
+                                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('ServiceBus.Connection.Name'))]",
+                                "id": "[variables('Connections.ManagedApis.ServiceBus')]"
+                            },
+                            "azureeventgridpublish": {
+                                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('EventGrid.Connection.Name'))]",
+                                "connectionName": "azureeventgridpublish",
+                                "id": "[variables('Connections.ManagedApis.EventGrid')]"
+                            }
+                        }
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/connections', parameters('ServiceBus.Connection.Name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "name": "[parameters('ServiceBus.Connection.Name')]",
+            "apiVersion": "2018-07-01-preview",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "displayName": "[parameters('ServiceBus.Connection.Name')]",
+                "customParameterValues": {},
+                "api": {
+                    "id": "[variables('Connections.ManagedApis.ServiceBus')]"
+                },
+                "parameterValues": {
+                    "connectionString": "[parameters('ServiceBus.Connection.String')]"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "name": "[parameters('EventGrid.Connection.Name')]",
+            "apiVersion": "2018-07-01-preview",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "displayName": "[parameters('EventGrid.Connection.Name')]",
+                "customParameterValues": {},
+                "api": {
+                    "id": "[variables('Connections.ManagedApis.EventGrid')]"
+                },
+                "parameterValues": {
+                    "endpoint": "[parameters('EventGrid.Endpoint')]",
+                    "api_key": "[parameters('EventGrid.ApiKey')]"
+                }
+            },
+            "dependsOn": []
+        }
+    ]
+}
