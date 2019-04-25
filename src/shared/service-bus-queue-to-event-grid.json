@@ -52,10 +52,16 @@
                 "description": "Name of the Service Bus connection"
             }
         },
-        "ServiceBus.Connection.String": {
-            "type": "securestring",
+        "ServiceBus.Namespace": {
+            "type": "string",
             "metadata": {
-                "description": "Connection string of the Service Bus namespace"
+                "description": "Name of the Service Bus namespace to use"
+            }
+        },
+        "ServiceBus.AuthorizationRule.Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Service Bus authentication rule to use"
             }
         }
     },
@@ -64,9 +70,20 @@
         "Connections.ManagedApis.ServiceBus": "[concat(variables('Connections.ManagedApis.BaseUri'), 'servicebus')]",
         "Connections.ManagedApis.EventGrid": "[concat(variables('Connections.ManagedApis.BaseUri'), 'azureeventgridpublish')]",
         "LogicAps.Paths.PeekMessageFromQueue": "[concat('/@{encodeURIComponent(encodeURIComponent(''', parameters('ServiceBus.Queue.Name'), '''))}/messages/head/peek')]",
-        "LogicAps.Paths.CompleteMessageFromQueue": "[concat('/@{encodeURIComponent(encodeURIComponent(''', parameters('ServiceBus.Queue.Name'), '''))}/messages/complete')]"
+        "LogicAps.Paths.CompleteMessageFromQueue": "[concat('/@{encodeURIComponent(encodeURIComponent(''', parameters('ServiceBus.Queue.Name'), '''))}/messages/complete')]",
+        "ServiceBus.AuthorizationRules.ResourceId":"[resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', parameters('ServiceBus.Namespace'), parameters('ServiceBus.AuthorizationRule.Name'))]"
     },
     "resources": [
+        {
+            "apiVersion": "2017-04-01",
+            "name": "[concat(parameters('ServiceBus.Namespace'), '/', parameters('ServiceBus.Queue.Name'))]",
+            "type": "Microsoft.ServiceBus/Namespaces/Queues",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "enablePartitioning": "true"
+            },
+            "resources": []
+        },
         {
             "type": "Microsoft.Logic/workflows",
             "apiVersion": "2018-07-01-preview",
@@ -184,7 +201,7 @@
                     "id": "[variables('Connections.ManagedApis.ServiceBus')]"
                 },
                 "parameterValues": {
-                    "connectionString": "[parameters('ServiceBus.Connection.String')]"
+                    "connectionString": "[listkeys(variables('ServiceBus.AuthorizationRules.ResourceId'), '2017-04-01').primaryConnectionString]"
                 }
             },
             "dependsOn": []
