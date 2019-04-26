@@ -22,16 +22,10 @@
                 "description": "Subject of the event to emit"
             }
         },
-        "EventGrid.Endpoint": {
+        "EventGrid.Topic.Name": {
             "type": "string",
             "metadata": {
-                "description": "Endpoint to which events need to be sent"
-            }
-        },
-        "EventGrid.ApiKey": {
-            "type": "securestring",
-            "metadata": {
-                "description": "Api key to authenticate with before sending events"
+                "description": "Name of the Event Grid topic to send events to"
             }
         },
         "EventGrid.Connection.Name": {
@@ -230,8 +224,8 @@
                     "id": "[variables('Connections.ManagedApis.EventGrid')]"
                 },
                 "parameterValues": {
-                    "endpoint": "[parameters('EventGrid.Endpoint')]",
-                    "api_key": "[parameters('EventGrid.ApiKey')]"
+                    "endpoint": "[reference(resourceId('Microsoft.EventGrid/topics', parameters('EventGrid.Topic.Name')), '2018-01-01').endpoint]",
+                    "api_key": "[listKeys(resourceId('Microsoft.EventGrid/topics', parameters('EventGrid.Topic.Name')), '2018-01-01').key1]"
                 }
             },
             "dependsOn": []
