@@ -57,12 +57,6 @@
             "metadata": {
                 "description": "Name of the Service Bus namespace to use"
             }
-        },
-        "ServiceBus.AuthorizationRule.Name": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the Service Bus authentication rule to use"
-            }
         }
     },
     "variables": {
@@ -71,7 +65,7 @@
         "Connections.ManagedApis.EventGrid": "[concat(variables('Connections.ManagedApis.BaseUri'), 'azureeventgridpublish')]",
         "LogicAps.Paths.PeekMessageFromQueue": "[concat('/@{encodeURIComponent(encodeURIComponent(''', parameters('ServiceBus.Queue.Name'), '''))}/messages/head/peek')]",
         "LogicAps.Paths.CompleteMessageFromQueue": "[concat('/@{encodeURIComponent(encodeURIComponent(''', parameters('ServiceBus.Queue.Name'), '''))}/messages/complete')]",
-        "ServiceBus.AuthorizationRules.ResourceId":"[resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', parameters('ServiceBus.Namespace'), parameters('ServiceBus.AuthorizationRule.Name'))]"
+        "ServiceBus.AuthorizationRules.ResourceId": "[resourceId('Microsoft.ServiceBus/namespaces/queues/authorizationRules', parameters('ServiceBus.Namespace'), parameters('ServiceBus.Queue.Name'), 'Manage')]"
     },
     "resources": [
         {
@@ -82,7 +76,25 @@
             "properties": {
                 "enablePartitioning": "true"
             },
-            "resources": []
+            "resources": [
+                {
+                    "apiVersion": "2017-04-01",
+                    "name": "Manage",
+                    "type": "AuthorizationRules",
+                    "dependsOn": [
+                        "[parameters('ServiceBus.Queue.Name')]"
+                    ],
+                    "location": "[resourceGroup().location]",
+                    "properties": {
+                        "rights": [
+                            "Manage",
+                            "Send",
+                            "Listen"
+                        ]
+                    },
+                    "resources": []
+                }
+            ]
         },
         {
             "type": "Microsoft.Logic/workflows",
