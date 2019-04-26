@@ -11,11 +11,17 @@
         "Event.Subject": {
             "value": "#{Event.Subject}#"
         },
+        "EventGrid.Connection.Name": {
+            "value": "#{EventGrid.Connection.Name}#"
+        },
+        "EventGrid.Topic.Name": {
+            "value": "#{EventGrid.Topic.Name}#"
+        },
         "ServiceBus.Connection.Name": {
             "value": "#{ServiceBus.Connection.Name}#"
         },
-        "ServiceBus.Connection.String": {
-            "value": "#{ServiceBus.Connection.String}#"
+        "ServiceBus.Namespace": {
+            "value": "#{ServiceBus.Namespace}#"
         },
         "ServiceBus.Queue.Name": {
             "value": "#{ServiceBus.Queue.Name}#"
