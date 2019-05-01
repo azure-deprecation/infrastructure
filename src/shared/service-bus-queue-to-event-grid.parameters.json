@@ -1,0 +1,30 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "LogicApp.Name": {
+            "value": "#{LogicApp.Name}#"
+        },
+        "Event.Type": {
+            "value": "#{Event.Type}#"
+        },
+        "Event.Subject": {
+            "value": "#{Event.Subject}#"
+        },
+        "EventGrid.Connection.Name": {
+            "value": "#{EventGrid.Connection.Name}#"
+        },
+        "EventGrid.Topic.Name": {
+            "value": "#{EventGrid.Topic.Name}#"
+        },
+        "ServiceBus.Connection.Name": {
+            "value": "#{ServiceBus.Connection.Name}#"
+        },
+        "ServiceBus.Namespace": {
+            "value": "#{ServiceBus.Namespace}#"
+        },
+        "ServiceBus.Queue.Name": {
+            "value": "#{ServiceBus.Queue.Name}#"
+        }
+    }
+}
