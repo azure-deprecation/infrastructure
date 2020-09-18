@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDeprecation.Contracts"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDeprecation.Tests.Unit", "AzureDeprecation.Tests.Unit\AzureDeprecation.Tests.Unit.csproj", "{7A7CA43F-D57A-477B-888D-BEA63F31AAE5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDeprecation.Notifications", "AzureDeprecation.Notifications\AzureDeprecation.Notifications.csproj", "{F7ECA9C9-7BBD-4596-BB60-98EC2DEB9E74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDeprecation.Runtimes.AzureFunctions", "AzureDeprecation.Runtimes.AzureFunctions\AzureDeprecation.Runtimes.AzureFunctions.csproj", "{94A81244-E466-403B-9625-292DE9D67449}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{7A7CA43F-D57A-477B-888D-BEA63F31AAE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A7CA43F-D57A-477B-888D-BEA63F31AAE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A7CA43F-D57A-477B-888D-BEA63F31AAE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7ECA9C9-7BBD-4596-BB60-98EC2DEB9E74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7ECA9C9-7BBD-4596-BB60-98EC2DEB9E74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7ECA9C9-7BBD-4596-BB60-98EC2DEB9E74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7ECA9C9-7BBD-4596-BB60-98EC2DEB9E74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94A81244-E466-403B-9625-292DE9D67449}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94A81244-E466-403B-9625-292DE9D67449}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94A81244-E466-403B-9625-292DE9D67449}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94A81244-E466-403B-9625-292DE9D67449}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
