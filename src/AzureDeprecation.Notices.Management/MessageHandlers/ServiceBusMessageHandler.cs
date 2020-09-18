@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
+using AzureDeprecation.Contracts;
 using Microsoft.Azure.ServiceBus;
-using Newtonsoft.Json;
 
 namespace AzureDeprecation.Notices.Management.MessageHandlers
 {
@@ -19,13 +19,12 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
         private static TInputMessage DeserializeMessageBody(Message queueMessage)
         {
             var rawMessageBody = Encoding.UTF8.GetString(queueMessage.Body);
-            var message = JsonConvert.DeserializeObject<TInputMessage>(rawMessageBody);
-            return message;
+            return Serializer.Deserialize<TInputMessage>(rawMessageBody);
         }
 
         private static byte[] SerializeMessageBody(TOutputMessage outputMessage)
         {
-            var rawMessageBody = JsonConvert.SerializeObject(outputMessage);
+            var rawMessageBody=Serializer.Serialize(outputMessage);
             var messageBytes = Encoding.UTF8.GetBytes(rawMessageBody);
             return messageBytes;
         }
