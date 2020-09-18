@@ -1,0 +1,46 @@
+{
+    "DeprecationInfo": {
+        "Title": "Azure Cognitive Services Translator v2 is deprecated by 24 May 2021.",
+        "DueOn": "2025-03-31T00:00:00+00:00",
+        "Impact": {
+            "Description": "Service will no longer be available.",
+            "Type": 4,
+            "Area": 6,
+            "Cloud": 1,
+            "Services": [
+                23
+            ]
+        },
+        "Notice": {
+            "OfficialReport": "> In May 2018, we announced the general availability of version 3 of Translator and will retire version 2 of Translator on 24 May 2021.\r\n> \r\n> Key benefits of version 3 of Translator include: \r\n> - More functionalities including bilingual dictionary, transliterate and translate to multiple target languages in a single request.\r\n> - Provides a  [layered security model](https://docs.microsoft.com/en-us/azure/cognitive-services/Welcome#securing-resources) as part of Azure Cognitive Services.\r\n> - Customized translations through [Custom Translator](https://portal.customtranslator.azure.ai/).",
+            "AdditionalInfo": null,
+            "Links": [
+                "https://azure.microsoft.com/en-gb/updates/version-2-of-translator-is-retiring-on-24-may-2021/",
+                "https://docs.microsoft.com/en-us/azure/cognitive-services/translator/migrate-to-v3"
+            ]
+        },
+        "RequiredAction": {
+            "OfficialReport": "> - If you are using version 2 of Translator, please [migrate your applications to version 3](https://docs.microsoft.com/en-us/azure/cognitive-services/translator/migrate-to-v3) before 24 May 2021 to avoid service disruption.\r\n> - Your current Translator subscription and key will work with version 3, there is no need to create a new Translator subscription in the Azure portal.",
+            "AdditionalInfo": null
+        },
+        "Contact": {
+            "Type": 3
+        },
+        "AdditionalInformation": "https://docs.microsoft.com/en-us/azure/cognitive-services/translator/migrate-to-v3"
+    },
+    "ReportInfo": {
+        "Id": {
+            "Api": 703714995,
+            "Issue": 70
+        },
+        "Url": "https://api.github.com/repos/azure-deprecation-automation/sandbox/issues/70",
+        "HtmlUrl": "https://github.com/azure-deprecation-automation/sandbox/issues/70",
+        "Title": "Azure Cognitive Services Translator v2 is deprecated by 24 May 2021.",
+        "Labels": [
+            "area:certification", "impact:migration-required", "services:cognitive-services", "verified"
+        ],
+        "ClosedAt": null,
+        "CreatedAt": "2020-09-17T15:58:52+00:00",
+        "UpdatedAt": "2020-09-17T15:58:52+00:00"
+    }
+}

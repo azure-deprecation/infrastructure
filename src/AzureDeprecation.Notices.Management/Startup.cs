@@ -1,43 +1,24 @@
-﻿using AzureDeprecation.Integrations.GitHub.Repositories;
+﻿using AutoMapper;
+using AzureDeprecation.Contracts.Messages.v1;
+using AzureDeprecation.Integrations.GitHub.Repositories;
 using AzureDeprecation.Notices.Management.MessageHandlers;
+using AzureDeprecation.Runtimes.AzureFunctions;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Serilog;
-using Serilog.Configuration;
-using Serilog.Events;
+using Octokit;
 
 [assembly: FunctionsStartup(typeof(AzureDeprecation.Notices.Management.Startup))]
 namespace AzureDeprecation.Notices.Management
 {
-    public class Startup : FunctionsStartup
+    public class Startup : DefaultStartup
     {
-        public override void Configure(IFunctionsHostBuilder builder)
+        public override string ComponentName { get; } = "Notice Management";
+
+        protected override void ConfigureDependencies(IServiceCollection services)
         {
-            builder.Services.AddHttpClient();
-            builder.Services.AddScoped<GitHubRepository>();
-            builder.Services.AddScoped<NewAzureDeprecationNotificationV1MessageHandler>();
-
-            var serviceProvider = builder.Services.BuildServiceProvider();
-            var config = serviceProvider.GetRequiredService<IConfiguration>();
-            var instrumentationKey = config.GetValue<string>("APPINSIGHTS_INSTRUMENTATIONKEY");
-
-            var logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                .Enrich.FromLogContext()
-                .Enrich.WithComponentName("Azure Deprecation Notice Management")
-                .Enrich.WithVersion()
-                .WriteTo.Console()
-                .WriteTo.AzureApplicationInsights(instrumentationKey)
-                .CreateLogger();
-
-            builder.Services.AddLogging(loggingBuilder =>
-            {
-                loggingBuilder.ClearProvidersExceptFunctionProviders();
-                loggingBuilder.AddSerilog(logger);
-            });
+            services.AddAutoMapper(typeof(Startup));
+            services.AddScoped<GitHubRepository>();
+            services.AddScoped<NewAzureDeprecationNotificationV1MessageHandler>();
         }
     }
 }

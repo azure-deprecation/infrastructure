@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using AzureDeprecation.Contracts.Messages.v1;
 using AzureDeprecation.Integrations.GitHub.Repositories;
 using GuardNet;
@@ -11,11 +12,14 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
     public class NewAzureDeprecationNotificationV1MessageHandler : ServiceBusMessageHandler<NewAzureDeprecationV1Message, NewDeprecationNoticePublishedV1Message>
     {
         private readonly GitHubRepository _gitHubRepository;
+        private readonly IMapper _mapper;
 
-        public NewAzureDeprecationNotificationV1MessageHandler(GitHubRepository gitHubRepository)
+        public NewAzureDeprecationNotificationV1MessageHandler(GitHubRepository gitHubRepository, IMapper mapper)
         {
-            Guard.NotNull(gitHubRepository,nameof(gitHubRepository));
+            Guard.NotNull(gitHubRepository, nameof(gitHubRepository));
+            Guard.NotNull(mapper, nameof(mapper));
 
+            _mapper = mapper;
             _gitHubRepository = gitHubRepository;
         }
 
@@ -63,10 +67,12 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
 
         private NewDeprecationNoticePublishedV1Message GenerateNewDeprecationNoticePublishedV1Message(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage, Issue createdIssue)
         {
+            var publishedNotice = _mapper.Map<PublishedNotice>(createdIssue);
+            
             return new NewDeprecationNoticePublishedV1Message
             {
                 DeprecationInfo = newNoticeV1MessageQueueMessage,
-                ReportInfo = createdIssue
+                PublishedNotice = publishedNotice
             };
         }
     }
