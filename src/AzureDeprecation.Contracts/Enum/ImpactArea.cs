@@ -10,6 +10,7 @@
         ApiEndpoint,
         Feature,
         ServiceRuntime,
-        Region
+        Region,
+        Sku
     }
 }
