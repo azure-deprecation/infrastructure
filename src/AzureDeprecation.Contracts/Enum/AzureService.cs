@@ -5,6 +5,7 @@ namespace AzureDeprecation.Contracts.Enum
         ActiveDirectory,
         Advisor,
         All,
+        AnalysisService,
         AnomalyDetector,
         ApiApps,
         ApiManagement,

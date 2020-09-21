@@ -13,6 +13,8 @@ namespace AzureDeprecation.Notices.Management
                     return "services:active-directory";
                 case AzureService.Advisor:
                     return "services:advisor";
+                case AzureService.AnalysisService:
+                    return "services:analysis-service";
                 case AzureService.AnomalyDetector:
                     return "services:anomaly-detector";
                 case AzureService.ApiApps:
@@ -264,6 +266,8 @@ namespace AzureDeprecation.Notices.Management
                     return "area:service-runtime";
                 case ImpactArea.Region:
                     return "area:region";
+                case ImpactArea.Sku:
+                    return "area:sku";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(impactArea), impactArea, null);
             }

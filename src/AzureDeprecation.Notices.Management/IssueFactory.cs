@@ -115,9 +115,12 @@ namespace AzureDeprecation.Notices.Management
 
         private static void WriteMoreInformation(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage, StringBuilder issueBuilder)
         {
-            issueBuilder.AppendLine("### More information");
-            issueBuilder.AppendLine();
-            issueBuilder.Append(newNoticeV1MessageQueueMessage.AdditionalInformation);
+            if(string.IsNullOrWhiteSpace(newNoticeV1MessageQueueMessage.AdditionalInformation) == false)
+            {
+                issueBuilder.AppendLine("### More information");
+                issueBuilder.AppendLine();
+                issueBuilder.Append(newNoticeV1MessageQueueMessage.AdditionalInformation);
+            }
         }
     }
 }
