@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GuardNet;
 using Microsoft.Extensions.Configuration;
 using Octokit;
 
@@ -25,6 +26,18 @@ namespace AzureDeprecation.Integrations.GitHub.Repositories
             };
         }
 
+        public async Task PostCommentAsync(int issueNumber, string commentText)
+        {
+            Guard.NotNullOrEmpty(commentText, nameof(commentText));
+
+            await _githubClient.Issue.Comment.Create(_repoOwner, _repoName, issueNumber, commentText);
+        }
+
+        public async Task LockIssueAsync(int issueNumber)
+        {
+            await _githubClient.Issue.Lock(_repoOwner, _repoName, issueNumber);
+        }
+
         public async Task<Issue> CreateIssueAsync(string title, string content, Milestone milestone, List<string> labels)
         {
             var foundRepository = await GetRepositoryAsync($"{_repoOwner}/{_repoName}");
@@ -39,7 +52,6 @@ namespace AzureDeprecation.Integrations.GitHub.Repositories
             {
                 noticeIssue.Labels.Add(label);
             }
-
             return await _githubClient.Issue.Create(foundRepository.Id, noticeIssue);
         }
 
