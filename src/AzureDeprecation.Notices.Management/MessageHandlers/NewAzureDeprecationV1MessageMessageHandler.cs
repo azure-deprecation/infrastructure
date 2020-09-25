@@ -25,12 +25,38 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
 
         protected override async Task<NewDeprecationNoticePublishedV1Message> ProcessMessageAsync(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage)
         {
+            // Create notice issue
+            var createdIssue = await CreateDeprecationNoticeAsync(newNoticeV1MessageQueueMessage);
+
+            // Post discussion message
+            await PostCommentToSteerPeopleToGitHubDiscussionsAsync(createdIssue);
+
+            // Lock conversation
+            await LockConversationAsync(createdIssue);
+
+            return GenerateNewDeprecationNoticePublishedV1Message(newNoticeV1MessageQueueMessage, createdIssue);
+        }
+
+        private async Task PostCommentToSteerPeopleToGitHubDiscussionsAsync(Issue createdIssue)
+        {
+            var commentText = "This issue is automatically managed and suggest to use [GitHub Discussions](https://github.com/azure-deprecation/dashboard/discussions) to discuss this deprecation.";
+            await _gitHubRepository.PostCommentAsync(createdIssue.Number, commentText);
+        }
+
+        private async Task LockConversationAsync(Issue createdIssue)
+        {
+            await _gitHubRepository.LockIssueAsync(createdIssue.Number);
+        }
+
+        private async Task<Issue> CreateDeprecationNoticeAsync(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage)
+        {
             // Determine deprecation year
             var deprecationYear = newNoticeV1MessageQueueMessage.DueOn.Year;
-            
+
             // Get matching milestone
             var milestoneDueDate = DateTimeOffset.Parse($"12/31/{deprecationYear}").AddDays(1);
-            var milestone = await _gitHubRepository.GetOrCreateMilestoneAsync(deprecationYear.ToString(), $"All Azure deprecation notices which are closing in {deprecationYear}", milestoneDueDate);
+            var milestone = await _gitHubRepository.GetOrCreateMilestoneAsync(deprecationYear.ToString(),
+                $"All Azure deprecation notices which are closing in {deprecationYear}", milestoneDueDate);
 
             // Generate issue content
             var issueContent = IssueFactory.GenerateNewDeprecationNotice(newNoticeV1MessageQueueMessage);
@@ -39,9 +65,9 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
             var labels = DetermineRequiredLabels(newNoticeV1MessageQueueMessage);
 
             // Create GitHub issue
-            var createdIssue = await _gitHubRepository.CreateIssueAsync(newNoticeV1MessageQueueMessage.Title, issueContent, milestone, labels);
-            
-            return GenerateNewDeprecationNoticePublishedV1Message(newNoticeV1MessageQueueMessage, createdIssue);
+            var createdIssue =
+                await _gitHubRepository.CreateIssueAsync(newNoticeV1MessageQueueMessage.Title, issueContent, milestone, labels);
+            return createdIssue;
         }
 
         private List<string> DetermineRequiredLabels(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage)
