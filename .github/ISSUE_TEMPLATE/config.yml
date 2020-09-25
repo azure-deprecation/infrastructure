@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Suggest a new deprecation
+    url: https://github.com/azure-deprecation/dashboard/issues/new/choose
+    about: Suggest a new deprecation to be listed
+  - name: Discuss a deprecation
+    url: https://github.com/azure-deprecation/dashboard/discussions
+    about: Discuss a deprecation that was announced
