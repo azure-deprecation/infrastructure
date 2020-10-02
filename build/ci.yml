@@ -1,0 +1,23 @@
+name: $(Date:yyyyMMdd)$(Rev:.r)
+trigger: none
+pr:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - src/*
+stages:
+- stage: Build
+  jobs:
+   - job: Build
+     displayName: Build
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - task: DotNetCoreCLI@2
+       displayName: Build Solution
+       inputs:
+         command: 'build'
+         projects: 'src/AzureDeprecation.sln'
+         arguments: '--configuration release'
