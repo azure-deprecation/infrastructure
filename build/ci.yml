@@ -1,0 +1,18 @@
+name: $(Date:yyyyMMdd)$(Rev:.r)
+trigger: none
+pr:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - src/*
+stages:
+- stage: Build
+  jobs:
+   - job: Build
+     displayName: Build
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - script: dotnet build
