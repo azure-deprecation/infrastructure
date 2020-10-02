@@ -10,6 +10,21 @@ namespace AzureDeprecation.Notices.Management.Mappings
     {
         public MappingProfile()
         {
+            CreateMap<DraftNotice, Notice>()
+                .ForMember(notice => notice.Description, x => x.MapFrom(draftNotice => draftNotice.Description))
+                .ForMember(notice => notice.Links, x => x.MapFrom(draftNotice => draftNotice.Links));
+            CreateMap<InputTimeLineEntry, TimeLineEntry>()
+                .ForMember(timeLineEntry => timeLineEntry.Phase, x => x.MapFrom(inputTimeLineEntry => inputTimeLineEntry.Phase))
+                .ForMember(timeLineEntry => timeLineEntry.Description, x => x.MapFrom(inputTimeLineEntry => inputTimeLineEntry.Description))
+                .ForMember(timeLineEntry => timeLineEntry.Date, x => x.MapFrom(inputTimeLineEntry => inputTimeLineEntry.Date));
+            CreateMap<NewAzureDeprecationV1Message, DeprecationInfo>()
+                .ForMember(deprecationInfo => deprecationInfo.Title, x => x.MapFrom(issue => issue.Title))
+                .ForMember(deprecationInfo => deprecationInfo.RequiredAction, x => x.MapFrom(issue => issue.RequiredAction.Description))
+                .ForMember(deprecationInfo => deprecationInfo.Contact, x => x.MapFrom(issue => issue.Contact))
+                .ForMember(deprecationInfo => deprecationInfo.Notice, x => x.MapFrom(issue => issue.Notice))
+                .ForMember(deprecationInfo => deprecationInfo.Impact, x => x.MapFrom(issue => issue.Impact))
+                .ForMember(deprecationInfo => deprecationInfo.Timeline, x => x.MapFrom(issue => issue.Timeline))
+                .ForMember(deprecationInfo => deprecationInfo.AdditionalInformation, x => x.MapFrom(issue => issue.AdditionalInformation));
             CreateMap<Issue, ApiInfo>()
                 .ForMember(apiInfo => apiInfo.Id, x => x.MapFrom(issue => issue.Id))
                 .ForMember(apiInfo => apiInfo.Url, x => x.MapFrom(issue => issue.Url));

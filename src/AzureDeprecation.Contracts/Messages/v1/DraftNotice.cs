@@ -2,9 +2,8 @@
 
 namespace AzureDeprecation.Contracts.Messages.v1
 {
-    public class Notice
+    public class DraftNotice : ComposedInfo
     {
-        public string Description { get; set; }
         public List<string> Links { get; set; } = new List<string>();
     }
 }

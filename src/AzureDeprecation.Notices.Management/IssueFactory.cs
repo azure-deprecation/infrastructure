@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using AzureDeprecation.Contracts.Enum;
 using AzureDeprecation.Contracts.Messages.v1;
@@ -14,6 +15,7 @@ namespace AzureDeprecation.Notices.Management
 
             WriteIntro(newNoticeV1MessageQueueMessage, issueBuilder);
             WriteNotice(newNoticeV1MessageQueueMessage, issueBuilder);
+            WriteTimeline(newNoticeV1MessageQueueMessage.Timeline, issueBuilder);
             WriteImpact(newNoticeV1MessageQueueMessage, issueBuilder);
             WriteRequiredAction(newNoticeV1MessageQueueMessage, issueBuilder);
             WriteContact(newNoticeV1MessageQueueMessage, issueBuilder);
@@ -24,9 +26,10 @@ namespace AzureDeprecation.Notices.Management
 
         private static void WriteIntro(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage, StringBuilder issueBuilder)
         {
+            var dueDate = newNoticeV1MessageQueueMessage.GetDueDate();
             issueBuilder.AppendLine(newNoticeV1MessageQueueMessage.Title);
             issueBuilder.AppendLine();
-            issueBuilder.AppendLine($"**Deadline:** {newNoticeV1MessageQueueMessage.DueOn:D}");
+            issueBuilder.AppendLine($"**Deadline:** {dueDate:MMM dd, yyyy}");
             issueBuilder.AppendLine("**Impacted Services:**");
 
             foreach (var impactedService in newNoticeV1MessageQueueMessage.Impact.Services)
@@ -52,21 +55,8 @@ namespace AzureDeprecation.Notices.Management
         private static void WriteNotice(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage, StringBuilder issueBuilder)
         {
             issueBuilder.AppendLine("### Notice");
-
             issueBuilder.AppendLine();
-            if (string.IsNullOrWhiteSpace(newNoticeV1MessageQueueMessage.Notice.AdditionalInfo) == false)
-            {
-                issueBuilder.AppendLine(newNoticeV1MessageQueueMessage.Notice.AdditionalInfo);
-                issueBuilder.AppendLine();
-            }
-
-            if (string.IsNullOrWhiteSpace(newNoticeV1MessageQueueMessage.Notice.OfficialReport) == false)
-            {
-                issueBuilder.AppendLine("Here's the official report from Microsoft:");
-                issueBuilder.AppendLine();
-                issueBuilder.AppendLine(newNoticeV1MessageQueueMessage.Notice.OfficialReport);
-                issueBuilder.AppendLine();
-            }
+            issueBuilder.AppendLine(newNoticeV1MessageQueueMessage.Notice.Description);
         }
 
         private static void WriteImpact(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage, StringBuilder issueBuilder)
@@ -77,23 +67,52 @@ namespace AzureDeprecation.Notices.Management
             issueBuilder.AppendLine();
         }
 
+        private static void WriteTimeline(List<InputTimeLineEntry> timeline, StringBuilder issueBuilder)
+        {
+            if (timeline == null || timeline.Any() == false)
+            {
+                return;
+            }
+
+            issueBuilder.AppendLine("### Timeline");
+            issueBuilder.AppendLine();
+            issueBuilder.AppendLine("| Phase | Date | Description |");
+            issueBuilder.AppendLine("|:------|------|-------------|");
+
+            if (timeline.Count > 1)
+            {
+                WriteTimelineEntriesForAllPhases(timeline, issueBuilder);
+            }
+            else
+            {
+                var timelineEntry = timeline.Single();
+                WriteTimelineForSinglePhase(issueBuilder, timelineEntry);
+            }
+
+            issueBuilder.AppendLine();
+        }
+
+        private static void WriteTimelineForSinglePhase(StringBuilder issueBuilder, InputTimeLineEntry timelineEntry)
+        {
+            var phase = string.IsNullOrWhiteSpace(timelineEntry.Phase) ? "Deprecation" : timelineEntry.Phase;
+            var description = string.IsNullOrWhiteSpace(timelineEntry.Description) ? "N/A" : timelineEntry.Description;
+            issueBuilder.AppendLine($"|{phase}|{timelineEntry.Date:MMM dd, yyyy}|{description}|");
+        }
+
+        private static void WriteTimelineEntriesForAllPhases(List<InputTimeLineEntry> timeline, StringBuilder issueBuilder)
+        {
+            foreach (var entry in timeline.OrderBy(x => x.Date))
+            {
+                var phase = string.IsNullOrWhiteSpace(entry.Phase) && entry.IsDueDate ? "Deprecation" : entry.Phase;
+                issueBuilder.AppendLine($"|{phase}|{entry.Date:MMM dd, yyyy}|{entry.Description}|");
+            }
+        }
+
         private static void WriteRequiredAction(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage, StringBuilder issueBuilder)
         {
             issueBuilder.AppendLine("### Required Action");
             issueBuilder.AppendLine();
-            if (string.IsNullOrWhiteSpace(newNoticeV1MessageQueueMessage.RequiredAction.AdditionalInfo) == false)
-            {
-                issueBuilder.AppendLine(newNoticeV1MessageQueueMessage.RequiredAction.AdditionalInfo);
-                issueBuilder.AppendLine();
-            }
-
-            if (string.IsNullOrWhiteSpace(newNoticeV1MessageQueueMessage.RequiredAction.OfficialReport) == false)
-            {
-                issueBuilder.AppendLine("Here's the official report from Microsoft:");
-                issueBuilder.AppendLine();
-                issueBuilder.AppendLine(newNoticeV1MessageQueueMessage.RequiredAction.OfficialReport);
-                issueBuilder.AppendLine();
-            }
+            issueBuilder.AppendLine(newNoticeV1MessageQueueMessage.RequiredAction.Description);
         }
 
         private static void WriteContact(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage, StringBuilder issueBuilder)
