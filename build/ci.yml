@@ -15,4 +15,8 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - script: dotnet build
+     - task: DotNetCoreCLI@2
+       inputs:
+         command: 'build'
+         projects: 'src/AzureDeprecation.sln'
+         arguments: '--configuration release'
