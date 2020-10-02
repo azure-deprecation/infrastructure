@@ -34,7 +34,7 @@ namespace AzureDeprecation.Notifications.Functions
             
             var @event = new CloudEvent(CloudEventsSpecVersion.V1_0,
                 "NewDeprecationNoticePublishedV1",
-                new Uri("https://eventgrid.arcus-azure.net/"),
+                new Uri("https://github.com/azure-deprecation/dashboard"),
                 subject: $"/{newDeprecationNoticePublishedV1Message.DeprecationInfo.Impact.Services.First()}")
             {
                 Data = Serializer.Serialize(newDeprecationNoticePublishedV1Message),
