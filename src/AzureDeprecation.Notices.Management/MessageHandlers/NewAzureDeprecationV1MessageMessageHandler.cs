@@ -51,7 +51,7 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
         private async Task<Issue> CreateDeprecationNoticeAsync(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage)
         {
             // Determine deprecation year
-            var deprecationYear = newNoticeV1MessageQueueMessage.DueOn.Year;
+            var deprecationYear = newNoticeV1MessageQueueMessage.GetDueDate().Year;
 
             // Get matching milestone
             var milestoneDueDate = DateTimeOffset.Parse($"12/31/{deprecationYear}").AddDays(1);
@@ -93,11 +93,12 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
 
         private NewDeprecationNoticePublishedV1Message GenerateNewDeprecationNoticePublishedV1Message(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage, Issue createdIssue)
         {
+            var deprecationInfo = _mapper.Map<DeprecationInfo>(newNoticeV1MessageQueueMessage);
             var publishedNotice = _mapper.Map<PublishedNotice>(createdIssue);
-            
+
             return new NewDeprecationNoticePublishedV1Message
             {
-                DeprecationInfo = newNoticeV1MessageQueueMessage,
+                DeprecationInfo = deprecationInfo,
                 PublishedNotice = publishedNotice
             };
         }

@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using AzureDeprecation.Contracts.Messages.v1;
 using AzureDeprecation.Notices.Management.Mappings;
+using AzureDeprecation.Tests.Unit.Generator;
 using Bogus;
 using Octokit;
 using Xunit;
@@ -56,11 +59,68 @@ namespace AzureDeprecation.Tests.Unit
             }
         }
 
+        [Fact]
+        public void AutoMapper_MapNewAzureDeprecationV1MessageToDeprecationInfo_IsValid()
+        {
+            //Arrange
+            var deprecationInfo = NewAzureDeprecationGenerator.GenerateSample(useAdvancedTimeline: true);
+
+            //Act
+            var publishedNotice = _mapper.Map<NewAzureDeprecationV1Message, DeprecationInfo>(deprecationInfo);
+
+            //Assert
+            Assert.NotNull(publishedNotice);
+            Assert.NotNull(publishedNotice.Contact);
+            Assert.NotNull(publishedNotice.Timeline);
+            Assert.Equal(deprecationInfo.Title, publishedNotice.Title);
+            Assert.Equal(deprecationInfo.RequiredAction.Description, publishedNotice.RequiredAction);
+            Assert.Equal(deprecationInfo.Contact.Type, publishedNotice.Contact.Type);
+            Assert.Equal(deprecationInfo.AdditionalInformation, publishedNotice.AdditionalInformation);
+            HasSameNotice(publishedNotice, deprecationInfo);
+            HasSameImpact(deprecationInfo, publishedNotice);
+        }
+
+        private static void HasSameNotice(DeprecationInfo publishedNotice, NewAzureDeprecationV1Message deprecationInfo)
+        {
+            Assert.NotNull(publishedNotice.Notice);
+            Assert.Equal(deprecationInfo.Notice.Description, publishedNotice.Notice.Description);
+            Assert.Equal(deprecationInfo.Notice.Links, publishedNotice.Notice.Links);
+        }
+
+        private static void HasSameImpact(NewAzureDeprecationV1Message deprecationInfo, DeprecationInfo publishedNotice)
+        {
+            Assert.NotNull(publishedNotice.Impact);
+            Assert.NotNull(publishedNotice.Impact.Services);
+            Assert.Equal(deprecationInfo.Impact.Area, publishedNotice.Impact.Area);
+            Assert.Equal(deprecationInfo.Impact.Cloud, publishedNotice.Impact.Cloud);
+            Assert.Equal(deprecationInfo.Impact.Description, publishedNotice.Impact.Description);
+            Assert.Equal(deprecationInfo.Impact.Type, publishedNotice.Impact.Type);
+            Assert.Equal(deprecationInfo.Impact.Services.Count, publishedNotice.Impact.Services.Count);
+            foreach (var impactedService in publishedNotice.Impact.Services)
+            {
+                Assert.Contains(impactedService, deprecationInfo.Impact.Services);
+            }
+        }
+
+        private static void HasSameTimeline(NewAzureDeprecationV1Message deprecationInfo, DeprecationInfo publishedNotice)
+        {
+            Assert.NotNull(publishedNotice.Timeline);
+            Assert.Equal(deprecationInfo.Timeline.Count, publishedNotice.Timeline.Count);
+            foreach (var timelineEntry in publishedNotice.Timeline)
+            {
+                var matchCount = deprecationInfo.Timeline.Count(entry =>
+                    entry.Date == timelineEntry.Date &&
+                    entry.Description.Equals(timelineEntry.Description, StringComparison.InvariantCultureIgnoreCase) &&
+                    entry.Phase.Equals(timelineEntry.Phase, StringComparison.InvariantCultureIgnoreCase));
+                Assert.Equal(1, matchCount);
+            }
+        }
+
         private Issue CreateBogusGitHubIssue()
         {
             var labels = new List<Label>();
 
-            for(int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 var label = new Faker<Label>()
                     .RuleFor(s => s.Name, f => f.Name.FirstName())

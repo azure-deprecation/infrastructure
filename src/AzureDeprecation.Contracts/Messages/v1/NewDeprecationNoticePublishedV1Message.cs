@@ -2,7 +2,7 @@
 {
     public class NewDeprecationNoticePublishedV1Message
     {
-        public NewAzureDeprecationV1Message DeprecationInfo { get; set; }
+        public DeprecationInfo DeprecationInfo { get; set; }
         public PublishedNotice PublishedNotice { get; set; }
     }
 }
