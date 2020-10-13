@@ -91,6 +91,8 @@ namespace AzureDeprecation.Notices.Management
                     return "services:dedicated-host";
                 case AzureService.DevOps:
                     return "services:devops";
+                case AzureService.DevSpaces:
+                    return "services:dev-spaces";
                 case AzureService.DevTestLabs:
                     return "services:devtest-labs";
                 case AzureService.DigitalTwins:

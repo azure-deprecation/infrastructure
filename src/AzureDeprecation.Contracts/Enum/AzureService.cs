@@ -44,6 +44,7 @@ namespace AzureDeprecation.Contracts.Enum
         DdosProtection,
         DedicatedHost,
         DevOps,
+        DevSpaces,
         DevTestLabs,
         DigitalTwins,
         Dns,
