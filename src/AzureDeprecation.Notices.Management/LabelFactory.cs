@@ -289,6 +289,8 @@ namespace AzureDeprecation.Notices.Management
                     return "impact:upgrade-required";
                 case ImpactType.MigrationRequired:
                     return "impact:migration-required";
+                case ImpactType.ShutdownWithoutAlternative:
+                    return "impact:no-alternative";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(impactType), impactType, null);
             }

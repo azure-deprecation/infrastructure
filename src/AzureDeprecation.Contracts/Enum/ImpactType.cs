@@ -6,6 +6,7 @@
         None,
         Limited,
         UpgradeRequired,
-        MigrationRequired
+        MigrationRequired,
+        ShutdownWithoutAlternative
     }
 }
