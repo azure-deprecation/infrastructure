@@ -127,6 +127,9 @@ namespace AzureDeprecation.Notices.Management
                 case ContactType.NotAvailable:
                     issueBuilder.AppendLine("None.");
                     break;
+                case ContactType.Unknown:
+                    issueBuilder.AppendLine("No information was provided.");
+                    break;
             }
 
             issueBuilder.AppendLine();
