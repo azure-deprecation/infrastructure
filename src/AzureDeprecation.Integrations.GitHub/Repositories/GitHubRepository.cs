@@ -52,6 +52,7 @@ namespace AzureDeprecation.Integrations.GitHub.Repositories
             {
                 noticeIssue.Labels.Add(label);
             }
+            
             return await _githubClient.Issue.Create(foundRepository.Id, noticeIssue);
         }
 
@@ -82,6 +83,37 @@ namespace AzureDeprecation.Integrations.GitHub.Repositories
             }
 
             return foundRepository;
+        }
+
+        public async Task<Project> GetOrCreateProjectAsync(string projectName)
+        {
+            var foundRepository = await GetRepositoryAsync($"{_repoOwner}/{_repoName}");
+            var allProjects = await _githubClient.Repository.Project.GetAllForRepository(foundRepository.Id);
+            var foundProject = allProjects.FirstOrDefault(project => project.Name.Equals(projectName, StringComparison.InvariantCultureIgnoreCase));
+            if (foundProject == null)
+            {
+                var newProject = new NewProject(projectName)
+                {
+                    Body = "Dashboard for all deprecation notices per year"
+                };
+                foundProject = await _githubClient.Repository.Project.CreateForRepository(foundRepository.Id, newProject);
+            }
+
+            return foundProject;
+        }
+
+        public async Task AddIssueToProjectAsync(int projectId, string columnName, int issueId)
+        {
+            var allProjectColumns = await _githubClient.Repository.Project.Column.GetAll(projectId);
+            var foundProjectColumn = allProjectColumns.FirstOrDefault(column => column.Name.Equals(columnName, StringComparison.InvariantCultureIgnoreCase));
+            if (foundProjectColumn == null)
+            {
+                var newProjectColumn = new NewProjectColumn(columnName);
+                foundProjectColumn = await _githubClient.Repository.Project.Column.Create(projectId, newProjectColumn);
+            }
+
+            var projectCard = new NewProjectCard(issueId, ProjectCardContentType.Issue);
+            await _githubClient.Repository.Project.Card.Create(foundProjectColumn.Id, projectCard);
         }
     }
 }
