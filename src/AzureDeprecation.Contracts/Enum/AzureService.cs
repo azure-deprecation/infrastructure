@@ -40,7 +40,7 @@ namespace AzureDeprecation.Contracts.Enum
         DataFactory,
         DataLakeStorage,
         DataShare,
-        DataSience,
+        DataScience,
         DdosProtection,
         DedicatedHost,
         DevOps,

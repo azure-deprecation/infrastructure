@@ -83,7 +83,7 @@ namespace AzureDeprecation.Notices.Management
                     return "services:data-lake-storage";
                 case AzureService.DataShare:
                     return "services:data-share";
-                case AzureService.DataSience:
+                case AzureService.DataScience:
                     return "services:data-sience";
                 case AzureService.DdosProtection:
                     return "services:ddos-protection";
