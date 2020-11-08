@@ -59,7 +59,7 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
                 $"All Azure deprecation notices which are closing in {deprecationYear}", milestoneDueDate);
             
             // Get matching project
-            var project = await _gitHubRepository.GetOrCreateProjectAsync("Deprecation Notices");
+            var project = await _gitHubRepository.GetOrCreateProjectAsync("Deprecation Notice Timeline");
 
             // Generate issue content
             var issueContent = IssueFactory.GenerateNewDeprecationNotice(newNoticeV1MessageQueueMessage);
