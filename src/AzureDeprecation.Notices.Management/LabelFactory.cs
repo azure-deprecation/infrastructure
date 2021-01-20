@@ -263,7 +263,7 @@ namespace AzureDeprecation.Notices.Management
                 case ImpactArea.ApiEndpoint:
                     return "area:api-endpoint";
                 case ImpactArea.Feature:
-                    return "area:certification";
+                    return "area:feature";
                 case ImpactArea.ServiceRuntime:
                     return "area:service-runtime";
                 case ImpactArea.Region:
