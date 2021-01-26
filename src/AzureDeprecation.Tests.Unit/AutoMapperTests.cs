@@ -74,8 +74,12 @@ namespace AzureDeprecation.Tests.Unit
             Assert.NotNull(publishedNotice.Timeline);
             Assert.Equal(deprecationInfo.Title, publishedNotice.Title);
             Assert.Equal(deprecationInfo.RequiredAction.Description, publishedNotice.RequiredAction);
-            Assert.Equal(deprecationInfo.Contact.Type, publishedNotice.Contact.Type);
             Assert.Equal(deprecationInfo.AdditionalInformation, publishedNotice.AdditionalInformation);
+            Assert.Equal(deprecationInfo.Contact.Count, publishedNotice.Contact.Count);
+            foreach (var contactEntry in deprecationInfo.Contact)
+            {
+                Assert.Contains(publishedNotice.Contact, entry => entry.Type == contactEntry.Type && entry.Data.Equals(contactEntry.Data, StringComparison.InvariantCultureIgnoreCase));
+            }
             HasSameNotice(publishedNotice, deprecationInfo);
             HasSameImpact(deprecationInfo, publishedNotice);
         }

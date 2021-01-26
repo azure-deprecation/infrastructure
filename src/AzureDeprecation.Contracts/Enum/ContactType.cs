@@ -5,6 +5,7 @@
         Unknown,
         NotAvailable,
         Email,
-        Support
+        Support,
+        MicrosoftQAndA
     }
 }
