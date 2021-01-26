@@ -42,9 +42,13 @@ namespace AzureDeprecation.Tests.Unit.Generator
                     OfficialReport = @"> - If you are using version 2 of Translator, please [migrate your applications to version 3](https://docs.microsoft.com/en-us/azure/cognitive-services/translator/migrate-to-v3) before 24 May 2021 to avoid service disruption.
 > - Your current Translator subscription and key will work with version 3, there is no need to create a new Translator subscription in the Azure portal."
                 },
-                Contact = new Contact
+                Contact = new List<ContactEntry>
                 {
-                    Type = ContactType.NotAvailable
+                    new ContactEntry
+                    {
+                        Type = ContactType.Email,
+                        Data = "example@example.com"
+                    }
                 },
                 Timeline = new List<InputTimeLineEntry>(),
                 AdditionalInformation = "https://docs.microsoft.com/en-us/azure/cognitive-services/translator/migrate-to-v3"

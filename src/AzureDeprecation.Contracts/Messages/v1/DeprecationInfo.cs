@@ -9,7 +9,7 @@ namespace AzureDeprecation.Contracts.Messages.v1
         public Impact Impact { get; set; }
         public Notice Notice { get; set; }
         public string RequiredAction { get; set; }
-        public Contact Contact { get; set; }
+        public List<ContactEntry> Contact { get; set; }
         public string AdditionalInformation { get; set; }
     }
 }
