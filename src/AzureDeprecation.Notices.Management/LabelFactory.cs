@@ -179,6 +179,8 @@ namespace AzureDeprecation.Notices.Management
                     return "services:service-bus";
                 case AzureService.ServiceFabric:
                     return "services:service-fabric";
+                case AzureService.ServiceFabricMesh:
+                    return "services:service-fabric-mesh";
                 case AzureService.ServiceHealth:
                     return "services:service-health";
                 case AzureService.SignalR:

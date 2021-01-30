@@ -93,6 +93,7 @@ namespace AzureDeprecation.Contracts.Enum
         Sentinel,
         ServiceBus,
         ServiceFabric,
+        ServiceFabricMesh,
         ServiceHealth,
         SignalR,
         SiteRecovery,
