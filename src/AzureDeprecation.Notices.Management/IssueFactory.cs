@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using AzureDeprecation.Contracts.Enum;
@@ -119,20 +121,42 @@ namespace AzureDeprecation.Notices.Management
         {
             issueBuilder.AppendLine("### Contact");
             issueBuilder.AppendLine();
-            switch (newNoticeV1MessageQueueMessage.Contact.Type)
+
+            if (newNoticeV1MessageQueueMessage.Contact.Count == 1)
+            {
+                var contactInformation = GetContactInformation(newNoticeV1MessageQueueMessage.Contact.First());
+                issueBuilder.AppendLine($"{contactInformation}");
+            }
+            else
+            {
+                issueBuilder.AppendLine("You can get in touch through the following options:");
+                foreach (var contactEntry in newNoticeV1MessageQueueMessage.Contact)
+                {
+                    var contactInformation = GetContactInformation(contactEntry);
+                    issueBuilder.AppendLine($"- {contactInformation}");
+                }
+            }
+            
+            issueBuilder.AppendLine();
+        }
+
+        private static string GetContactInformation(ContactEntry contactEntry)
+        {
+            switch (contactEntry.Type)
             {
                 case ContactType.Support:
-                    issueBuilder.AppendLine("Contact Azure support ([link](https://portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/overview)).");
-                    break;
+                    return "Contact Azure support ([link](https://portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/overview)).";
+                case ContactType.Email:
+                    return $"Contact the product group through email ([email](mailto:{contactEntry.Data})).";
+                case ContactType.MicrosoftQAndA:
+                    return $"Get answers from Microsoft Q&A ([link](mailto:{contactEntry.Data})).";
                 case ContactType.NotAvailable:
-                    issueBuilder.AppendLine("None.");
-                    break;
+                    return "None.";
                 case ContactType.Unknown:
-                    issueBuilder.AppendLine("No information was provided.");
-                    break;
+                    return "No information was provided.";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(contactEntry.Type), contactEntry.Type, "Contact type is not implemented.");
             }
-
-            issueBuilder.AppendLine();
         }
 
         private static void WriteMoreInformation(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage, StringBuilder issueBuilder)

@@ -11,7 +11,7 @@ namespace AzureDeprecation.Contracts.Messages.v1
         public Impact Impact { get; set; }
         public DraftNotice Notice { get; set; }
         public RequiredAction RequiredAction { get; set; }
-        public Contact Contact { get; set; }
+        public List<ContactEntry> Contact { get; set; }
         public string AdditionalInformation { get; set; }
 
         public DateTimeOffset GetDueDate()
