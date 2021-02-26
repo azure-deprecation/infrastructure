@@ -25,6 +25,8 @@ namespace AzureDeprecation.Notices.Management
                     return "services:app-config";
                 case AzureService.ApplicationGateway:
                     return "services:app-gateway";
+                case AzureService.ApplicationInsights:
+                    return "services:app-insights";
                 case AzureService.AppService:
                     return "services:app-services";
                 case AzureService.Arc:
@@ -295,6 +297,27 @@ namespace AzureDeprecation.Notices.Management
                     return "impact:no-alternative";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(impactType), impactType, null);
+            }
+        }
+
+        public static string GetForCloud(AzureCloud cloud)
+        {
+            switch (cloud)
+            {
+                case AzureCloud.Unknown:
+                    return "cloud:unknown";
+                case AzureCloud.Public:
+                    return "cloud:public";
+                case AzureCloud.Sovereign:
+                    return "cloud:sovereign";
+                case AzureCloud.China:
+                    return "cloud:china";
+                case AzureCloud.Government:
+                    return "cloud:government";
+                case AzureCloud.German:
+                    return "cloud:german";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(cloud), cloud, null);
             }
         }
     }

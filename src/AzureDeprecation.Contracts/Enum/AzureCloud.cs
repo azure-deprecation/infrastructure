@@ -4,6 +4,9 @@
     {
         Unknown,
         Public,
-        Sovereign
+        Sovereign,
+        China,
+        Government,
+        German
     }
 }

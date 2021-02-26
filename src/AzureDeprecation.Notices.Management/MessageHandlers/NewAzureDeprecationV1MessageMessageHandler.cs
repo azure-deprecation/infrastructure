@@ -93,6 +93,8 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
             labels.Add(areaLabel);
             var typeLabel = LabelFactory.GetForImpactType(newNoticeV1MessageQueueMessage.Impact.Type);
             labels.Add(typeLabel);
+            var cloudLabel = LabelFactory.GetForCloud(newNoticeV1MessageQueueMessage.Impact.Cloud);
+            labels.Add(cloudLabel);
 
             return labels;
         }

@@ -11,6 +11,7 @@ namespace AzureDeprecation.Contracts.Enum
         ApiManagement,
         AppConfiguration,
         ApplicationGateway,
+        ApplicationInsights,
         AppService,
         Arc,
         Automation,
