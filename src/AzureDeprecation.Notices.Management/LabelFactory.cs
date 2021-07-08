@@ -59,6 +59,8 @@ namespace AzureDeprecation.Notices.Management
                     return "services:cognitive-search";
                 case AzureService.CognitiveServices:
                     return "services:cognitive-services";
+                case AzureService.CommunicationServices:
+                    return "services:communication-services";
                 case AzureService.ContainerInstances:
                     return "services:container-instances";
                 case AzureService.ContainerRegistry:

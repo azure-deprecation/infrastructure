@@ -28,6 +28,7 @@ namespace AzureDeprecation.Contracts.Enum
         CloudServices,
         CognitiveSearch,
         CognitiveServices,
+        CommunicationServices,
         ContainerInstances,
         ContainerRegistry,
         CosmosDb,
