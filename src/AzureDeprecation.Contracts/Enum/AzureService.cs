@@ -108,6 +108,7 @@ namespace AzureDeprecation.Contracts.Enum
         Storage,
         StoreSimple,
         StreamAnalytics,
+        SynapseAnalytics,
         TimeSeriesInsights,
         TrafficManager,
         VideoIndexer,

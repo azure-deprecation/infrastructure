@@ -207,6 +207,8 @@ namespace AzureDeprecation.Notices.Management
                     return "services:storage";
                 case AzureService.StreamAnalytics:
                     return "services:stream-analytics";
+                case AzureService.SynapseAnalytics:
+                    return "services:synapse";
                 case AzureService.TimeSeriesInsights:
                     return "services:time-series-insights";
                 case AzureService.TrafficManager:
