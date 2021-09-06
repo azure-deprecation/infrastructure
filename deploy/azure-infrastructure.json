@@ -221,30 +221,6 @@
             ]
         },
         {
-            "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
-            "apiVersion": "2021-06-01-preview",
-            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/event-grid-notifications')]",
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "maxDeliveryCount": 3
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('ServiceBus.Namespace.Name'), 'new-deprecation-notices')]"
-            ]
-        },
-        {
-            "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
-            "apiVersion": "2021-06-01-preview",
-            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/new-notice-tweet')]",
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "maxDeliveryCount": 3
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('ServiceBus.Namespace.Name'), 'new-deprecation-notices')]"
-            ]
-        },
-        {
             "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
             "apiVersion": "2021-06-01-preview",
             "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/archive/$Default')]",
@@ -262,6 +238,18 @@
             ]
         },
         {
+            "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+            "apiVersion": "2021-06-01-preview",
+            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/event-grid-notifications')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "maxDeliveryCount": 3
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('ServiceBus.Namespace.Name'), 'new-deprecation-notices')]"
+            ]
+        },
+        {
             "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
             "apiVersion": "2021-06-01-preview",
             "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/event-grid-notifications/$Default')]",
@@ -275,7 +263,19 @@
                 }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('ServiceBus.Namespace.Name'), 'new-deprecation-notices', 'event-grid-notifications')]",
+                "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('ServiceBus.Namespace.Name'), 'new-deprecation-notices', 'event-grid-notifications')]"
+            ]
+        },
+        {
+            "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+            "apiVersion": "2021-06-01-preview",
+            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/new-notice-tweet')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "maxDeliveryCount": 3
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('ServiceBus.Namespace.Name'), 'new-deprecation-notices')]"
             ]
         },
         {
@@ -293,6 +293,35 @@
             },
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('ServiceBus.Namespace.Name'), 'new-deprecation-notices', 'new-notice-tweet')]"
+            ]
+        },
+        {
+            "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+            "apiVersion": "2021-06-01-preview",
+            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/persist-new-notice')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "maxDeliveryCount": 3
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('ServiceBus.Namespace.Name'), 'new-deprecation-notices')]"
+            ]
+        },
+        {
+            "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+            "apiVersion": "2021-06-01-preview",
+            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/persist-new-notice/$Default')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "action": {},
+                "filterType": "SqlFilter",
+                "sqlFilter": {
+                    "sqlExpression": "1=1",
+                    "compatibilityLevel": 20
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('ServiceBus.Namespace.Name'), 'new-deprecation-notices', 'persist-new-notice')]"
             ]
         }
     ]
