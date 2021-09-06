@@ -1,0 +1,27 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "ApplicationInsights.Name": {
+        "value": "azure-deprecation-notices-telemetry"
+      },
+      "CosmosDb.Account.Name": {
+        "value": "azure-deprecation-notices"
+      },
+      "CosmosDb.Database.Name": {
+        "value": "deprecation-db"
+      },
+      "CosmosDb.Collection.Name": {
+        "value": "deprecations"
+      },
+      "EventGrid.Topic.Name": {
+        "value": "azure-deprecation-notices"
+      },
+      "LogAnalytics.Name": {
+        "value": "azure-deprecation-notices-logs"
+      },
+      "ServiceBus.Namespace.Name": {
+        "value": "azure-deprecation-notices"
+      }
+    }
+  }

@@ -1,0 +1,33 @@
+name: CI
+on:
+  pull_request:
+    paths:
+    - '.github/workflows/ci.yml'
+    - 'deploy/**'
+    - 'src/**'
+  
+jobs:
+  azure:
+    name: Azure
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Authenticate to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Lint ARM template (Azure Infrastructure)
+      uses: azure/arm-deploy@v1
+      with:
+        deploymentMode: Validate
+        resourceGroupName: azure-deprecation-notices
+        template: ./deploy/azure-infrastructure.json
+        parameters: ./deploy/azure-infrastructure.parameters.ci.json
+
+  solution:
+    name: Runtime (Solution)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build Solution
+      run: dotnet build src/AzureDeprecation.sln --configuration Release
