@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "Connections.CosmosDb.ExternalId": {
+        "value": "/subscriptions/63c590b6-4947-4898-92a3-cae91a31b5e4/resourceGroups/azure-deprecation-notices/providers/Microsoft.Web/connections/documentdb"
+      },
+      "Connections.ServiceBus.ExternalId": {
+        "value": "/subscriptions/63c590b6-4947-4898-92a3-cae91a31b5e4/resourceGroups/azure-deprecation-notices/providers/Microsoft.Web/connections/servicebus"
+      },
+      "Workflow.Name": {
+        "value": "azure-deprecation-notices-persist-new-notice"
+      }
+    }
+  }

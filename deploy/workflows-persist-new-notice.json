@@ -1,0 +1,114 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Workflow.Name": {
+            "type": "String"
+        },
+        "Connections.CosmosDb.ExternalId": {
+            "type": "String"
+        },
+        "Connections.ServiceBus.ExternalId": {
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[parameters('Workflow.Name')]",
+            "location": "westeurope",
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        }
+                    },
+                    "triggers": {
+                        "When_a_deprecation_notice_is_published_(peek-lock)": {
+                            "recurrence": {
+                                "frequency": "Hour",
+                                "interval": 1
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['servicebus']['connectionId']"
+                                    }
+                                },
+                                "method": "get",
+                                "path": "/@{encodeURIComponent(encodeURIComponent('new-deprecation-notices'))}/subscriptions/@{encodeURIComponent('persist-new-notice')}/messages/head/peek",
+                                "queries": {
+                                    "sessionId": "None",
+                                    "subscriptionType": "Main"
+                                }
+                            }
+                        }
+                    },
+                    "actions": {
+                        "Complete_the_message": {
+                            "runAfter": {
+                                "Create_or_update_new_deprecation_document": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['servicebus']['connectionId']"
+                                    }
+                                },
+                                "method": "delete",
+                                "path": "/@{encodeURIComponent(encodeURIComponent('new-deprecation-notices'))}/subscriptions/@{encodeURIComponent('persist-new-notice')}/messages/complete",
+                                "queries": {
+                                    "lockToken": "@triggerBody()?['LockToken']",
+                                    "sessionId": "",
+                                    "subscriptionType": "Main"
+                                }
+                            }
+                        },
+                        "Create_or_update_new_deprecation_document": {
+                            "runAfter": {},
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": "@addProperty(json(decodeBase64(triggerBody()?['ContentData'])), 'id', guid())",
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['documentdb']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v2/cosmosdb/@{encodeURIComponent('AccountNameFromSettings')}/dbs/@{encodeURIComponent('deprecation-db')}/colls/@{encodeURIComponent('deprecations')}/docs"
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "documentdb": {
+                                "connectionId": "[parameters('Connections.CosmosDb.ExternalId')]",
+                                "connectionName": "documentdb",
+                                "id": "/subscriptions/63c590b6-4947-4898-92a3-cae91a31b5e4/providers/Microsoft.Web/locations/westeurope/managedApis/documentdb"
+                            },
+                            "servicebus": {
+                                "connectionId": "[parameters('Connections.ServiceBus.ExternalId')]",
+                                "connectionName": "servicebus",
+                                "id": "/subscriptions/63c590b6-4947-4898-92a3-cae91a31b5e4/providers/Microsoft.Web/locations/westeurope/managedApis/servicebus"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
