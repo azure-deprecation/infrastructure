@@ -10,13 +10,8 @@ on:
 env:
   ARTIFACT_NAME: azure-infrastructure
   OUTPUT_PATH: ${{ github.workspace }}/.output
-  ApplicationInsights.Name: azure-deprecation-notices-telemetry${{ env.ENVIRONMENT_RESOURCE_SUFFIX }}
-  CosmosDb.Account.Name: azure-deprecation-notices${{ env.ENVIRONMENT_RESOURCE_SUFFIX }}
   CosmosDb.Database.Name: deprecation-db
   CosmosDb.Collection.Name: deprecations
-  EventGrid.Topic.Name: azure-deprecation-notices${{ env.ENVIRONMENT_RESOURCE_SUFFIX }}
-  LogAnalytics.Name: azure-deprecation-notices-logs${{ env.ENVIRONMENT_RESOURCE_SUFFIX }}
-  ServiceBus.Namespace.Name: azure-deprecation-notices${{ env.ENVIRONMENT_RESOURCE_SUFFIX }}
 
 jobs:
   deploy_to_staging:
@@ -24,6 +19,11 @@ jobs:
       env:
         AZURE_RESOURCEGROUP_NAME: "azure-deprecation-notices-staging"
         ENVIRONMENT_RESOURCE_SUFFIX: "-staging"
+        ApplicationInsights.Name: azure-deprecation-notices-telemetry-staging
+        CosmosDb.Account.Name: azure-deprecation-notices-staging
+        EventGrid.Topic.Name: azure-deprecation-notices-staging
+        LogAnalytics.Name: azure-deprecation-notices-logs-staging
+        ServiceBus.Namespace.Name: azure-deprecation-notices-staging
       environment:
         name: azure-infrastructure-staging
       runs-on: ubuntu-latest
