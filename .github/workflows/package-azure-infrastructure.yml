@@ -25,5 +25,5 @@ jobs:
       with:
           name: ${{ env.ARTIFACT_NAME }}
           path: |
-            ${{ github.workspace }}/deploy/azure-infrastructure.json
-            ${{ github.workspace }}/deploy/azure-infrastructure.parameters.json
+            deploy/azure-infrastructure.json
+            deploy/azure-infrastructure.parameters.json
