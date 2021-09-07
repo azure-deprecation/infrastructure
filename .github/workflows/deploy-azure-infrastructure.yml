@@ -30,8 +30,10 @@ jobs:
       steps:
           # Download artifact
       - name: Download Artifact
-        uses: actions/download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2
         with:
+            workflow: package-azure-infrastructure.yml
+            workflow_conclusion: success
             name: ${{ env.ARTIFACT_NAME }}
 
           # Login to Azure
