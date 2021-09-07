@@ -9,7 +9,6 @@ on:
     
 env:
   ARTIFACT_NAME: azure-infrastructure
-  OUTPUT_PATH: ${{ github.workspace }}/.output
   CosmosDb_Database_Name: deprecation-db
   CosmosDb_Collection_Name: deprecations
 
@@ -47,13 +46,13 @@ jobs:
         with:
           files: 'azure-infrastructure.parameters.json'
         env:
-          ApplicationInsights.Name: ${{ env.ApplicationInsights_Name }}
-          CosmosDb.Account.Name: ${{ env.CosmosDb_Account_Name }}
-          CosmosDb.Database.Name: ${{ env.CosmosDb_Database_Name }}
-          CosmosDb.Collection.Name: ${{ env.CosmosDb_Collection_Name }}
-          EventGrid.Topic.Name: ${{ env.EventGrid_Topic_Name }}
-          LogAnalytics.Name: ${{ env.LogAnalytics_Name }}
-          ServiceBus.Namespace.Name: ${{ env.ServiceBus_Namespace_Name }}
+          ApplicationInsights_Name: ${{ env.ApplicationInsights_Name }}
+          CosmosDb_Account_Name: ${{ env.CosmosDb_Account_Name }}
+          CosmosDb_Database_Name: ${{ env.CosmosDb_Database_Name }}
+          CosmosDb_Collection_Name: ${{ env.CosmosDb_Collection_Name }}
+          EventGrid_Topic_Name: ${{ env.EventGrid_Topic_Name }}
+          LogAnalytics_Name: ${{ env.LogAnalytics_Name }}
+          ServiceBus_Namespace_Name: ${{ env.ServiceBus_Namespace_Name }}
 
         # Deploy ARM template
       - name: Run ARM deploy
@@ -97,13 +96,13 @@ jobs:
         with:
           files: 'azure-infrastructure.parameters.json'
         env:
-          ApplicationInsights.Name: ${{ env.ApplicationInsights_Name }}
-          CosmosDb.Account.Name: ${{ env.CosmosDb_Account_Name }}
-          CosmosDb.Database.Name: ${{ env.CosmosDb_Database_Name }}
-          CosmosDb.Collection.Name: ${{ env.CosmosDb_Collection_Name }}
-          EventGrid.Topic.Name: ${{ env.EventGrid_Topic_Name }}
-          LogAnalytics.Name: ${{ env.LogAnalytics_Name }}
-          ServiceBus.Namespace.Name: ${{ env.ServiceBus_Namespace_Name }}
+          ApplicationInsights_Name: ${{ env.ApplicationInsights_Name }}
+          CosmosDb_Account_Name: ${{ env.CosmosDb_Account_Name }}
+          CosmosDb_Database_Name: ${{ env.CosmosDb_Database_Name }}
+          CosmosDb_Collection_Name: ${{ env.CosmosDb_Collection_Name }}
+          EventGrid_Topic_Name: ${{ env.EventGrid_Topic_Name }}
+          LogAnalytics_Name: ${{ env.LogAnalytics_Name }}
+          ServiceBus_Namespace_Name: ${{ env.ServiceBus_Namespace_Name }}
 
         # Deploy ARM template
       - name: Run ARM deploy

@@ -3,25 +3,25 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
       "ApplicationInsights.Name": {
-        "value": "#{ApplicationInsights.Name}#"
+        "value": "#{ApplicationInsights_Name}#"
       },
       "CosmosDb.Account.Name": {
-        "value": "#{CosmosDb.Account.Name}#"
+        "value": "#{CosmosDb_Account_Name}#"
       },
       "CosmosDb.Database.Name": {
-        "value": "#{CosmosDb.Database.Name}#"
+        "value": "#{CosmosDb_Database_Name}#"
       },
       "CosmosDb.Collection.Name": {
-        "value": "#{CosmosDb.Collection.Name}#"
+        "value": "#{CosmosDb_Collection_Name}#"
       },
       "EventGrid.Topic.Name": {
-        "value": "#{EventGrid.Topic.Name}#"
+        "value": "#{EventGrid_Topic_Name}#"
       },
       "LogAnalytics.Name": {
-        "value": "#{LogAnalytics.Name}#"
+        "value": "#{LogAnalytics_Name}#"
       },
       "ServiceBus.Namespace.Name": {
-        "value": "#{ServiceBus.Namespace.Name}#"
+        "value": "#{ServiceBus_Namespace_Name}#"
       }
     }
   }
