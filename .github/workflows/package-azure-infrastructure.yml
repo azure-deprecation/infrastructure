@@ -19,7 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: List Deploy folder
-      run:  ls .\deploy\
+      run:  ls deploy
     - name: Publish Azure Function Artifact
       uses: actions/upload-artifact@v1
       with:
