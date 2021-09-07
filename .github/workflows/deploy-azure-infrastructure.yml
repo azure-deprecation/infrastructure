@@ -42,7 +42,7 @@ jobs:
       - run: cat azure-infrastructure.parameters.json
 
           # Replace tokens in ARM template
-      - uses: cschleiden/replace-tokens@v1
+      - uses: cschleiden/replace-tokens@v1.1
         with:
           files: '[azure-infrastructure.parameters.json]'
         env:
@@ -55,17 +55,17 @@ jobs:
           ServiceBus_Namespace_Name: ${{ env.ServiceBus_Namespace_Name }}
 
           # Replace tokens in ARM template
-      - uses: microsoft/variable-substitution@v1
-        with:
-          files: 'azure-infrastructure.parameters.json'
-        env:
-          ApplicationInsights_Name: ${{ env.ApplicationInsights_Name }}
-          CosmosDb_Account_Name: ${{ env.CosmosDb_Account_Name }}
-          CosmosDb_Database_Name: ${{ env.CosmosDb_Database_Name }}
-          CosmosDb_Collection_Name: ${{ env.CosmosDb_Collection_Name }}
-          EventGrid_Topic_Name: ${{ env.EventGrid_Topic_Name }}
-          LogAnalytics_Name: ${{ env.LogAnalytics_Name }}
-          ServiceBus_Namespace_Name: ${{ env.ServiceBus_Namespace_Name }}
+      # - uses: microsoft/variable-substitution@v1
+      #   with:
+      #     files: 'azure-infrastructure.parameters.json'
+      #   env:
+      #     ApplicationInsights_Name: ${{ env.ApplicationInsights_Name }}
+      #     CosmosDb_Account_Name: ${{ env.CosmosDb_Account_Name }}
+      #     CosmosDb_Database_Name: ${{ env.CosmosDb_Database_Name }}
+      #     CosmosDb_Collection_Name: ${{ env.CosmosDb_Collection_Name }}
+      #     EventGrid_Topic_Name: ${{ env.EventGrid_Topic_Name }}
+      #     LogAnalytics_Name: ${{ env.LogAnalytics_Name }}
+      #     ServiceBus_Namespace_Name: ${{ env.ServiceBus_Namespace_Name }}
 
         # Deploy ARM template
       - name: Run ARM deploy
@@ -75,6 +75,7 @@ jobs:
           resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
           template: azure-infrastructure.json
           parameters: azure-infrastructure.parameters.json
+
   deploy_to_production:
       name: Deploy to Production environment
       needs: [deploy_to_staging]
