@@ -18,22 +18,13 @@ jobs:
     environment: production
     steps:
     - uses: actions/checkout@v2
-    - name: List Deploy folder
-      run:  ls deploy
-    - name: Publish Azure Function Artifact
+    - name: Publish ARM template to Artifact
       uses: actions/upload-artifact@v1
       with:
           name: ${{ env.ARTIFACT_NAME }}
           path: deploy/azure-infrastructure.json
-    - name: Publish ARM template to Artifact
+    - name: Publish ARM template parameters to Artifact
       uses: actions/upload-artifact@v1
       with:
           name: ${{ env.ARTIFACT_NAME }}
           path: deploy/azure-infrastructure.parameters.json
-    - name: Publish ARM template to Artifact
-      uses: actions/upload-artifact@v1
-      with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: |
-            deploy/azure-infrastructure.json
-            deploy/azure-infrastructure.parameters.json
