@@ -18,7 +18,8 @@ jobs:
     environment: production
     steps:
     - uses: actions/checkout@v2
-    - script: ls -al
+    - name: List Directories
+      run: ls -al
     - name: Publish Azure Function Artifact
       uses: actions/upload-artifact@v1
       with:
