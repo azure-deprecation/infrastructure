@@ -39,6 +39,8 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS_STAGING }}
 
+      - run: cat azure-infrastructure.parameters.json
+
           # Replace tokens in ARM template
       - uses: cschleiden/replace-tokens@v1
         with:
