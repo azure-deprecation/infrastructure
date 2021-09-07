@@ -1,8 +1,8 @@
-name: Deploy Azure Infrastructure
+name: Azure Infrastructure (Deploy)
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["Package Azure Infrastructure"]
+    workflows: ["Azure Infrastructure (Package)"]
     branches: [main]
     types: 
       - completed

@@ -1,4 +1,4 @@
-name: Package Azure Infrastructure
+name: Azure Infrastructure (Package)
 on:
   workflow_dispatch:
   push:
