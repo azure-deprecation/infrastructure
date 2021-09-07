@@ -30,10 +30,9 @@ jobs:
       steps:
           # Download artifact
       - name: Download Artifact
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v2
         with:
             name: ${{ env.ARTIFACT_NAME }}
-            path: ${{ env.OUTPUT_PATH }}
 
           # Login to Azure
       - uses: azure/login@v1
