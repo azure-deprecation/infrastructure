@@ -20,7 +20,7 @@
     },
     "variables": {
         "Connections.CosmosDb.Id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/documentdb')]",
-        "Connections.ServiceBus.Id": "[concat(subscription().id, '/providers/Microsoft.Web/locations', resourceGroup().location, 'managedApis/servicebus')]"
+        "Connections.ServiceBus.Id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/servicebus')]"
     },
     "resources": [
         {
