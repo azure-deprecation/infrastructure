@@ -1,0 +1,28 @@
+name: Package Azure Infrastructure
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+    - 'deploy/azure-infrastructure.json'
+    - '.github/workflows/package-azure-infrastructure.yml'
+    
+env:
+  ARTIFACT_NAME: azure-infrastructure
+
+jobs:
+  package:
+    name: Package Azure Infrastructure
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Publish Azure Function Artifact
+      uses: actions/upload-artifact@v1
+      with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: |
+            ./deploy/azure-infrastructure.json
+            ./deploy/azure-infrastructure.parameters.json
