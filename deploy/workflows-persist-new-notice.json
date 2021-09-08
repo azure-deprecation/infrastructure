@@ -154,8 +154,8 @@
                 }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Web/locations', parameters('Connections.CosmosDb.Name'))]",
-                "[resourceId('Microsoft.Web/locations', parameters('Connections.ServiceBus.Name'))]"
+                "[resourceId('Microsoft.Web/connections', parameters('Connections.CosmosDb.Name'))]",
+                "[resourceId('Microsoft.Web/connections', parameters('Connections.ServiceBus.Name'))]"
             ]
         }
     ]
