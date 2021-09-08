@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "Connections.CosmosDb.Name": {
+      "value": "azure-deprecation-notices-connections-cosmos-db-staging"
+    },
+    "Connections.ServiceBus.Name": {
+      "value": "azure-deprecation-notices-connections-service-bus-staging"
+    },
+    "CosmosDb.Account.Name": {
+      "value": "azure-deprecation-notices-staging"
+    },
+    "ServiceBus.Namespace.Name": {
+      "value": "azure-deprecation-notices-staging"
+    },
+    "Workflow.Name": {
+      "value": "azure-deprecation-notices-persist-new-notice-staging"
+    }
+  }
+}

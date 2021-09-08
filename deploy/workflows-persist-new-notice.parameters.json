@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "Connections.CosmosDb.Name": {
+      "value": "#{Connections.CosmosDb.Name}#"
+    },
+    "Connections.ServiceBus.Name": {
+      "value": "#{Connections.ServiceBus.Name}#"
+    },
+    "CosmosDb.Account.Name": {
+      "value": "#{CosmosDb.Account.Name}#"
+    },
+    "ServiceBus.Namespace.Name": {
+      "value": "#{ServiceBus.Namespace.Name}#"
+    },
+    "Workflow.Name": {
+      "value": "#{Workflow.Name}#"
+    }
+  }
+}
