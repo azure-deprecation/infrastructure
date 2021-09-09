@@ -22,6 +22,9 @@
       },
       "ServiceBus.Namespace.Name": {
         "value": "azure-deprecation-notices-staging"
+      },
+      "StorageAccount.Name": {
+        "value": "azuredeprecationstaging"
       }
     }
   }

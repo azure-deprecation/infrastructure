@@ -22,10 +22,25 @@
         },
         "ServiceBus.Namespace.Name": {
             "type": "String"
+        },
+        "StorageAccount.Name": {
+            "type": "String"
         }
     },
     "variables": {},
     "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-04-01",
+            "name": "[parameters('StorageAccount.Name')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "kind": "Storage",
+            "properties": {}
+        },
         {
             "type": "Microsoft.EventGrid/topics",
             "apiVersion": "2021-06-01-preview",
@@ -165,7 +180,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', parameters('ServiceBus.Namespace.Name'))]"
             ],
-            "properties": { }
+            "properties": {}
         },
         {
             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
