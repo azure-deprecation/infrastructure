@@ -27,48 +27,6 @@
     "variables": {},
     "resources": [
         {
-            "type": "Microsoft.DocumentDB/databaseAccounts",
-            "apiVersion": "2021-06-15",
-            "name": "[parameters('CosmosDb.Account.Name')]",
-            "location": "[resourceGroup().location]",
-            "tags": {
-            },
-            "kind": "GlobalDocumentDB",
-            "identity": {
-                "type": "None"
-            },
-            "properties": {
-                "publicNetworkAccess": "Enabled",
-                "consistencyPolicy": {
-                    "defaultConsistencyLevel": "Session",
-                    "maxIntervalInSeconds": 5,
-                    "maxStalenessPrefix": 100
-                },
-                "locations": [
-                    {
-                        "locationName": "West Europe",
-                        "failoverPriority": 0,
-                        "isZoneRedundant": true
-                    }
-                ],
-                "cors": [],
-                "capabilities": [
-                    {
-                        "name": "EnableServerless"
-                    }
-                ],
-                "ipRules": [],
-                "backupPolicy": {
-                    "type": "Periodic",
-                    "periodicModeProperties": {
-                        "backupIntervalInMinutes": 240,
-                        "backupRetentionIntervalInHours": 8
-                    }
-                },
-                "networkAclBypassResourceIds": []
-            }
-        },
-        {
             "type": "Microsoft.EventGrid/topics",
             "apiVersion": "2021-06-01-preview",
             "name": "[parameters('EventGrid.Topic.Name')]",
@@ -104,15 +62,46 @@
             }
         },
         {
-            "type": "Microsoft.ServiceBus/namespaces",
-            "apiVersion": "2021-06-01-preview",
-            "name": "[parameters('ServiceBus.Namespace.Name')]",
+            "type": "Microsoft.DocumentDB/databaseAccounts",
+            "apiVersion": "2021-06-15",
+            "name": "[parameters('CosmosDb.Account.Name')]",
             "location": "[resourceGroup().location]",
-            "sku": {
-                "name": "Standard",
-                "tier": "Standard"
+            "tags": {
+            },
+            "kind": "GlobalDocumentDB",
+            "identity": {
+                "type": "None"
             },
             "properties": {
+                "databaseAccountOfferType": "Standard",
+                "publicNetworkAccess": "Enabled",
+                "consistencyPolicy": {
+                    "defaultConsistencyLevel": "Session",
+                    "maxIntervalInSeconds": 5,
+                    "maxStalenessPrefix": 100
+                },
+                "locations": [
+                    {
+                        "locationName": "West Europe",
+                        "failoverPriority": 0,
+                        "isZoneRedundant": true
+                    }
+                ],
+                "cors": [],
+                "capabilities": [
+                    {
+                        "name": "EnableServerless"
+                    }
+                ],
+                "ipRules": [],
+                "backupPolicy": {
+                    "type": "Periodic",
+                    "periodicModeProperties": {
+                        "backupIntervalInMinutes": 240,
+                        "backupRetentionIntervalInHours": 8
+                    }
+                },
+                "networkAclBypassResourceIds": []
             }
         },
         {
@@ -143,6 +132,18 @@
             "dependsOn": [
                 "[resourceId('microsoft.operationalinsights/workspaces', parameters('LogAnalytics.Name'))]"
             ]
+        },
+        {
+            "type": "Microsoft.ServiceBus/namespaces",
+            "apiVersion": "2021-06-01-preview",
+            "name": "[parameters('ServiceBus.Namespace.Name')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard",
+                "tier": "Standard"
+            },
+            "properties": {
+            }
         },
         {
             "type": "Microsoft.ServiceBus/namespaces/queues",
