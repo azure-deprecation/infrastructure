@@ -1,4 +1,4 @@
-name: Package Azure Infrastructure
+name: Azure Infrastructure (Package)
 on:
   workflow_dispatch:
   push:
@@ -18,11 +18,13 @@ jobs:
     environment: production
     steps:
     - uses: actions/checkout@v2
-
-    - name: Publish Azure Function Artifact
+    - name: Publish ARM template to Artifact
       uses: actions/upload-artifact@v1
       with:
           name: ${{ env.ARTIFACT_NAME }}
-          path: |
-            ./deploy/azure-infrastructure.json
-            ./deploy/azure-infrastructure.parameters.json
+          path: deploy/azure-infrastructure.json
+    - name: Publish ARM template parameters to Artifact
+      uses: actions/upload-artifact@v1
+      with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: deploy/azure-infrastructure.parameters.json

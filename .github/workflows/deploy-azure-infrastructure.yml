@@ -1,8 +1,8 @@
-name: Deploy Azure Infrastructure
+name: Azure Infrastructure (Deploy)
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["Package Azure Infrastructure"]
+    workflows: ["Azure Infrastructure (Package)"]
     branches: [main]
     types: 
       - completed
@@ -10,48 +10,50 @@ on:
 env:
   ARTIFACT_NAME: azure-infrastructure
   OUTPUT_PATH: ${{ github.workspace }}/.output
-  ApplicationInsights.Name: azure-deprecation-notices-telemetry${{ env.ENVIRONMENT_RESOURCE_SUFFIX }}
-  CosmosDb.Account.Name: azure-deprecation-notices${{ env.ENVIRONMENT_RESOURCE_SUFFIX }}
-  CosmosDb.Database.Name: deprecation-db
-  CosmosDb.Collection.Name: deprecations
-  EventGrid.Topic.Name: azure-deprecation-notices${{ env.ENVIRONMENT_RESOURCE_SUFFIX }}
-  LogAnalytics.Name: azure-deprecation-notices-logs${{ env.ENVIRONMENT_RESOURCE_SUFFIX }}
-  ServiceBus.Namespace.Name: azure-deprecation-notices${{ env.ENVIRONMENT_RESOURCE_SUFFIX }}
+  CosmosDb_Database_Name: deprecation-db
+  CosmosDb_Collection_Name: deprecations
 
 jobs:
   deploy_to_staging:
       name: Deploy to Staging environment
       env:
         AZURE_RESOURCEGROUP_NAME: "azure-deprecation-notices-staging"
-        ENVIRONMENT_RESOURCE_SUFFIX: "-staging"
+        ApplicationInsights_Name: azure-deprecation-notices-telemetry-staging
+        CosmosDb_Account_Name: azure-deprecation-notices-staging
+        EventGrid_Topic_Name: azure-deprecation-notices-staging
+        LogAnalytics_Name: azure-deprecation-notices-logs-staging
+        ServiceBus_Namespace_Name: azure-deprecation-notices-staging
       environment:
         name: azure-infrastructure-staging
       runs-on: ubuntu-latest
       steps:
           # Download artifact
       - name: Download Artifact
-        uses: actions/download-artifact@v1
+        uses: dawidd6/action-download-artifact@v2
         with:
+            workflow: package-azure-infrastructure.yml
+            workflow_conclusion: success
             name: ${{ env.ARTIFACT_NAME }}
-            path: ${{ env.OUTPUT_PATH }}
 
           # Login to Azure
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS_STAGING }}
+          
+      - run: ls -R
 
           # Replace tokens in ARM template
-      - uses: microsoft/variable-substitution@v1 
+      - uses: microsoft/variable-substitution@v1
         with:
-          files: '${{ env.OUTPUT_PATH }}/azure-infrastructure.parameters.json'
+          files: 'azure-infrastructure.parameters.json'
         env:
-          ApplicationInsights.Name: ${{ env.AZURE_RESOURCEGROUP_NAME }}
-          CosmosDb.Account.Name: ${{ env.AZURE_RESOURCEGROUP_NAME }}
-          CosmosDb.Database.Name: ${{ env.AZURE_RESOURCEGROUP_NAME }}
-          CosmosDb.Collection.Name: ${{ env.AZURE_RESOURCEGROUP_NAME }}
-          EventGrid.Topic.Name: ${{ env.AZURE_RESOURCEGROUP_NAME }}
-          LogAnalytics.Name: ${{ env.AZURE_RESOURCEGROUP_NAME }}
-          ServiceBus.Namespace.Name: ${{ env.AZURE_RESOURCEGROUP_NAME }}
+          ApplicationInsights.Name: ${{ env.ApplicationInsights_Name }}
+          CosmosDb.Account.Name: ${{ env.CosmosDb_Account_Name }}
+          CosmosDb.Database.Name: ${{ env.CosmosDb_Database_Name }}
+          CosmosDb.Collection.Name: ${{ env.CosmosDb_Collection_Name }}
+          EventGrid.Topic.Name: ${{ env.EventGrid_Topic_Name }}
+          LogAnalytics.Name: ${{ env.LogAnalytics_Name }}
+          ServiceBus.Namespace.Name: ${{ env.ServiceBus_Namespace_Name }}
 
         # Deploy ARM template
       - name: Run ARM deploy
@@ -59,5 +61,55 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
-          template: ${{ env.OUTPUT_PATH }}/azure-infrastructure.json
-          parameters: ${{ env.OUTPUT_PATH }}/azure-infrastructure.parameters.json
+          template: azure-infrastructure.json
+          parameters: azure-infrastructure.parameters.json
+  deploy_to_production:
+      name: Deploy to Production environment
+      needs: [deploy_to_staging]
+      env:
+        AZURE_RESOURCEGROUP_NAME: "azure-deprecation-notices"
+        ApplicationInsights_Name: azure-deprecation-notices-telemetry-staging
+        CosmosDb_Account_Name: azure-deprecation-notices-staging
+        EventGrid_Topic_Name: azure-deprecation-notices-staging
+        LogAnalytics_Name: azure-deprecation-notices-logs-staging
+        ServiceBus_Namespace_Name: azure-deprecation-notices-staging
+      environment:
+        name: azure-infrastructure-production
+      runs-on: ubuntu-latest
+      steps:
+          # Download artifact
+      - name: Download Artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+            workflow: package-azure-infrastructure.yml
+            workflow_conclusion: success
+            name: ${{ env.ARTIFACT_NAME }}
+
+          # Login to Azure
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS_PRODUCTION }}
+          
+      - run: ls -R
+
+          # Replace tokens in ARM template
+      - uses: microsoft/variable-substitution@v1
+        with:
+          files: 'azure-infrastructure.parameters.json'
+        env:
+          ApplicationInsights.Name: ${{ env.ApplicationInsights_Name }}
+          CosmosDb.Account.Name: ${{ env.CosmosDb_Account_Name }}
+          CosmosDb.Database.Name: ${{ env.CosmosDb_Database_Name }}
+          CosmosDb.Collection.Name: ${{ env.CosmosDb_Collection_Name }}
+          EventGrid.Topic.Name: ${{ env.EventGrid_Topic_Name }}
+          LogAnalytics.Name: ${{ env.LogAnalytics_Name }}
+          ServiceBus.Namespace.Name: ${{ env.ServiceBus_Namespace_Name }}
+
+        # Deploy ARM template
+      - name: Run ARM deploy
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
+          template: azure-infrastructure.json
+          parameters: azure-infrastructure.parameters.json
