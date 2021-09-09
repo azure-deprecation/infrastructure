@@ -23,7 +23,7 @@ jobs:
         resourceGroupName: azure-deprecation-notices
         template: ./deploy/azure-infrastructure.json
         parameters: ./deploy/azure-infrastructure.parameters.ci.json
-    - name: Lint ARM template (Persist New Notice Infrastructure)
+    - name: Lint ARM template (Notice Management)
       uses: azure/arm-deploy@v1
       with:
         deploymentMode: Validate
