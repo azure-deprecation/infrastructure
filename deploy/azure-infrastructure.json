@@ -223,7 +223,7 @@
         {
             "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
             "apiVersion": "2021-06-01-preview",
-            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/archive/$Default')]",
+            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/archive/unfiltered')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "action": {},
@@ -252,7 +252,7 @@
         {
             "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
             "apiVersion": "2021-06-01-preview",
-            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/event-grid-notifications/$Default')]",
+            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/event-grid-notifications/unfiltered')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "action": {},
@@ -281,7 +281,7 @@
         {
             "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
             "apiVersion": "2021-06-01-preview",
-            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/new-notice-tweet/$Default')]",
+            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/new-notice-tweet/unfiltered')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "action": {},
@@ -310,7 +310,7 @@
         {
             "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
             "apiVersion": "2021-06-01-preview",
-            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/persist-new-notice/$Default')]",
+            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/persist-new-notice/unfiltered')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "action": {},
