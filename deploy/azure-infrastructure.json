@@ -47,7 +47,6 @@
                 "locations": [
                     {
                         "locationName": "West Europe",
-                        "provisioningState": "Succeeded",
                         "failoverPriority": 0,
                         "isZoneRedundant": true
                     }
@@ -92,7 +91,6 @@
             "name": "[parameters('LogAnalytics.Name')]",
             "location": "[resourceGroup().location]",
             "properties": {
-                "provisioningState": "Succeeded",
                 "sku": {
                     "name": "pergb2018"
                 },
