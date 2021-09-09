@@ -28,8 +28,8 @@ jobs:
       with:
         deploymentMode: Validate
         resourceGroupName: azure-deprecation-notices
-        template: ./deploy/workflows-persist-new-notice.json
-        parameters: ./deploy/workflows-persist-new-notice.parameters.ci.json
+        template: ./deploy/notice-management.json
+        parameters: ./deploy/notice-management.parameters.ci.json
 
   solution:
     name: Runtime (Solution)

@@ -2,6 +2,9 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "ApplicationInsights.Name": {
+            "type": "String"
+        },
         "Connections.CosmosDb.Name": {
             "type": "String"
         },
@@ -11,7 +14,25 @@
         "CosmosDb.Account.Name": {
             "type": "String"
         },
+        "Function.App.Name": {
+            "type": "String"
+        },
+        "Function.Plan.Name": {
+            "type": "String"
+        },
+        "GitHub.Owner": {
+            "type": "String"
+        },
+        "GitHub.Repo.Name": {
+            "type": "String"
+        },
+        "GitHub.Token": {
+            "type": "securestring"
+        },
         "ServiceBus.Namespace.Name": {
+            "type": "String"
+        },
+        "StorageAccount.Name": {
             "type": "String"
         },
         "Workflow.Name": {
@@ -23,6 +44,71 @@
         "Connections.ServiceBus.Id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/servicebus')]"
     },
     "resources": [
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2021-01-15",
+            "name": "[parameters('Function.Plan.Name')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Y1",
+                "tier": "Dynamic",
+                "size": "Y1"
+            },
+            "kind": "functionapp",
+            "properties": {
+                "reserved": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2021-01-15",
+            "name": "[parameters('Function.App.Name')]",
+            "location": "[resourceGroup().location]",
+            "kind": "functionapp,linux",
+            "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('Function.Plan.Name'))]",
+                "reserved": true,
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(resourceId('microsoft.insights/components/', parameters('ApplicationInsights.Name')), '2015-05-01').InstrumentationKey]"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('StorageAccount.Name'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('StorageAccount.Name')), '2015-05-01-preview').key1)]"
+                        },
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~3"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "dotnet"
+                        },
+                        {
+                            "name": "GitHub_Owner",
+                            "value": "[parameters('GitHub.Owner')]"
+                        },
+                        {
+                            "name": "GitHub_RepoName",
+                            "value": "[parameters('GitHub.Repo.Name')]"
+                        },
+                        {
+                            "name": "GitHub_Token",
+                            "value": "[parameters('GitHub.Token')]"
+                        },
+                        {
+                            "name": "ServiceBus_ConnectionString",
+                            "value": "[listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', parameters('ServiceBus.Namespace.Name'), 'RootManageSharedAccessKey'), '2017-04-01').primaryConnectionString]"
+                        }
+                    ]
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('Function.Plan.Name'))]"
+            ]
+        },
         {
             "type": "Microsoft.Web/connections",
             "apiVersion": "2016-06-01",
