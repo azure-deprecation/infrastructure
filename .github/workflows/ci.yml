@@ -20,14 +20,14 @@ jobs:
       uses: azure/arm-deploy@v1
       with:
         deploymentMode: Validate
-        resourceGroupName: azure-deprecation-notices
+        resourceGroupName: azure-deprecation-notices-staging
         template: ./deploy/azure-infrastructure.json
         parameters: ./deploy/azure-infrastructure.parameters.ci.json
     - name: Lint ARM template (Notice Management)
       uses: azure/arm-deploy@v1
       with:
         deploymentMode: Validate
-        resourceGroupName: azure-deprecation-notices
+        resourceGroupName: azure-deprecation-notices-staging
         template: ./deploy/notice-management.json
         parameters: ./deploy/notice-management.parameters.ci.json
 
