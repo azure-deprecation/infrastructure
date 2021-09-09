@@ -27,49 +27,6 @@
     "variables": {},
     "resources": [
         {
-            "type": "Microsoft.DocumentDB/databaseAccounts",
-            "apiVersion": "2021-06-15",
-            "name": "[parameters('CosmosDb.Account.Name')]",
-            "location": "[resourceGroup().location]",
-            "tags": {
-            },
-            "kind": "GlobalDocumentDB",
-            "identity": {
-                "type": "None"
-            },
-            "properties": {
-                "publicNetworkAccess": "Enabled",
-                "consistencyPolicy": {
-                    "defaultConsistencyLevel": "Session",
-                    "maxIntervalInSeconds": 5,
-                    "maxStalenessPrefix": 100
-                },
-                "locations": [
-                    {
-                        "locationName": "West Europe",
-                        "provisioningState": "Succeeded",
-                        "failoverPriority": 0,
-                        "isZoneRedundant": true
-                    }
-                ],
-                "cors": [],
-                "capabilities": [
-                    {
-                        "name": "EnableServerless"
-                    }
-                ],
-                "ipRules": [],
-                "backupPolicy": {
-                    "type": "Periodic",
-                    "periodicModeProperties": {
-                        "backupIntervalInMinutes": 240,
-                        "backupRetentionIntervalInHours": 8
-                    }
-                },
-                "networkAclBypassResourceIds": []
-            }
-        },
-        {
             "type": "Microsoft.EventGrid/topics",
             "apiVersion": "2021-06-01-preview",
             "name": "[parameters('EventGrid.Topic.Name')]",
@@ -92,7 +49,6 @@
             "name": "[parameters('LogAnalytics.Name')]",
             "location": "[resourceGroup().location]",
             "properties": {
-                "provisioningState": "Succeeded",
                 "sku": {
                     "name": "pergb2018"
                 },
@@ -106,15 +62,46 @@
             }
         },
         {
-            "type": "Microsoft.ServiceBus/namespaces",
-            "apiVersion": "2021-06-01-preview",
-            "name": "[parameters('ServiceBus.Namespace.Name')]",
+            "type": "Microsoft.DocumentDB/databaseAccounts",
+            "apiVersion": "2021-06-15",
+            "name": "[parameters('CosmosDb.Account.Name')]",
             "location": "[resourceGroup().location]",
-            "sku": {
-                "name": "Standard",
-                "tier": "Standard"
+            "tags": {
+            },
+            "kind": "GlobalDocumentDB",
+            "identity": {
+                "type": "None"
             },
             "properties": {
+                "databaseAccountOfferType": "Standard",
+                "publicNetworkAccess": "Enabled",
+                "consistencyPolicy": {
+                    "defaultConsistencyLevel": "Session",
+                    "maxIntervalInSeconds": 5,
+                    "maxStalenessPrefix": 100
+                },
+                "locations": [
+                    {
+                        "locationName": "West Europe",
+                        "failoverPriority": 0,
+                        "isZoneRedundant": true
+                    }
+                ],
+                "cors": [],
+                "capabilities": [
+                    {
+                        "name": "EnableServerless"
+                    }
+                ],
+                "ipRules": [],
+                "backupPolicy": {
+                    "type": "Periodic",
+                    "periodicModeProperties": {
+                        "backupIntervalInMinutes": 240,
+                        "backupRetentionIntervalInHours": 8
+                    }
+                },
+                "networkAclBypassResourceIds": []
             }
         },
         {
@@ -145,6 +132,18 @@
             "dependsOn": [
                 "[resourceId('microsoft.operationalinsights/workspaces', parameters('LogAnalytics.Name'))]"
             ]
+        },
+        {
+            "type": "Microsoft.ServiceBus/namespaces",
+            "apiVersion": "2021-06-01-preview",
+            "name": "[parameters('ServiceBus.Namespace.Name')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard",
+                "tier": "Standard"
+            },
+            "properties": {
+            }
         },
         {
             "type": "Microsoft.ServiceBus/namespaces/queues",
@@ -223,7 +222,7 @@
         {
             "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
             "apiVersion": "2021-06-01-preview",
-            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/archive/$Default')]",
+            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/archive/unfiltered')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "action": {},
@@ -252,7 +251,7 @@
         {
             "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
             "apiVersion": "2021-06-01-preview",
-            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/event-grid-notifications/$Default')]",
+            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/event-grid-notifications/unfiltered')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "action": {},
@@ -281,7 +280,7 @@
         {
             "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
             "apiVersion": "2021-06-01-preview",
-            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/new-notice-tweet/$Default')]",
+            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/new-notice-tweet/unfiltered')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "action": {},
@@ -310,7 +309,7 @@
         {
             "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
             "apiVersion": "2021-06-01-preview",
-            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/persist-new-notice/$Default')]",
+            "name": "[concat(parameters('ServiceBus.Namespace.Name'), '/new-deprecation-notices/persist-new-notice/unfiltered')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "action": {},
