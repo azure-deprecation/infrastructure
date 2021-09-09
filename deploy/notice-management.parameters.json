@@ -1,0 +1,42 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "ApplicationInsights.Name": {
+      "value": "#{ApplicationInsights.Name}#"
+    },
+    "Connections.CosmosDb.Name": {
+      "value": "#{Connections.CosmosDb.Name}#"
+    },
+    "Connections.ServiceBus.Name": {
+      "value": "#{Connections.ServiceBus.Name}#"
+    },
+    "CosmosDb.Account.Name": {
+      "value": "#{CosmosDb.Account.Name}#"
+    },
+    "Function.App.Name": {
+      "value": "#{Function.App.Name}#"
+    },
+    "Function.Plan.Name": {
+      "value": "#{Function.Plan.Name}#"
+    },
+    "GitHub.Owner": {
+      "value": "#{GitHub.Owner}#"
+    },
+    "GitHub.Repo.Name": {
+      "value": "#{GitHub.Repo.Name}#"
+    },
+    "GitHub.Token": {
+      "value": "#{GitHub.Token}#"
+    },
+    "ServiceBus.Namespace.Name": {
+      "value": "#{ServiceBus.Namespace.Name}#"
+    },
+    "StorageAccount.Name": {
+      "value": "#{StorageAccount.Name}#"
+    },
+    "Workflow.Name": {
+      "value": "#{Workflow.Name}#"
+    }
+  }
+}

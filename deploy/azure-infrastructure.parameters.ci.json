@@ -3,10 +3,10 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
       "ApplicationInsights.Name": {
-        "value": "azure-deprecation-notices-telemetry"
+        "value": "azure-deprecation-notices-telemetry-staging"
       },
       "CosmosDb.Account.Name": {
-        "value": "azure-deprecation-notices"
+        "value": "azure-deprecation-notices-staging"
       },
       "CosmosDb.Database.Name": {
         "value": "deprecation-db"
@@ -15,13 +15,16 @@
         "value": "deprecations"
       },
       "EventGrid.Topic.Name": {
-        "value": "azure-deprecation-notices"
+        "value": "azure-deprecation-notices-staging"
       },
       "LogAnalytics.Name": {
-        "value": "azure-deprecation-notices-logs"
+        "value": "azure-deprecation-notices-logs-staging"
       },
       "ServiceBus.Namespace.Name": {
-        "value": "azure-deprecation-notices"
+        "value": "azure-deprecation-notices-staging"
+      },
+      "StorageAccount.Name": {
+        "value": "azuredeprecationstaging"
       }
     }
   }
