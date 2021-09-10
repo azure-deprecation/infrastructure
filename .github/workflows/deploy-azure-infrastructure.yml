@@ -17,11 +17,6 @@ jobs:
       name: Deploy to Staging environment
       env:
         AZURE_RESOURCEGROUP_NAME: "azure-deprecation-notices-staging"
-        ApplicationInsights_Name: azure-deprecation-notices-telemetry-staging
-        CosmosDb_Account_Name: azure-deprecation-notices-staging
-        EventGrid_Topic_Name: azure-deprecation-notices-staging
-        LogAnalytics_Name: azure-deprecation-notices-logs-staging
-        ServiceBus_Namespace_Name: azure-deprecation-notices-staging
       environment:
         name: azure-infrastructure-staging
       runs-on: ubuntu-latest
@@ -39,34 +34,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS_STAGING }}
 
-      - run: cat azure-infrastructure.parameters.json
-
-          # Replace tokens in ARM template
-      - uses: cschleiden/replace-tokens@v1.1
-        with:
-          files: '[azure-infrastructure.parameters.json]'
-        env:
-          ApplicationInsights_Name: ${{ env.ApplicationInsights_Name }}
-          CosmosDb_Account_Name: ${{ env.CosmosDb_Account_Name }}
-          CosmosDb_Database_Name: ${{ env.CosmosDb_Database_Name }}
-          CosmosDb_Collection_Name: ${{ env.CosmosDb_Collection_Name }}
-          EventGrid_Topic_Name: ${{ env.EventGrid_Topic_Name }}
-          LogAnalytics_Name: ${{ env.LogAnalytics_Name }}
-          ServiceBus_Namespace_Name: ${{ env.ServiceBus_Namespace_Name }}
-
-          # Replace tokens in ARM template
-      # - uses: microsoft/variable-substitution@v1
-      #   with:
-      #     files: 'azure-infrastructure.parameters.json'
-      #   env:
-      #     ApplicationInsights_Name: ${{ env.ApplicationInsights_Name }}
-      #     CosmosDb_Account_Name: ${{ env.CosmosDb_Account_Name }}
-      #     CosmosDb_Database_Name: ${{ env.CosmosDb_Database_Name }}
-      #     CosmosDb_Collection_Name: ${{ env.CosmosDb_Collection_Name }}
-      #     EventGrid_Topic_Name: ${{ env.EventGrid_Topic_Name }}
-      #     LogAnalytics_Name: ${{ env.LogAnalytics_Name }}
-      #     ServiceBus_Namespace_Name: ${{ env.ServiceBus_Namespace_Name }}
-
         # Deploy ARM template
       - name: Run ARM deploy
         uses: azure/arm-deploy@v1
@@ -74,18 +41,13 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
           template: azure-infrastructure.json
-          parameters: azure-infrastructure.parameters.json
+          parameters: azure-infrastructure.parameters.staging.json
 
   deploy_to_production:
       name: Deploy to Production environment
       needs: [deploy_to_staging]
       env:
         AZURE_RESOURCEGROUP_NAME: "azure-deprecation-notices"
-        ApplicationInsights_Name: azure-deprecation-notices-telemetry-staging
-        CosmosDb_Account_Name: azure-deprecation-notices-staging
-        EventGrid_Topic_Name: azure-deprecation-notices-staging
-        LogAnalytics_Name: azure-deprecation-notices-logs-staging
-        ServiceBus_Namespace_Name: azure-deprecation-notices-staging
       environment:
         name: azure-infrastructure-production
       runs-on: ubuntu-latest
@@ -102,21 +64,6 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS_PRODUCTION }}
-          
-      - run: ls -R
-
-          # Replace tokens in ARM template
-      - uses: microsoft/variable-substitution@v1
-        with:
-          files: 'azure-infrastructure.parameters.json'
-        env:
-          ApplicationInsights_Name: ${{ env.ApplicationInsights_Name }}
-          CosmosDb_Account_Name: ${{ env.CosmosDb_Account_Name }}
-          CosmosDb_Database_Name: ${{ env.CosmosDb_Database_Name }}
-          CosmosDb_Collection_Name: ${{ env.CosmosDb_Collection_Name }}
-          EventGrid_Topic_Name: ${{ env.EventGrid_Topic_Name }}
-          LogAnalytics_Name: ${{ env.LogAnalytics_Name }}
-          ServiceBus_Namespace_Name: ${{ env.ServiceBus_Namespace_Name }}
 
         # Deploy ARM template
       - name: Run ARM deploy
@@ -125,4 +72,4 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
           template: azure-infrastructure.json
-          parameters: azure-infrastructure.parameters.json
+          parameters: azure-infrastructure.parameters.production.json
