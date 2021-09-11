@@ -23,12 +23,21 @@ jobs:
       with:
           name: ${{ env.ARTIFACT_NAME }}
           path: deploy/azure-infrastructure.json
+          
+    - name: Publish ARM template parameters (Tokenized) to Artifact
+      uses: actions/upload-artifact@v1
+      with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: deploy/azure-infrastructure.parameters.json
+
       # Since tokenization is a pain, so we work around it
     - name: Publish ARM template parameters (Staging) to Artifact
       uses: actions/upload-artifact@v1
       with:
           name: ${{ env.ARTIFACT_NAME }}
           path: deploy/azure-infrastructure.parameters.staging.json
+          
+      # Since tokenization is a pain, so we work around it
     - name: Publish ARM template parameters (Production) to Artifact
       uses: actions/upload-artifact@v1
       with:
