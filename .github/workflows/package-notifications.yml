@@ -1,0 +1,64 @@
+name: Notifications (Package)
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+    - 'deploy/notifications.json'
+    - '.github/workflows/package-notifications.yml'
+    - 'src/AzureDeprecation.Runtimes.AzureFunctions/*'
+    - 'src/AzureDeprecation.Notifications/*'
+    - 'src/AzureDeprecation.Contracts/*'
+    
+env:
+  OUTPUT_PATH: ${{ github.workspace }}/.output
+  ARTIFACT_NAME: notifications
+
+jobs:
+  package:
+    name: Package Notice Management
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup .NET v${{ env.DOTNET_VERSION }}
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Package Azure Function Artifact
+      run: dotnet publish ./src/AzureDeprecation.Notifications/AzureDeprecation.Notifications.csproj --configuration Release --output ${{ env.OUTPUT_PATH }}/function
+
+    - name: Publish Azure Function Artifact
+      uses: actions/upload-artifact@v2
+      with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.OUTPUT_PATH }}
+
+    - name: Publish ARM template to Artifact
+      uses: actions/upload-artifact@v2
+      with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: deploy/notifications.json
+          
+    - name: Publish ARM template parameters (Tokenized) to Artifact
+      uses: actions/upload-artifact@v2
+      with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: deploy/notifications.parameters.json
+
+      # Since tokenization is a pain, so we work around it
+    - name: Publish ARM template parameters (Staging) to Artifact
+      uses: actions/upload-artifact@v2
+      with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: deploy/notifications.parameters.staging.json
+          
+      # Since tokenization is a pain, so we work around it
+    - name: Publish ARM template parameters (Production) to Artifact
+      uses: actions/upload-artifact@v2
+      with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: deploy/notifications.parameters.production.json

@@ -1,0 +1,92 @@
+name: Notifications (Deploy)
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Notifications (Package)"]
+    branches: [main]
+    types: 
+      - completed
+    
+env:
+  ARTIFACT_NAME: notifications
+  FUNCTION_PACKAGE_PATH: function
+
+jobs:
+  deploy_to_staging:
+      name: Deploy to Staging environment
+      env:
+        AZURE_RESOURCEGROUP_NAME: "azure-deprecation-notices-staging"
+        AZURE_FUNCTIONAPP_NAME: azure-deprecation-notices-notifications-staging
+      environment:
+        name: notifications-staging
+      runs-on: ubuntu-latest
+      steps:
+          # Download artifact
+      - name: Download Artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+            workflow: package-notifications.yml
+            workflow_conclusion: success
+            name: ${{ env.ARTIFACT_NAME }}
+
+          # Login to Azure
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS_STAGING }}
+
+        # Deploy ARM template
+      - name: Run ARM deploy
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
+          template: notifications.json
+          parameters: notifications.parameters.staging.json
+      
+      - name: Deploy Azure Function
+        id: deploy-to-azure
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+          package: ${{ env.FUNCTION_PACKAGE_PATH }}
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+
+  deploy_to_production:
+      name: Deploy to Production environment
+      needs: [deploy_to_staging]
+      env:
+        AZURE_RESOURCEGROUP_NAME: "azure-deprecation-notices"
+        AZURE_FUNCTIONAPP_NAME: azure-deprecation-notices-notifications
+      environment:
+        name: notifications-production
+      runs-on: ubuntu-latest
+      steps:
+          # Download artifact
+      - name: Download Artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+            workflow: package-notifications.yml
+            workflow_conclusion: success
+            name: ${{ env.ARTIFACT_NAME }}
+
+          # Login to Azure
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS_PRODUCTION }}
+
+        # Deploy ARM template
+      - name: Run ARM deploy
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
+          template: notifications.json
+          parameters: notifications.parameters.staging.json
+      
+      - name: Deploy Azure Function
+        id: deploy-to-azure
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+          package: ${{ env.FUNCTION_PACKAGE_PATH }}
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}

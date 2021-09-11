@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "ApplicationInsights.Name": {
+      "value": "azure-deprecation-notices-telemetry-staging"
+    },
+    "Connections.Twitter.Name": {
+      "value": "azure-deprecation-notices-connections-twitter-staging"
+    },
+    "EventGrid.Topic.Name": {
+      "value": "azure-deprecation-notices-staging"
+    },
+    "Function.App.Name": {
+      "value": "azure-deprecation-notices-notifications-staging"
+    },
+    "Function.Plan.Name": {
+      "value": "azure-deprecation-notices-notifications-staging"
+    },
+    "ServiceBus.Namespace.Name": {
+      "value": "azure-deprecation-notices-staging"
+    },
+    "StorageAccount.Name": {
+      "value": "azuredeprecationstaging"
+    },
+    "Workflow.Name": {
+      "value": "azure-deprecation-notices-tweet-new-notice-staging"
+    }
+  }
+}
