@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "ApplicationInsights.Name": {
+      "value": "azure-deprecation-notices-telemetry"
+    },
+    "Connections.CosmosDb.Name": {
+      "value": "azure-deprecation-notices-connections-cosmos-db"
+    },
+    "Connections.ServiceBus.Name": {
+      "value": "azure-deprecation-notices-connections-service-bus"
+    },
+    "CosmosDb.Account.Name": {
+      "value": "azure-deprecation-notices"
+    },
+    "Function.App.Name": {
+      "value": "azure-deprecation-notices-notice-management"
+    },
+    "Function.Plan.Name": {
+      "value": "azure-deprecation-notices-notice-management"
+    },
+    "GitHub.Owner": {
+      "value": "azure-deprecation"
+    },
+    "GitHub.Repo.Name": {
+      "value": "dashboard"
+    },
+    "ServiceBus.Namespace.Name": {
+      "value": "azure-deprecation-notices"
+    },
+    "StorageAccount.Name": {
+      "value": "azuredeprecationstaging"
+    },
+    "Workflow.Name": {
+      "value": "azuredeprecationnotices"
+    }
+  }
+}

@@ -29,7 +29,7 @@ jobs:
         deploymentMode: Validate
         resourceGroupName: azure-deprecation-notices-staging
         template: ./deploy/notice-management.json
-        parameters: ./deploy/notice-management.parameters.ci.json
+        parameters: ./deploy/notice-management.parameters.staging.json
 
   solution:
     name: Runtime (Solution)
