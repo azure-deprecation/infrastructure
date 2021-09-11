@@ -9,7 +9,7 @@ on:
     
 env:
   ARTIFACT_NAME: notice-management
-  FUNCTION_PACKAGE_PATH: ${{ github.workspace }}/.output/function
+  FUNCTION_PACKAGE_PATH: function
 
 jobs:
   deploy_to_staging:
