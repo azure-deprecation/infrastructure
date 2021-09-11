@@ -30,10 +30,10 @@
       "value": "azure-deprecation-notices"
     },
     "StorageAccount.Name": {
-      "value": "azuredeprecationstaging"
+      "value": "azuredeprecationnotices"
     },
     "Workflow.Name": {
-      "value": "azuredeprecationnotices"
+      "value": "azure-deprecation-notices-persist-new-notice"
     }
   }
 }
