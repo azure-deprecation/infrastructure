@@ -30,7 +30,7 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Package Azure Function Artifact
-      run: dotnet publish ./src/AzureDeprecation.Notices.Management/AzureDeprecation.Notices.Management.csproj --configuration Release --output ${{ env.OUTPUT_PATH }}
+      run: dotnet publish ./src/AzureDeprecation.Notices.Management/AzureDeprecation.Notices.Management.csproj --configuration Release --output ${{ env.OUTPUT_PATH }}/function
 
     - name: Publish Azure Function Artifact
       uses: actions/upload-artifact@v2
