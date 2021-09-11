@@ -30,6 +30,13 @@ jobs:
         resourceGroupName: azure-deprecation-notices-staging
         template: ./deploy/notice-management.json
         parameters: ./deploy/notice-management.parameters.staging.json
+    - name: Lint ARM template (Notifications)
+      uses: azure/arm-deploy@v1
+      with:
+        deploymentMode: Validate
+        resourceGroupName: azure-deprecation-notices-staging
+        template: ./deploy/notifications.json
+        parameters: ./deploy/notifications.parameters.staging.json
 
   solution:
     name: Runtime (Solution)

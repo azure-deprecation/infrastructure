@@ -1,0 +1,245 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ApplicationInsights.Name": {
+            "type": "String"
+        },
+        "Connections.Twitter.Name": {
+            "type": "String"
+        },
+        "Function.App.Name": {
+            "type": "String"
+        },
+        "Function.Plan.Name": {
+            "type": "String"
+        },
+        "EventGrid.Topic.Name": {
+            "type": "String"
+        },
+        "ServiceBus.Namespace.Name": {
+            "type": "String"
+        },
+        "StorageAccount.Name": {
+            "type": "String"
+        },
+        "Workflow.Name": {
+            "type": "String"
+        }
+    },
+    "variables": {
+        "Connections.Twitter.Id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/twitter')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2021-01-15",
+            "name": "[parameters('Function.Plan.Name')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Y1",
+                "tier": "Dynamic",
+                "size": "Y1"
+            },
+            "kind": "functionapp",
+            "properties": {
+                "reserved": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2021-01-15",
+            "name": "[parameters('Function.App.Name')]",
+            "location": "[resourceGroup().location]",
+            "kind": "functionapp,linux",
+            "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('Function.Plan.Name'))]",
+                "reserved": true,
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(resourceId('microsoft.insights/components/', parameters('ApplicationInsights.Name')), '2015-05-01').InstrumentationKey]"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('StorageAccount.Name'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('StorageAccount.Name')), '2015-05-01-preview').key1)]"
+                        },
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~3"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "dotnet"
+                        },
+                        {
+                            "name": "EVENTGRID_AUTH_KEY",
+                            "value": "[listKeys(resourceId('Microsoft.EventGrid/topics', parameters('EventGrid.Topic.Name')), '2020-06-01').key1]"
+                        },
+                        {
+                            "name": "EVENTGRID_ENDPOINT",
+                            "value": "[concat('https://', parameters('EventGrid.Topic.Name'), '.', resourceGroup().location, '-1.eventgrid.azure.net/api/events')]"
+                        },
+                        {
+                            "name": "ServiceBus_ConnectionString",
+                            "value": "[listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', parameters('ServiceBus.Namespace.Name'), 'RootManageSharedAccessKey'), '2017-04-01').primaryConnectionString]"
+                        }
+                    ]
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('Function.Plan.Name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "[parameters('Connections.Twitter.Name')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "displayName": "[parameters('Connections.Twitter.Name')]",
+                "customParameterValues": {},
+                "api": {
+                    "id": "[variables('Connections.Twitter.Id')]"
+                },
+                "parameterValues": { }
+            },
+            "dependsOn": []
+        },
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[parameters('Workflow.Name')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        }
+                    },
+                    "triggers": {
+                        "When_a_message_is_received_in_a_topic_subscription_(auto-complete)": {
+                            "recurrence": {
+                                "frequency": "Minute",
+                                "interval": 15
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['servicebus']['connectionId']"
+                                    }
+                                },
+                                "method": "get",
+                                "path": "/@{encodeURIComponent(encodeURIComponent('new-deprecation-notices'))}/subscriptions/@{encodeURIComponent('new-notice-tweet')}/messages/head",
+                                "queries": {
+                                    "subscriptionType": "Main"
+                                }
+                            }
+                        }
+                    },
+                    "actions": {
+                        "Parse_JSON": {
+                            "runAfter": {},
+                            "type": "ParseJson",
+                            "inputs": {
+                                "content": "@{decodeBase64(triggerBody()?['ContentData'])}",
+                                "schema": {
+                                    "DeprecationInfo": {
+                                        "AdditionalInformation": "https://docs.microsoft.com/en-us/azure/cognitive-services/translator/migrate-to-v3",
+                                        "Contact": {
+                                            "Type": 3
+                                        },
+                                        "DueOn": "2025-03-31T00:00:00+00:00",
+                                        "Impact": {
+                                            "Area": "Feature",
+                                            "Cloud": "Public",
+                                            "Description": "Service will no longer be available.",
+                                            "Services": [
+                                                "CognitiveServices"
+                                            ],
+                                            "Type": "MigrationRequired"
+                                        },
+                                        "Notice": {
+                                            "AdditionalInfo": null,
+                                            "Links": [
+                                                "https://azure.microsoft.com/en-gb/updates/version-2-of-translator-is-retiring-on-24-may-2021/",
+                                                "https://docs.microsoft.com/en-us/azure/cognitive-services/translator/migrate-to-v3"
+                                            ],
+                                            "OfficialReport": "> In May 2018, we announced the general availability of version 3 of Translator and will retire version 2 of Translator on 24 May 2021.\r\n> \r\n> Key benefits of version 3 of Translator include: \r\n> - More functionalities including bilingual dictionary, transliterate and translate to multiple target languages in a single request.\r\n> - Provides a  [layered security model](https://docs.microsoft.com/en-us/azure/cognitive-services/Welcome#securing-resources) as part of Azure Cognitive Services.\r\n> - Customized translations through [Custom Translator](https://portal.customtranslator.azure.ai/)."
+                                        },
+                                        "RequiredAction": {
+                                            "AdditionalInfo": null,
+                                            "OfficialReport": "> - If you are using version 2 of Translator, please [migrate your applications to version 3](https://docs.microsoft.com/en-us/azure/cognitive-services/translator/migrate-to-v3) before 24 May 2021 to avoid service disruption.\r\n> - Your current Translator subscription and key will work with version 3, there is no need to create a new Translator subscription in the Azure portal."
+                                        },
+                                        "Title": "Azure Cognitive Services Translator v2 is deprecated by 24 May 2021."
+                                    },
+                                    "PublishedNotice": {
+                                        "ApiInfo": {
+                                            "Id": 704370266,
+                                            "Url": "https://api.github.com/repos/azure-deprecation-automation/sandbox/issues/73"
+                                        },
+                                        "ClosedAt": null,
+                                        "CreatedAt": "2020-09-18T13:16:36+00:00",
+                                        "DashboardInfo": {
+                                            "Id": 73,
+                                            "Url": "https://github.com/azure-deprecation-automation/sandbox/issues/73"
+                                        },
+                                        "Labels": [
+                                            "area:certification",
+                                            "impact:migration-required",
+                                            "services:cognitive-services",
+                                            "verified"
+                                        ],
+                                        "Title": "Azure Cognitive Services Translator v2 is deprecated by 24 May 2021.",
+                                        "UpdatedAt": "2020-09-18T13:16:37+00:00"
+                                    }
+                                }
+                            }
+                        },
+                        "Post_a_tweet": {
+                            "runAfter": {
+                                "Parse_JSON": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['twitter']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/posttweet",
+                                "queries": {
+                                    "tweetText": "📢 @{body('Parse_JSON')['DeprecationInfo']?['Title']}\n\n@{body('Parse_JSON')['PublishedNotice']?['DashboardInfo']?['Url']}\n\n#azure #deprecation"
+                                }
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "twitter": {
+                                "connectionId": "[resourceId('Microsoft.Web/locations', parameters('Connections.Twitter.Name'))]",
+                                "connectionName": "[parameters('Connections.Twitter.Name')]",
+                                "id": "[variables('Connections.Twitter.Id')]"
+                            }
+                        }
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/connections', parameters('Connections.Twitter.Name'))]"
+            ]
+        }
+    ]
+}

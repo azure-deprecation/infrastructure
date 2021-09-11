@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "ApplicationInsights.Name": {
+      "value": "#{ApplicationInsights.Name}#"
+    },
+    "Connections.Twitter.Name": {
+      "value": "#{Connections.Twitter.Name}#"
+    },
+    "Function.App.Name": {
+      "value": "#{Function.App.Name}#"
+    },
+    "Function.Plan.Name": {
+      "value": "#{Function.Plan.Name}#"
+    },
+    "EventGrid.Topic.Name": {
+      "value": "#{EventGrid.Topic.Name}#"
+    },
+    "ServiceBus.Namespace.Name": {
+      "value": "#{ServiceBus.Namespace.Name}#"
+    },
+    "StorageAccount.Name": {
+      "value": "#{StorageAccount.Name}#"
+    },
+    "Workflow.Name": {
+      "value": "#{Workflow.Name}#"
+    }
+  }
+}
