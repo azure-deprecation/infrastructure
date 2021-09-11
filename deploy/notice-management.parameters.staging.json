@@ -27,7 +27,7 @@
       "value": "sandbox"
     },
     "GitHub.Token": {
-      "value": "github-token"
+      "value": "github-ci-token"
     },
     "ServiceBus.Namespace.Name": {
       "value": "azure-deprecation-notices-staging"
