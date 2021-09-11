@@ -9,8 +9,6 @@ on:
     
 env:
   ARTIFACT_NAME: azure-infrastructure
-  CosmosDb_Database_Name: deprecation-db
-  CosmosDb_Collection_Name: deprecations
 
 jobs:
   deploy_to_staging:
