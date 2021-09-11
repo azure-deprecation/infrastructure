@@ -103,8 +103,7 @@
                 "api": {
                     "id": "[variables('Connections.Twitter.Id')]"
                 },
-                "parameterValues": {
-                }
+                "parameterValues": { }
             },
             "dependsOn": []
         },
