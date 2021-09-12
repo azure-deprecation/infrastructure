@@ -5,6 +5,9 @@
     "ApplicationInsights.Name": {
       "value": "#{ApplicationInsights.Name}#"
     },
+    "Connections.ServiceBus.Name": {
+      "value": "#{Connections.ServiceBus.Name}#"
+    },
     "Connections.Twitter.Name": {
       "value": "#{Connections.Twitter.Name}#"
     },

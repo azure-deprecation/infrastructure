@@ -5,6 +5,9 @@
         "ApplicationInsights.Name": {
             "type": "String"
         },
+        "Connections.ServiceBus.Name": {
+            "type": "String"
+        },
         "Connections.Twitter.Name": {
             "type": "String"
         },
@@ -28,6 +31,7 @@
         }
     },
     "variables": {
+        "Connections.ServiceBus.Id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/servicebus')]",
         "Connections.Twitter.Id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/twitter')]"
     },
     "resources": [
@@ -91,6 +95,23 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', parameters('Function.Plan.Name'))]"
             ]
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "[parameters('Connections.ServiceBus.Name')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "displayName": "[parameters('Connections.ServiceBus.Name')]",
+                "customParameterValues": {},
+                "api": {
+                    "id": "[variables('Connections.ServiceBus.Id')]"
+                },
+                "parameterValues": {
+                    "connectionString": "[listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', parameters('ServiceBus.Namespace.Name'), 'RootManageSharedAccessKey'), '2017-04-01').primaryConnectionString]"
+                }
+            },
+            "dependsOn": []
         },
         {
             "type": "Microsoft.Web/connections",
@@ -228,6 +249,11 @@
                 "parameters": {
                     "$connections": {
                         "value": {
+                            "servicebus": {
+                                "connectionId": "[resourceId('Microsoft.Web/locations', parameters('Connections.ServiceBus.Name'))]",
+                                "connectionName": "[parameters('Connections.ServiceBus.Name')]",
+                                "id": "[variables('Connections.ServiceBus.Id')]"
+                            },
                             "twitter": {
                                 "connectionId": "[resourceId('Microsoft.Web/locations', parameters('Connections.Twitter.Name'))]",
                                 "connectionName": "[parameters('Connections.Twitter.Name')]",
@@ -238,6 +264,7 @@
                 }
             },
             "dependsOn": [
+                "[resourceId('Microsoft.Web/connections', parameters('Connections.ServiceBus.Name'))]",
                 "[resourceId('Microsoft.Web/connections', parameters('Connections.Twitter.Name'))]"
             ]
         }
