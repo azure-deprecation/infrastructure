@@ -31,8 +31,8 @@
         }
     },
     "variables": {
-        "Connections.ServiceBus.Id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/servicebus')]",
-        "Connections.Twitter.Id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/twitter')]"
+        "Connections.ServiceBus.Id": "[concat(subscription().id, '/providers/Microsoft.Web/connections/', resourceGroup().location, '/managedApis/servicebus')]",
+        "Connections.Twitter.Id": "[concat(subscription().id, '/providers/Microsoft.Web/connections/', resourceGroup().location, '/managedApis/twitter')]"
     },
     "resources": [
         {
