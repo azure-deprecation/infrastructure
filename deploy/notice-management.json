@@ -225,12 +225,12 @@
                     "$connections": {
                         "value": {
                             "documentdb": {
-                                "connectionId": "[resourceId('Microsoft.Web/locations', parameters('Connections.CosmosDb.Name'))]",
+                                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('Connections.CosmosDb.Name'))]",
                                 "connectionName": "[parameters('Connections.CosmosDb.Name')]",
                                 "id": "[variables('Connections.CosmosDb.Id')]"
                             },
                             "servicebus": {
-                                "connectionId": "[resourceId('Microsoft.Web/locations', parameters('Connections.ServiceBus.Name'))]",
+                                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('Connections.ServiceBus.Name'))]",
                                 "connectionName": "[parameters('Connections.ServiceBus.Name')]",
                                 "id": "[variables('Connections.ServiceBus.Id')]"
                             }

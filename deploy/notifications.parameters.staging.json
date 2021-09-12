@@ -5,6 +5,9 @@
     "ApplicationInsights.Name": {
       "value": "azure-deprecation-notices-telemetry-staging"
     },
+    "Connections.ServiceBus.Name": {
+      "value": "azure-deprecation-notices-connections-service-bus-staging"
+    },
     "Connections.Twitter.Name": {
       "value": "azure-deprecation-notices-connections-twitter-staging"
     },

@@ -5,6 +5,9 @@
     "ApplicationInsights.Name": {
       "value": "azure-deprecation-notices-telemetry"
     },
+    "Connections.ServiceBus.Name": {
+      "value": "azure-deprecation-notices-connections-service-bus"
+    },
     "Connections.Twitter.Name": {
       "value": "azure-deprecation-notices-connections-twitter"
     },
