@@ -5,6 +5,12 @@
     "ApplicationInsights.Name": {
       "value": "azure-deprecation-notices-telemetry-staging"
     },
+    "Connections.CosmosDb.Name": {
+      "value": "azure-deprecation-notices-connections-cosmos-db-staging"
+    },
+    "Connections.MailChimp.Name": {
+      "value": "azure-deprecation-notices-connections-mailchimp-staging"
+    },
     "Connections.ServiceBus.Name": {
       "value": "azure-deprecation-notices-connections-service-bus-staging"
     },

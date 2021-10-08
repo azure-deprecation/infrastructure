@@ -5,6 +5,12 @@
     "ApplicationInsights.Name": {
       "value": "azure-deprecation-notices-telemetry"
     },
+    "Connections.CosmosDb.Name": {
+      "value": "azure-deprecation-notices-connections-cosmos-db"
+    },
+    "Connections.MailChimp.Name": {
+      "value": "azure-deprecation-notices-connections-mailchimp"
+    },
     "Connections.ServiceBus.Name": {
       "value": "azure-deprecation-notices-connections-service-bus"
     },

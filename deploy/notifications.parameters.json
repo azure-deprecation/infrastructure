@@ -5,6 +5,12 @@
     "ApplicationInsights.Name": {
       "value": "#{ApplicationInsights.Name}#"
     },
+    "Connections.CosmosDb.Name": {
+      "value": "#{Connections.CosmosDb.Name}#"
+    },
+    "Connections.MailChimp.Name": {
+      "value": "#{Connections.MailChimp.Name}#"
+    },
     "Connections.ServiceBus.Name": {
       "value": "#{Connections.ServiceBus.Name}#"
     },
