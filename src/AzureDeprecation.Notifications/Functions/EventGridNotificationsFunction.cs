@@ -22,7 +22,7 @@ namespace AzureDeprecation.Notifications.Functions
         }
 
         [FunctionName("event-grid-notification")]
-        public async Task Run([ServiceBusTrigger("new-deprecation-notices", "event-grid-notifications-sandbox", Connection = "ServiceBus_ConnectionString")] NewDeprecationNoticePublishedV1Message newDeprecationNoticePublishedV1Message, ILogger log)
+        public async Task Run([ServiceBusTrigger("new-deprecation-notices", "event-grid-notifications", Connection = "ServiceBus_ConnectionString")] NewDeprecationNoticePublishedV1Message newDeprecationNoticePublishedV1Message, ILogger log)
         {
             var eventGridTopicEndpoint = _configuration["EVENTGRID_ENDPOINT"];
             var eventGridAuthKey = _configuration["EVENTGRID_AUTH_KEY"];
