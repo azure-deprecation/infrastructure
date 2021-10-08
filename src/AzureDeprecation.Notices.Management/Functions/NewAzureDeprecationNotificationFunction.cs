@@ -23,8 +23,8 @@ namespace AzureDeprecation.Notices.Management.Functions
         }
 
         [FunctionName("publish-new-notice")]
-        public async Task Run([ServiceBusTrigger("new-azure-deprecation", Connection = "ServiceBus_ConnectionString")]Message queueMessage,
-                              [ServiceBus("new-deprecation-notices", EntityType.Topic, Connection = "ServiceBus_ConnectionString")] IAsyncCollector<Message> publishedDeprecationNotice,
+        public async Task Run([ServiceBusTrigger("new-azure-deprecation-sandbox", Connection = "ServiceBus_ConnectionString")]Message queueMessage,
+                              [ServiceBus("new-deprecation-notices-sandbox", EntityType.Topic, Connection = "ServiceBus_ConnectionString")] IAsyncCollector<Message> publishedDeprecationNotice,
                               ILogger log)
         {
             if (queueMessage.UserProperties.ContainsKey("MessageType") == false)

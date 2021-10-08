@@ -11,6 +11,9 @@
     "Connections.Twitter.Name": {
       "value": "azure-deprecation-notices-connections-twitter-staging"
     },
+    "CosmosDb.Account.Name": {
+      "value": "azure-deprecation-notices-staging"
+    },
     "EventGrid.Topic.Name": {
       "value": "azure-deprecation-notices-staging"
     },
@@ -26,7 +29,10 @@
     "StorageAccount.Name": {
       "value": "azuredeprecationstaging"
     },
-    "Workflow.Name": {
+    "Workflow.MonthlySummaryNewsletter.Name": {
+      "value": "azure-deprecation-notices-monthly-summary-newsletter-staging"
+    },
+    "Workflow.TweetNewDeprecation.Name": {
       "value": "azure-deprecation-notices-tweet-new-notice-staging"
     }
   }

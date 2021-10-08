@@ -5,10 +5,19 @@
         "ApplicationInsights.Name": {
             "type": "String"
         },
+        "Connections.CosmosDb.Name": {
+            "type": "String"
+        },
+        "Connections.MailChimp.Name": {
+            "type": "String"
+        },
         "Connections.ServiceBus.Name": {
             "type": "String"
         },
         "Connections.Twitter.Name": {
+            "type": "String"
+        },
+        "CosmosDb.Account.Name": {
             "type": "String"
         },
         "Function.App.Name": {
@@ -20,17 +29,28 @@
         "EventGrid.Topic.Name": {
             "type": "String"
         },
+        "MailChimp.Auth.BearerToken": {
+            "type": "SecureString"
+        },
+        "MailChimp.Template.Id": {
+            "type": "int"
+        },
         "ServiceBus.Namespace.Name": {
             "type": "String"
         },
         "StorageAccount.Name": {
             "type": "String"
         },
-        "Workflow.Name": {
+        "Workflow.MonthlySummaryNewsletter.Name": {
+            "type": "String"
+        },
+        "Workflow.TweetNewDeprecation.Name": {
             "type": "String"
         }
     },
     "variables": {
+        "Connections.CosmosDb.Id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/documentdb')]",
+        "Connections.MailChimp.Id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/mailchimp')]",
         "Connections.ServiceBus.Id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/servicebus')]",
         "Connections.Twitter.Id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/twitter')]"
     },
@@ -124,14 +144,14 @@
                 "api": {
                     "id": "[variables('Connections.Twitter.Id')]"
                 },
-                "parameterValues": { }
+                "parameterValues": {}
             },
             "dependsOn": []
         },
         {
             "type": "Microsoft.Logic/workflows",
             "apiVersion": "2017-07-01",
-            "name": "[parameters('Workflow.Name')]",
+            "name": "[parameters('Workflow.TweetNewDeprecation.Name')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "definition": {
@@ -266,6 +286,284 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Web/connections', parameters('Connections.ServiceBus.Name'))]",
                 "[resourceId('Microsoft.Web/connections', parameters('Connections.Twitter.Name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "[parameters('Connections.CosmosDb.Name')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "displayName": "[parameters('Connections.CosmosDb.Name')]",
+                "customParameterValues": {},
+                "api": {
+                    "id": "[variables('Connections.CosmosDb.Id')]"
+                },
+                "parameterValues": {
+                    "databaseAccount": "[parameters('CosmosDb.Account.Name')]",
+                    "accessKey": "[listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('CosmosDb.Account.Name')), '2015-04-08').primaryMasterKey]"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "[parameters('Connections.MailChimp.Name')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "displayName": "[parameters('Connections.MailChimp.Name')]",
+                "customParameterValues": {},
+                "api": {
+                    "id": "[variables('Connections.MailChimp.Id')]"
+                },
+                "parameterValues": {}
+            },
+            "dependsOn": []
+        },
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[parameters('Workflow.MonthlySummaryNewsletter.Name')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        },
+                        "MailChimp.BearerToken": {
+                            "defaultValue": "[parameters('MailChimp.Auth.BearerToken')]",
+                            "type": "SecureString"
+                        },
+                        "MailChimp.Template.Id": {
+                            "defaultValue": "[parameters('MailChimp.Template.Id')]",
+                            "type": "Int"
+                        }
+                    },
+                    "triggers": {
+                        "Recurrence": {
+                            "recurrence": {
+                                "frequency": "Month",
+                                "interval": 1,
+                                "startTime": "2021-11-01T02:00:00Z",
+                                "timeZone": "Romance Standard Time"
+                            },
+                            "evaluatedRecurrence": {
+                                "frequency": "Month",
+                                "interval": 1,
+                                "startTime": "2021-11-01T02:00:00Z",
+                                "timeZone": "Romance Standard Time"
+                            },
+                            "type": "Recurrence"
+                        }
+                    },
+                    "actions": {
+                        "Compose_Email_Campaign_Name": {
+                            "runAfter": {
+                                "Get_First_10_Upcoming_Deprecations": [
+                                    "Succeeded"
+                                ],
+                                "Get_New_Deprecations_From_Last_Month": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Compose",
+                            "inputs": "Azure Deprecation Notices - Monthly Summary (@{formatDateTime(variables('PastPeriod'), 'MMMM yyyy')})"
+                        },
+                        "Create_New_Campaign": {
+                            "runAfter": {
+                                "Compose_Email_Campaign_Name": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "recipients": {
+                                        "list_id": "b0f0db5931"
+                                    },
+                                    "settings": {
+                                        "from_name": "Azure Deprecation Notices",
+                                        "reply_to": "no-reply@azure-deprecation-notices.cloud",
+                                        "subject_line": "@{outputs('Compose_Email_Campaign_Name')}",
+                                        "title": "@{outputs('Compose_Email_Campaign_Name')}"
+                                    },
+                                    "type": "regular"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['mailchimp']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v2/campaigns"
+                            }
+                        },
+                        "Get_Campaign_Info": {
+                            "runAfter": {
+                                "Create_New_Campaign": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Http",
+                            "inputs": {
+                                "headers": {
+                                    "Authorization": "Basic @{parameters('MailChimp.BearerToken')}"
+                                },
+                                "method": "GET",
+                                "uri": "https://us2.api.mailchimp.com/3.0/campaigns/@{body('Create_New_Campaign')?['id']}/content"
+                            }
+                        },
+                        "Get_Default_Content_for_Template": {
+                            "runAfter": {
+                                "Get_Template_Info": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Http",
+                            "inputs": {
+                                "headers": {
+                                    "Authorization": "Basic @{parameters('MailChimp.BearerToken')}"
+                                },
+                                "method": "GET",
+                                "uri": "https://us2.api.mailchimp.com/3.0/templates/@{parameters('MailChimp.Template.Id')}/default-content"
+                            }
+                        },
+                        "Get_First_10_Upcoming_Deprecations": {
+                            "runAfter": {
+                                "Initialize_Past_Period_Variable": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['documentdb']['connectionId']"
+                                    }
+                                },
+                                "method": "get",
+                                "path": "/v5/cosmosdb/@{encodeURIComponent('AccountNameFromSettings')}/dbs/@{encodeURIComponent('deprecation-db')}/colls/@{encodeURIComponent('deprecations')}/query",
+                                "queries": {
+                                    "queryText": "SELECT c.DeprecationInfo.Title, c.PublishedNotice.DashboardInfo.Url FROM c ORDER BY c.DeprecationInfo.Timeline ASC"
+                                }
+                            }
+                        },
+                        "Get_New_Deprecations_From_Last_Month": {
+                            "runAfter": {
+                                "Initialize_Past_Period_Variable": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['documentdb']['connectionId']"
+                                    }
+                                },
+                                "method": "get",
+                                "path": "/v5/cosmosdb/@{encodeURIComponent('AccountNameFromSettings')}/dbs/@{encodeURIComponent('deprecation-db')}/colls/@{encodeURIComponent('deprecations')}/query",
+                                "queries": {
+                                    "queryText": "SELECT c.DeprecationInfo.Title, c.PublishedNotice.DashboardInfo.Url FROM c WHERE c.PublishedNotice.CreatedAt >= '@{formatDateTime(variables('PastPeriod'), 'yyyy-MM')}-01T00:00:01+00:00' AND c.PublishedNotice.CreatedAt < '@{formatDateTime(utcNow(), 'yyyy-MM')}-01T00:00:01+00:00' ORDER BY c.DeprecationInfo.Timeline ASC"
+                                }
+                            }
+                        },
+                        "Get_Template_Info": {
+                            "runAfter": {
+                                "Get_Campaign_Info": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Http",
+                            "inputs": {
+                                "headers": {
+                                    "Authorization": "Basic @{parameters('MailChimp.BearerToken')}"
+                                },
+                                "method": "GET",
+                                "uri": "https://us2.api.mailchimp.com/3.0/templates/@{parameters('MailChimp.Template.Id')}"
+                            }
+                        },
+                        "Initialize_Past_Period_Variable": {
+                            "runAfter": {},
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "PastPeriod",
+                                        "type": "string",
+                                        "value": "@{subtractFromTime(utcNow(), 1, 'Month')}"
+                                    }
+                                ]
+                            }
+                        },
+                        "Send_Campaign_To_Subscribers": {
+                            "runAfter": {
+                                "Set_Campaign_Content": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['mailchimp']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/campaigns/@{encodeURIComponent(body('Create_New_Campaign')?['id'])}/actions/send"
+                            }
+                        },
+                        "Set_Campaign_Content": {
+                            "runAfter": {
+                                "Get_Default_Content_for_Template": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Http",
+                            "inputs": {
+                                "body": {
+                                    "template": {
+                                        "id": "@parameters('MailChimp.Template.Id')",
+                                        "sections": {
+                                            "content": "Hello World from Logic Apps!"
+                                        }
+                                    }
+                                },
+                                "headers": {
+                                    "Authorization": "Basic @{parameters('MailChimp.BearerToken')}"
+                                },
+                                "method": "PUT",
+                                "uri": "https://us2.api.mailchimp.com/3.0/campaigns/@{body('Create_New_Campaign')?['id']}/content"
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "documentdb": {
+                                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('Connections.CosmosDb.Name'))]",
+                                "connectionName": "[parameters('Connections.CosmosDb.Name')]",
+                                "id": "[variables('Connections.CosmosDb.Id')]"
+                            },
+                            "mailchimp": {
+                                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('Connections.MailChimp.Name'))]",
+                                "connectionName": "[parameters('Connections.MailChimp.Name')]",
+                                "id": "[variables('Connections.MailChimp.Id')]"
+                            }
+                        }
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/connections', parameters('Connections.CosmosDb.Name'))]",
+                "[resourceId('Microsoft.Web/connections', parameters('Connections.MailChimp.Name'))]"
             ]
         }
     ]
