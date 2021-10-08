@@ -5,11 +5,20 @@
     "ApplicationInsights.Name": {
       "value": "#{ApplicationInsights.Name}#"
     },
+    "Connections.CosmosDb.Name": {
+      "value": "#{Connections.CosmosDb.Name}#"
+    },
+    "Connections.MailChimp.Name": {
+      "value": "#{Connections.MailChimp.Name}#"
+    },
     "Connections.ServiceBus.Name": {
       "value": "#{Connections.ServiceBus.Name}#"
     },
     "Connections.Twitter.Name": {
       "value": "#{Connections.Twitter.Name}#"
+    },
+    "CosmosDb.Account.Name": {
+      "value": "#{CosmosDb.Account.Name}#"
     },
     "Function.App.Name": {
       "value": "#{Function.App.Name}#"
@@ -26,8 +35,11 @@
     "StorageAccount.Name": {
       "value": "#{StorageAccount.Name}#"
     },
-    "Workflow.Name": {
-      "value": "#{Workflow.Name}#"
+    "Workflow.MonthlySummaryNewsletter.Name": {
+        "value": "#{Workflow.MonthlySummaryNewsletter.Name}#"
+    },
+    "Workflow.TweetNewDeprecation.Name": {
+      "value": "#{Workflow.TweetNewDeprecation.Name}#"
     }
   }
 }

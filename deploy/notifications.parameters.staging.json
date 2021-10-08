@@ -5,11 +5,20 @@
     "ApplicationInsights.Name": {
       "value": "azure-deprecation-notices-telemetry-staging"
     },
+    "Connections.CosmosDb.Name": {
+      "value": "azure-deprecation-notices-connections-cosmos-db-staging"
+    },
+    "Connections.MailChimp.Name": {
+      "value": "azure-deprecation-notices-connections-mailchimp-staging"
+    },
     "Connections.ServiceBus.Name": {
       "value": "azure-deprecation-notices-connections-service-bus-staging"
     },
     "Connections.Twitter.Name": {
       "value": "azure-deprecation-notices-connections-twitter-staging"
+    },
+    "CosmosDb.Account.Name": {
+      "value": "azure-deprecation-notices-staging"
     },
     "EventGrid.Topic.Name": {
       "value": "azure-deprecation-notices-staging"
@@ -20,13 +29,22 @@
     "Function.Plan.Name": {
       "value": "azure-deprecation-notices-notifications-staging"
     },
+    "MailChimp.MailingList.Id": {
+        "value": "b0f0db5931"
+    },
+    "MailChimp.Template.Id": {
+        "value": 11355345
+    },
     "ServiceBus.Namespace.Name": {
       "value": "azure-deprecation-notices-staging"
     },
     "StorageAccount.Name": {
       "value": "azuredeprecationstaging"
     },
-    "Workflow.Name": {
+    "Workflow.MonthlySummaryNewsletter.Name": {
+      "value": "azure-deprecation-notices-monthly-summary-newsletter-staging"
+    },
+    "Workflow.TweetNewDeprecation.Name": {
       "value": "azure-deprecation-notices-tweet-new-notice-staging"
     }
   }

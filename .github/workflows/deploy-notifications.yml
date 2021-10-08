@@ -40,8 +40,9 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
+          deploymentName: notifications-run-${{ github.run_number }}
           template: notifications.json
-          parameters: notifications.parameters.staging.json
+          parameters: notifications.parameters.staging.json MailChimp.Auth.BearerToken=${{ secrets.MAILCHIMP_AUTH_BEARERTOKEN }}
       
       - name: Deploy Azure Function
         id: deploy-to-azure
@@ -80,8 +81,9 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
+          deploymentName: notifications-run-${{ github.run_number }}
           template: notifications.json
-          parameters: notifications.parameters.production.json
+          parameters: notifications.parameters.production.json MailChimp.Auth.BearerToken=${{ secrets.MAILCHIMP_AUTH_BEARERTOKEN }}
       
       - name: Deploy Azure Function
         id: deploy-to-azure

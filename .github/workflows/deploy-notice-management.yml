@@ -42,6 +42,7 @@ jobs:
           resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
           templateLocation: notice-management.json
           parameters: notice-management.parameters.staging.json
+          deploymentName: notifice-management-run-${{ github.run_number }}
           overrideParameters: |
             GitHub.Token=${{ secrets.BOT_GITHUB_TOKEN }}
       
@@ -83,6 +84,7 @@ jobs:
           creds : ${{ secrets.AZURE_CREDENTIALS_PRODUCTION }}
           resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
           templateLocation: notice-management.json
+          deploymentName: notifice-management-run-${{ github.run_number }}
           parameters: notice-management.parameters.production.json
           overrideParameters: |
             GitHub.Token=${{ secrets.BOT_GITHUB_TOKEN }}
