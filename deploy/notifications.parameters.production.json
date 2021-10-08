@@ -29,6 +29,12 @@
     "Function.Plan.Name": {
       "value": "azure-deprecation-notices-notifications"
     },
+    "MailChimp.MailingList.Id": {
+        "value": "b0f0db5931"
+    },
+    "MailChimp.Template.Id": {
+        "value": 11355345
+    },
     "ServiceBus.Namespace.Name": {
       "value": "azure-deprecation-notices"
     },

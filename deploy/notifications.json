@@ -32,6 +32,9 @@
         "MailChimp.Auth.BearerToken": {
             "type": "SecureString"
         },
+        "MailChimp.MailingList.Id": {
+            "type": "String"
+        },
         "MailChimp.Template.Id": {
             "type": "int"
         },
@@ -339,6 +342,10 @@
                             "defaultValue": "[parameters('MailChimp.Auth.BearerToken')]",
                             "type": "SecureString"
                         },
+                        "MailChimp.MailingList.Id": {
+                            "defaultValue": "[parameters('MailChimp.MailingList.Id')]",
+                            "type": "String"
+                        },
                         "MailChimp.Template.Id": {
                             "defaultValue": "[parameters('MailChimp.Template.Id')]",
                             "type": "Int"
@@ -384,7 +391,7 @@
                             "inputs": {
                                 "body": {
                                     "recipients": {
-                                        "list_id": "b0f0db5931"
+                                        "list_id": "@parameters('MailChimp.MailingList.Id')"
                                     },
                                     "settings": {
                                         "from_name": "Azure Deprecation Notices",
