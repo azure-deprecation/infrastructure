@@ -1,0 +1,154 @@
+{
+    "properties": {
+      "name": "gmail",
+      "connectionParameters": {
+        "token": {
+          "type": "oauthSetting",
+          "oAuthSettings": {
+            "identityProvider": "Google",
+            "clientId": "972489997876-8op8gd42ke0d43bompbilqqn9oh06r4u.apps.googleusercontent.com",
+            "scopes": [
+              "https://mail.google.com/"
+            ],
+            "redirectMode": "Direct",
+            "redirectUrl": "https://logic-apis-westeurope.consent.azure-apim.net/redirect",
+            "properties": {
+              "IsFirstParty": "False",
+              "IsOnbehalfofLoginSupported": false
+            }
+          },
+          "uiDefinition": {
+            "displayName": "Sign in with Google credentials",
+            "description": "Sign in with Google credentials",
+            "tooltip": "Provide Google credentials",
+            "constraints": {
+              "required": "true"
+            }
+          }
+        }
+      },
+      "connectionParameterSets": {
+        "uiDefinition": {
+          "displayName": "Authentication Type",
+          "description": "Type of authentication to be used."
+        },
+        "values": [
+          {
+            "name": "shared-application",
+            "uiDefinition": {
+              "displayName": "Use default shared application",
+              "description": "Sign in using the standard Google app."
+            },
+            "parameters": {
+              "token": {
+                "type": "oauthSetting",
+                "oAuthSettings": {
+                  "identityProvider": "Google",
+                  "clientId": "972489997876-8op8gd42ke0d43bompbilqqn9oh06r4u.apps.googleusercontent.com",
+                  "scopes": [
+                    "https://mail.google.com/"
+                  ],
+                  "redirectMode": "Direct",
+                  "redirectUrl": "https://logic-apis-westeurope.consent.azure-apim.net/redirect",
+                  "properties": {
+                    "IsFirstParty": "False",
+                    "IsOnbehalfofLoginSupported": false
+                  }
+                },
+                "uiDefinition": {
+                  "displayName": "Sign in with Google credentials",
+                  "description": "Sign in with Google credentials",
+                  "tooltip": "Provide Google credentials",
+                  "constraints": {
+                    "required": "true"
+                  }
+                }
+              }
+            },
+            "metadata": {
+              "allowSharing": false
+            }
+          },
+          {
+            "name": "byoa",
+            "uiDefinition": {
+              "displayName": "Bring your own application",
+              "description": "Sign in using your own Google app. For more details see https://docs.microsoft.com/connectors/gmail/#authentication-and-bring-your-own-application."
+            },
+            "parameters": {
+              "token-byoa": {
+                "type": "oauthSetting",
+                "oAuthSettings": {
+                  "identityProvider": "Google",
+                  "scopes": [
+                    "https://mail.google.com/"
+                  ],
+                  "redirectMode": "Global",
+                  "redirectUrl": "https://global.consent.azure-apim.net/redirect",
+                  "properties": {
+                    "IsFirstParty": "False",
+                    "IsOnbehalfofLoginSupported": false
+                  }
+                },
+                "uiDefinition": {
+                  "displayName": "Sign in with Google credentials",
+                  "description": "Sign in with Google credentials",
+                  "tooltip": "Provide Google credentials",
+                  "constraints": {
+                    "required": "true"
+                  }
+                }
+              },
+              "token-byoa:clientId": {
+                "type": "string",
+                "uiDefinition": {
+                  "displayName": "Client ID",
+                  "description": "Client (or Application) ID of your Google application",
+                  "constraints": {
+                    "required": "true",
+                    "hidden": "false"
+                  }
+                }
+              },
+              "token-byoa:clientSecret": {
+                "type": "securestring",
+                "uiDefinition": {
+                  "displayName": "Client Secret",
+                  "description": "Client secret of your Google application",
+                  "constraints": {
+                    "required": "true",
+                    "hidden": "False"
+                  }
+                }
+              }
+            },
+            "metadata": {
+              "allowSharing": false
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "source": "marketplace",
+        "brandColor": "#20427f"
+      },
+      "runtimeUrls": [
+        "https://logic-apis-westeurope.azure-apim.net/apim/gmail"
+      ],
+      "generalInformation": {
+        "iconUrl": "https://connectoricons-prod.azureedge.net/releases/v1.0.1528/1.0.1528.2589/gmail/icon.png",
+        "displayName": "Gmail",
+        "description": "Gmail is a web-based email service from Google. With the Gmail connector, you can perform actions such as send or receive e-mail messages, and trigger flows on new e-mails.",
+        "termsOfUseUrl": "https://az818438.vo.msecnd.net/tos/gmail/tos.html",
+        "releaseTag": "Production",
+        "tier": "Standard"
+      },
+      "capabilities": [
+        "actions"
+      ]
+    },
+    "id": "/subscriptions/63c590b6-4947-4898-92a3-cae91a31b5e4/providers/Microsoft.Web/locations/westeurope/managedApis/gmail",
+    "name": "gmail",
+    "type": "Microsoft.Web/locations/managedApis",
+    "location": "westeurope"
+  }
