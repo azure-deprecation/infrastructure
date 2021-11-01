@@ -8,6 +8,9 @@
     "Connections.CosmosDb.Name": {
       "value": "azure-deprecation-notices-connections-cosmos-db"
     },
+    "Connections.Gmail.Name": {
+      "value": "azure-deprecation-notices-connections-gmail"
+    },
     "Connections.MailChimp.Name": {
       "value": "azure-deprecation-notices-connections-mailchimp"
     },
