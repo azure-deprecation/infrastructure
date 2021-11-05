@@ -36,7 +36,7 @@ jobs:
         deploymentMode: Validate
         resourceGroupName: azure-deprecation-notices-staging
         template: ./deploy/notifications.json
-        parameters: ./deploy/notifications.parameters.staging.json MailChimp.Auth.BearerToken=CI
+        parameters: ./deploy/notifications.parameters.staging.json MailChimp.Auth.BearerToken=CI Gmail.Auth.ClientId=CI Gmail.Auth.ClientSecret=CI
 
   solution:
     name: Runtime (Solution)
