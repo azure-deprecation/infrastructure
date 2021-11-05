@@ -414,7 +414,7 @@
                                 ]
                             },
                             "type": "Compose",
-                            "inputs": "Azure Deprecation Notices - Monthly Summary (@{formatDateTime(variables('PastPeriod'), 'MMMM yyyy')})"
+                            "inputs": "Azure Deprecation Notices - Monthly Summary (@{formatDateTime(utcNow(), 'MMMM yyyy')})",
                         },
                         "Create_New_Campaign": {
                             "runAfter": {
@@ -570,26 +570,23 @@
                                 ]
                             }
                         },
-                        "Set_Campaign_Content": {
+                        "Show_New_Deprecations": {
+                            "inputs": "@variables('NewDeprecationsHtml')",
                             "runAfter": {
                                 "Create_New_Campaign": [
                                     "Succeeded"
                                 ]
                             },
-                            "type": "Http",
-                            "inputs": {
-                                "body": {
-                                    "template": {
-                                        "id": "@parameters('MailChimp.Template.Id')",
-                                        "sections": {}
-                                    }
-                                },
-                                "headers": {
-                                    "Authorization": "Basic @{parameters('MailChimp.BearerToken')}"
-                                },
-                                "method": "PUT",
-                                "uri": "https://us2.api.mailchimp.com/3.0/campaigns/@{body('Create_New_Campaign')?['id']}/content"
-                            }
+                            "type": "Compose"
+                        },
+                        "Show_Upcoming_Deprecations": {
+                            "inputs": "@variables('UpcomingDeprecationsHtml')",
+                            "runAfter": {
+                                "Show_New_Deprecations": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Compose"
                         }
                     },
                     "outputs": {}
