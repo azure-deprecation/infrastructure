@@ -8,6 +8,9 @@
         "Connections.CosmosDb.Name": {
             "type": "String"
         },
+        "Connections.Gmail.Name": {
+            "type": "String"
+        },
         "Connections.MailChimp.Name": {
             "type": "String"
         },
@@ -28,6 +31,12 @@
         },
         "EventGrid.Topic.Name": {
             "type": "String"
+        },
+        "Gmail.Auth.ClientId": {
+            "type": "String"
+        },
+        "Gmail.Auth.ClientSecret": {
+            "type": "SecureString"
         },
         "MailChimp.Auth.BearerToken": {
             "type": "SecureString"
@@ -53,6 +62,7 @@
     },
     "variables": {
         "Connections.CosmosDb.Id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/documentdb')]",
+        "Connections.Gmail.Id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/gmail')]",
         "Connections.MailChimp.Id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/mailchimp')]",
         "Connections.ServiceBus.Id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/servicebus')]",
         "Connections.Twitter.Id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/twitter')]"
@@ -320,7 +330,8 @@
                 "api": {
                     "id": "[variables('Connections.MailChimp.Id')]"
                 },
-                "parameterValues": {}
+                "parameterValues": {
+                }
             },
             "dependsOn": []
         },
@@ -369,12 +380,36 @@
                         }
                     },
                     "actions": {
+                        "Close_HTML_List_(New)": {
+                            "runAfter": {
+                                "For_Each_New_Deprecation": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "AppendToStringVariable",
+                            "inputs": {
+                                "name": "NewDeprecationsHtml",
+                                "value": "</ul>"
+                            }
+                        },
+                        "Close_HTML_List_(Upcoming)": {
+                            "runAfter": {
+                                "For_Each_Upcoming_Deprecation": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "AppendToStringVariable",
+                            "inputs": {
+                                "name": "UpcomingDeprecationsHtml",
+                                "value": "</ul>"
+                            }
+                        },
                         "Compose_Email_Campaign_Name": {
                             "runAfter": {
-                                "Get_First_10_Upcoming_Deprecations": [
+                                "Close_HTML_List_(New)": [
                                     "Succeeded"
                                 ],
-                                "Get_New_Deprecations_From_Last_Month": [
+                                "Close_HTML_List_(Upcoming)": [
                                     "Succeeded"
                                 ]
                             },
@@ -410,39 +445,47 @@
                                 "path": "/v2/campaigns"
                             }
                         },
-                        "Get_Campaign_Info": {
+                        "For_Each_New_Deprecation": {
+                            "foreach": "@body('Get_New_Deprecations_From_Last_Month')?['value']",
+                            "actions": {
+                                "Append_New_Deprecation_To_List": {
+                                    "runAfter": {},
+                                    "type": "AppendToStringVariable",
+                                    "inputs": {
+                                        "name": "NewDeprecationsHtml",
+                                        "value": "<li>@{items('For_Each_New_Deprecation')['Title']} (<a href=\"@{items('For_Each_New_Deprecation')['Url']}\">link</a>)</li>"
+                                    }
+                                }
+                            },
                             "runAfter": {
-                                "Create_New_Campaign": [
+                                "Get_New_Deprecations_From_Last_Month": [
                                     "Succeeded"
                                 ]
                             },
-                            "type": "Http",
-                            "inputs": {
-                                "headers": {
-                                    "Authorization": "Basic @{parameters('MailChimp.BearerToken')}"
-                                },
-                                "method": "GET",
-                                "uri": "https://us2.api.mailchimp.com/3.0/campaigns/@{body('Create_New_Campaign')?['id']}/content"
-                            }
+                            "type": "Foreach"
                         },
-                        "Get_Default_Content_for_Template": {
+                        "For_Each_Upcoming_Deprecation": {
+                            "foreach": "@body('Get_First_10_Upcoming_Deprecations')?['value']",
+                            "actions": {
+                                "Append_Upcoming_Deprecation_To_List": {
+                                    "runAfter": {},
+                                    "type": "AppendToStringVariable",
+                                    "inputs": {
+                                        "name": "UpcomingDeprecationsHtml",
+                                        "value": "<li>@{items('For_Each_Upcoming_Deprecation')['Title']} (<a href=\"@{items('For_Each_Upcoming_Deprecation')['Url']}\">link</a>)</li>"
+                                    }
+                                }
+                            },
                             "runAfter": {
-                                "Get_Template_Info": [
+                                "Get_First_10_Upcoming_Deprecations": [
                                     "Succeeded"
                                 ]
                             },
-                            "type": "Http",
-                            "inputs": {
-                                "headers": {
-                                    "Authorization": "Basic @{parameters('MailChimp.BearerToken')}"
-                                },
-                                "method": "GET",
-                                "uri": "https://us2.api.mailchimp.com/3.0/templates/@{parameters('MailChimp.Template.Id')}/default-content"
-                            }
+                            "type": "Foreach"
                         },
                         "Get_First_10_Upcoming_Deprecations": {
                             "runAfter": {
-                                "Initialize_Past_Period_Variable": [
+                                "Initialize_Upcoming_Deprecations_HTML": [
                                     "Succeeded"
                                 ]
                             },
@@ -462,7 +505,7 @@
                         },
                         "Get_New_Deprecations_From_Last_Month": {
                             "runAfter": {
-                                "Initialize_Past_Period_Variable": [
+                                "Initialize_Upcoming_Deprecations_HTML": [
                                     "Succeeded"
                                 ]
                             },
@@ -480,19 +523,21 @@
                                 }
                             }
                         },
-                        "Get_Template_Info": {
+                        "Initialize_New_Deprecations_HTML": {
                             "runAfter": {
-                                "Get_Campaign_Info": [
+                                "Initialize_Past_Period_Variable": [
                                     "Succeeded"
                                 ]
                             },
-                            "type": "Http",
+                            "type": "InitializeVariable",
                             "inputs": {
-                                "headers": {
-                                    "Authorization": "Basic @{parameters('MailChimp.BearerToken')}"
-                                },
-                                "method": "GET",
-                                "uri": "https://us2.api.mailchimp.com/3.0/templates/@{parameters('MailChimp.Template.Id')}"
+                                "variables": [
+                                    {
+                                        "name": "NewDeprecationsHtml",
+                                        "type": "string",
+                                        "value": "<ul>"
+                                    }
+                                ]
                             }
                         },
                         "Initialize_Past_Period_Variable": {
@@ -508,26 +553,26 @@
                                 ]
                             }
                         },
-                        "Send_Campaign_To_Subscribers": {
+                        "Initialize_Upcoming_Deprecations_HTML": {
                             "runAfter": {
-                                "Set_Campaign_Content": [
+                                "Initialize_New_Deprecations_HTML": [
                                     "Succeeded"
                                 ]
                             },
-                            "type": "ApiConnection",
+                            "type": "InitializeVariable",
                             "inputs": {
-                                "host": {
-                                    "connection": {
-                                        "name": "@parameters('$connections')['mailchimp']['connectionId']"
+                                "variables": [
+                                    {
+                                        "name": "UpcomingDeprecationsHtml",
+                                        "type": "string",
+                                        "value": "<ul>"
                                     }
-                                },
-                                "method": "post",
-                                "path": "/campaigns/@{encodeURIComponent(body('Create_New_Campaign')?['id'])}/actions/send"
+                                ]
                             }
                         },
                         "Set_Campaign_Content": {
                             "runAfter": {
-                                "Get_Default_Content_for_Template": [
+                                "Create_New_Campaign": [
                                     "Succeeded"
                                 ]
                             },
@@ -536,9 +581,7 @@
                                 "body": {
                                     "template": {
                                         "id": "@parameters('MailChimp.Template.Id')",
-                                        "sections": {
-                                            "content": "Hello World from Logic Apps!"
-                                        }
+                                        "sections": {}
                                     }
                                 },
                                 "headers": {

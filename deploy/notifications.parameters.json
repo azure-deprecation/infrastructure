@@ -8,6 +8,9 @@
     "Connections.CosmosDb.Name": {
       "value": "#{Connections.CosmosDb.Name}#"
     },
+    "Connections.Gmail.Name": {
+      "value": "#{Connections.Gmail.Name}#"
+    },
     "Connections.MailChimp.Name": {
       "value": "#{Connections.MailChimp.Name}#"
     },
