@@ -330,8 +330,7 @@
                 "api": {
                     "id": "[variables('Connections.MailChimp.Id')]"
                 },
-                "parameterValues": {
-                }
+                "parameterValues": {}
             },
             "dependsOn": []
         },
@@ -414,7 +413,7 @@
                                 ]
                             },
                             "type": "Compose",
-                            "inputs": "Azure Deprecation Notices - Monthly Summary (@{formatDateTime(utcNow(), 'MMMM yyyy')})",
+                            "inputs": "Azure Deprecation Notices - Monthly Summary (@{formatDateTime(utcNow(), 'MMMM yyyy')})"
                         },
                         "Create_New_Campaign": {
                             "runAfter": {
