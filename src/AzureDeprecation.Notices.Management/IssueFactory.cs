@@ -148,7 +148,7 @@ namespace AzureDeprecation.Notices.Management
                 case ContactType.Email:
                     return $"Contact the product group through email ([email](mailto:{contactEntry.Data})).";
                 case ContactType.MicrosoftQAndA:
-                    return $"Get answers from Microsoft Q&A ([link](mailto:{contactEntry.Data})).";
+                    return $"Get answers from Microsoft Q&A ([link]({contactEntry.Data})).";
                 case ContactType.NotAvailable:
                     return "None.";
                 case ContactType.Unknown:
