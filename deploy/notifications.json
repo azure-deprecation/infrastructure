@@ -518,7 +518,7 @@
                                 "method": "get",
                                 "path": "/v5/cosmosdb/@{encodeURIComponent('AccountNameFromSettings')}/dbs/@{encodeURIComponent('deprecation-db')}/colls/@{encodeURIComponent('deprecations')}/query",
                                 "queries": {
-                                    "queryText": "SELECT c.DeprecationInfo.Title, c.PublishedNotice.DashboardInfo.Url FROM c WHERE c.PublishedNotice.CreatedAt >= '@{formatDateTime(variables('PastPeriod'), 'yyyy-MM')}-01T00:00:01+00:00' AND c.PublishedNotice.CreatedAt < '@{formatDateTime(utcNow(), 'yyyy-MM')}-01T00:00:01+00:00' ORDER BY c.DeprecationInfo.Timeline ASC"
+                                    "queryText": "SELECT c.DeprecationInfo.Title, c.PublishedNotice.DashboardInfo.Url FROM c WHERE c.PublishedNotice.UpdatedAt >= '@{formatDateTime(variables('PastPeriod'), 'yyyy-MM')}-01T00:00:01+00:00' AND c.PublishedNotice.CreatedAt < '@{formatDateTime(utcNow(), 'yyyy-MM')}-01T00:00:01+00:00' ORDER BY c.DeprecationInfo.Timeline ASC"
                                 }
                             }
                         },
