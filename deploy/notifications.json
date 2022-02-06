@@ -617,8 +617,10 @@
                         "Send_Notification_Email": {
                             "inputs": {
                                 "body": {
-                                    "Body": "<p>Chop chop!</p>",
+                                    "Body": "<p>New deprecations:</p>\n@{variables('NewDeprecationsHtml')}\n<p>Upcoming deprecations:</p>\n@{variables('UpcomingDeprecationsHtml')}",
                                     "Subject": "[Action Required] @{outputs('Compose_Email_Campaign_Name')}",
+                                    "Cc": "tomkerkhove.opensource@gmail.com",
+                                    "Importance": "High",
                                     "To": "kerkhove.tom@gmail.com"
                                 },
                                 "host": {
@@ -651,6 +653,11 @@
                                 "connectionId": "[resourceId('Microsoft.Web/connections', parameters('Connections.MailChimp.Name'))]",
                                 "connectionName": "[parameters('Connections.MailChimp.Name')]",
                                 "id": "[variables('Connections.MailChimp.Id')]"
+                            },
+                            "gmail": {
+                                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('Connections.Gmail.Name'))]",
+                                "connectionName": "[parameters('Connections.Gmail.Name')]",
+                                "id": "[variables('Connections.Gmail.Id')]"
                             }
                         }
                     }
