@@ -335,6 +335,33 @@
             "dependsOn": []
         },
         {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2018-07-01-preview",
+            "name": "[parameters('Connections.Gmail.Name')]",
+            "location": "[resourceGroup().location]",
+            "kind": "V1",
+            "properties": {
+                "api": {
+                    "id": "[variables('Connections.Gmail.Id')]"
+                },
+                "displayName": "[parameters('Connections.Gmail.Name')]",
+                "parameterValueSet": {
+                    "name": "byoa",
+                    "values": {
+                        "token-byoa:clientId": {
+                            "value": "[parameters('Gmail.Auth.ClientId')]"
+                        },
+                        "token-byoa:clientSecret": {
+                            "value": "[parameters('Gmail.Auth.ClientSecret')]"
+                        },
+                        "token-byoa": {
+                            "value": "https://global.consent.azure-apim.net/redirect"
+                        }
+                    }
+                }
+            }
+        },
+        {
             "type": "Microsoft.Logic/workflows",
             "apiVersion": "2017-07-01",
             "name": "[parameters('Workflow.MonthlySummaryNewsletter.Name')]",
@@ -586,6 +613,28 @@
                                 ]
                             },
                             "type": "Compose"
+                        },
+                        "Send_Notification_Email": {
+                            "inputs": {
+                                "body": {
+                                    "Body": "<p>Chop chop!</p>",
+                                    "Subject": "[Action Required] @{outputs('Compose_Email_Campaign_Name')}",
+                                    "To": "kerkhove.tom@gmail.com"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['gmail']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v2/Mail"
+                            },
+                            "runAfter": {
+                                "Show_Upcoming_Deprecations": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection"
                         }
                     },
                     "outputs": {}
@@ -609,6 +658,7 @@
             },
             "dependsOn": [
                 "[resourceId('Microsoft.Web/connections', parameters('Connections.CosmosDb.Name'))]",
+                "[resourceId('Microsoft.Web/connections', parameters('Connections.Gmail.Name'))]",
                 "[resourceId('Microsoft.Web/connections', parameters('Connections.MailChimp.Name'))]"
             ]
         }
