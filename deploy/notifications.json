@@ -177,11 +177,7 @@
                         }
                     },
                     "triggers": {
-                        "When_a_message_is_received_in_a_topic_subscription_(auto-complete)": {
-                            "recurrence": {
-                                "frequency": "Minute",
-                                "interval": 15
-                            },
+                        "When_a_new_notice_was_published": {
                             "type": "ApiConnection",
                             "inputs": {
                                 "host": {
@@ -190,14 +186,41 @@
                                     }
                                 },
                                 "method": "get",
-                                "path": "/@{encodeURIComponent(encodeURIComponent('new-deprecation-notices'))}/subscriptions/@{encodeURIComponent('new-notice-tweet')}/messages/head",
+                                "path": "/@{encodeURIComponent(encodeURIComponent('new-deprecation-notices'))}/subscriptions/@{encodeURIComponent('new-notice-tweet')}/messages/head/peek",
                                 "queries": {
+                                    "sessionId": "None",
                                     "subscriptionType": "Main"
                                 }
+                            },
+                            "recurrence": {
+                                "frequency": "Minute",
+                                "interval": 15
                             }
                         }
                     },
                     "actions": {
+                        "Complete_the_new_notice_to_tweet": {
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['servicebus']['connectionId']"
+                                    }
+                                },
+                                "method": "delete",
+                                "path": "/@{encodeURIComponent(encodeURIComponent('new-deprecation-notices'))}/subscriptions/@{encodeURIComponent('new-notice-tweet')}/messages/complete",
+                                "queries": {
+                                    "lockToken": "@triggerBody()?['LockToken']",
+                                    "sessionId": "",
+                                    "subscriptionType": "Main"
+                                }
+                            },
+                            "runAfter": {
+                                "Post_a_tweet": [
+                                    "Succeeded"
+                                ]
+                            }
+                        },
                         "Parse_JSON": {
                             "runAfter": {},
                             "type": "ParseJson",
