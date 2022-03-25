@@ -39,6 +39,7 @@ namespace AzureDeprecation.Contracts.Enum
         DatabaseMigrationService,
         Databricks,
         DataFactory,
+        DataLakeAnalytics,
         DataLakeStorage,
         DataShare,
         DataScience,
