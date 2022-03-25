@@ -81,6 +81,8 @@ namespace AzureDeprecation.Notices.Management
                     return "services:databricks";
                 case AzureService.DataFactory:
                     return "services:data-factory";
+                case AzureService.DataLakeAnalytics:
+                    return "services:data-lake-analytics";
                 case AzureService.DataLakeStorage:
                     return "services:data-lake-storage";
                 case AzureService.DataShare:
