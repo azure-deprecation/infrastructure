@@ -90,6 +90,7 @@ namespace AzureDeprecation.Contracts.Enum
         RedHatOpenshift,
         Relay,
         RemoteRendering,
+        ReservedIp,
         ResourceGraph,
         ResourceManager,
         SecurityCenter,

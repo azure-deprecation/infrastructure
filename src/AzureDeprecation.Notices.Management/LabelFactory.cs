@@ -175,6 +175,10 @@ namespace AzureDeprecation.Notices.Management
                     return "services:red-hat-openshift";
                 case AzureService.RemoteRendering:
                     return "services:remote-rendering";
+                case AzureService.ReservedIp:
+                    return "services:reserved-ip";
+                case AzureService.ResourceGraph:
+                    return "services:resource-graph";
                 case AzureService.ResourceManager:
                     return "services:arm";
                 case AzureService.SecurityCenter:
@@ -245,8 +249,6 @@ namespace AzureDeprecation.Notices.Management
                     return "services:hdinsight";
                 case AzureService.EventHubs:
                     return "services:event-hubs";
-                case AzureService.ResourceGraph:
-                    return "services:resource-graph";
                 case AzureService.All:
                     return "services:all";
                 case AzureService.Relay:
