@@ -8,6 +8,7 @@ namespace AzureDeprecation.Contracts.Enum
         AnalysisService,
         AnomalyDetector,
         ApiApps,
+        ApiForFhir,
         ApiManagement,
         AppConfiguration,
         ApplicationGateway,

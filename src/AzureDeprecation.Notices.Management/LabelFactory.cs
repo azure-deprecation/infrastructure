@@ -19,6 +19,8 @@ namespace AzureDeprecation.Notices.Management
                     return "services:anomaly-detector";
                 case AzureService.ApiApps:
                     return "services:api-apps";
+                case AzureService.ApiForFhir:
+                    return "services:api-for-fhir";
                 case AzureService.ApiManagement:
                     return "services:api-management";
                 case AzureService.AppConfiguration:
