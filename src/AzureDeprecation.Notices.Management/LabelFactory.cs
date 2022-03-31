@@ -168,7 +168,9 @@ namespace AzureDeprecation.Notices.Management
                 case AzureService.Other:
                     return "services:other";
                 case AzureService.Policy:
-                    return "services:policy";
+                    return "services:policy"; 
+                case AzureService.Portal:
+                    return "services:portal";
                 case AzureService.PrivateLink:
                     return "services:private-link";
                 case AzureService.RedHatOpenshift:

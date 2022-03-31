@@ -85,6 +85,7 @@ namespace AzureDeprecation.Contracts.Enum
         NotificationHubs,
         Other,
         Policy,
+        Portal,
         PowerBI,
         PrivateLink,
         RedHatOpenshift,
