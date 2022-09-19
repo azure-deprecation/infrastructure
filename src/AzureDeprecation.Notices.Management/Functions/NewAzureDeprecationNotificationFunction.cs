@@ -1,12 +1,13 @@
 using System;
 using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
 using AzureDeprecation.Contracts;
 using AzureDeprecation.Notices.Management.MessageHandlers;
-using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SBEntityType = Microsoft.Azure.WebJobs.ServiceBus.ServiceBusEntityType;
 
 namespace AzureDeprecation.Notices.Management.Functions
 {
@@ -23,19 +24,18 @@ namespace AzureDeprecation.Notices.Management.Functions
         }
 
         [FunctionName("publish-new-notice")]
-        public async Task Run([ServiceBusTrigger("new-azure-deprecation", Connection = "ServiceBus_ConnectionString")]Message queueMessage,
-                              [ServiceBus("new-deprecation-notices", EntityType.Topic, Connection = "ServiceBus_ConnectionString")] IAsyncCollector<Message> publishedDeprecationNotice,
+        public async Task Run([ServiceBusTrigger("new-azure-deprecation", Connection = "ServiceBus_ConnectionString")] ServiceBusReceivedMessage queueMessage,
+                              [ServiceBus("new-deprecation-notices", SBEntityType.Topic, Connection = "ServiceBus_ConnectionString")] IAsyncCollector<ServiceBusMessage> publishedDeprecationNotice,
                               ILogger log)
         {
-            if (queueMessage.UserProperties.ContainsKey("MessageType") == false)
+            if (!queueMessage.ApplicationProperties.TryGetValue("MessageType", out var rawMessageType) ||
+                rawMessageType is not string messageTypeString ||
+                !Enum.TryParse<MessageType>(messageTypeString, true, out var messageType))
             {
                 throw new ArgumentException("No message type was annotated to the message.");
             }
 
-            var rawMessageType = queueMessage.UserProperties["MessageType"]?.ToString();
-            var messageType = Enum.Parse<MessageType>(rawMessageType);
-
-            Message outputMessage;
+            ServiceBusMessage outputMessage;
             switch (messageType)
             {
                 case MessageType.NewAzureDeprecationV1:
