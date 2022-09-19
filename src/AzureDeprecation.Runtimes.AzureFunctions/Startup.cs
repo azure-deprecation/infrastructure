@@ -22,15 +22,20 @@ namespace AzureDeprecation.Runtimes.AzureFunctions
             var config = serviceProvider.GetRequiredService<IConfiguration>();
             var instrumentationKey = config.GetValue<string>("APPINSIGHTS_INSTRUMENTATIONKEY");
 
-            var logger = new LoggerConfiguration()
+            var loggerConfiguration = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .Enrich.FromLogContext()
                 .Enrich.WithComponentName(ComponentName)
                 .Enrich.WithVersion()
-                .WriteTo.Console()
-                .WriteTo.AzureApplicationInsights(instrumentationKey)
-                .CreateLogger();
+                .WriteTo.Console();
+
+            if (string.IsNullOrWhiteSpace(instrumentationKey) == false)
+            {
+                loggerConfiguration.WriteTo.AzureApplicationInsights(instrumentationKey);
+            }
+
+            var logger = loggerConfiguration.CreateLogger();
 
             builder.Services.AddLogging(loggingBuilder =>
             {
