@@ -55,7 +55,7 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
             var deprecationYear = newNoticeV1MessageQueueMessage.GetDueDate().Year;
 
             // Get matching milestone
-            var milestoneDueDate = DateTimeOffset.Parse($"12/31/{deprecationYear}", CultureInfo.InvariantCulture).AddDays(1);
+            var milestoneDueDate = new DateTimeOffset(new DateTime(deprecationYear + 1, 1, 1));
             var milestone = await _gitHubRepository.GetOrCreateMilestoneAsync(deprecationYear.ToString(),
                 $"All Azure deprecation notices which are closing in {deprecationYear}", milestoneDueDate);
             
