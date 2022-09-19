@@ -63,7 +63,7 @@ https://docs.microsoft.com/en-us/azure/cognitive-services/translator/migrate-to-
             var newAzureDeprecationV1Message = NewAzureDeprecationGenerator.GenerateSample();
 
             // Act
-            var issueContent = IssueFactory.GenerateNewDeprecationNotice(newAzureDeprecationV1Message);
+            var issueContent = IssueFactory.GenerateNewDeprecationNotice(newAzureDeprecationV1Message).ReplaceLineEndings();
 
             // Assert
             Assert.Equal(ExpectedIssueContent, issueContent);
@@ -115,7 +115,7 @@ Here's the official report from Microsoft:
 
 You can get in touch through the following options:
 - Contact the product group through email ([email](mailto:example@example.com)).
-- Get answers from Microsoft Q&A ([link](mailto:https://example.com)).
+- Get answers from Microsoft Q&A ([link](https://example.com)).
 
 ### More information
 
@@ -129,7 +129,7 @@ https://docs.microsoft.com/en-us/azure/cognitive-services/translator/migrate-to-
             };
 
             // Act
-            var issueContent = IssueFactory.GenerateNewDeprecationNotice(newAzureDeprecationV1Message);
+            var issueContent = IssueFactory.GenerateNewDeprecationNotice(newAzureDeprecationV1Message).ReplaceLineEndings();
 
             // Assert
             Assert.Equal(ExpectedIssueContent, issueContent);
@@ -189,7 +189,7 @@ https://docs.microsoft.com/en-us/azure/cognitive-services/translator/migrate-to-
             var newAzureDeprecationV1Message = NewAzureDeprecationGenerator.GenerateSample(useAdvancedTimeline: true);
 
             // Act
-            var issueContent = IssueFactory.GenerateNewDeprecationNotice(newAzureDeprecationV1Message);
+            var issueContent = IssueFactory.GenerateNewDeprecationNotice(newAzureDeprecationV1Message).ReplaceLineEndings();
 
             // Assert
             Assert.Equal(ExpectedIssueContent, issueContent);
