@@ -2,16 +2,16 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "ApplicationInsights.Name": {
+    "applicationInsightsName": {
       "value": "azure-deprecation-notices-telemetry"
     },
-    "Function.App.Name": {
+    "functionAppName": {
       "value": "azure-deprecation-notices-rest-api"
     },
-    "Function.Plan.Name": {
+    "functionPlanName": {
       "value": "azure-deprecation-notices-rest-api"
     },
-    "StorageAccount.Name": {
+    "storageAccountName": {
       "value": "azuredeprecationnotices"
     }
   }

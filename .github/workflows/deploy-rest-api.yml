@@ -40,18 +40,8 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           client-id: ${{ secrets.AZURE_DEPLOYMENT_STAGING_CLIENT_ID }}
 
-        # Deploy ARM template
-      # - name: Run ARM deploy
-      #   uses: azure/arm-deploy@v1
-      #   with:
-      #     subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      #     resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
-      #     deploymentName: rest-api-run-${{ github.run_number }}
-      #     template: rest-api.json
-      #     parameters: rest-api.parameters.staging.json
-
         # Deploy Bicep file
-      - name: Deploy to Azure
+      - name: Deploy to Azure with Bicep
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
@@ -93,17 +83,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           client-id: ${{ secrets.AZURE_DEPLOYMENT_PRODUCTION_CLIENT_ID }}
 
-        # Deploy ARM template
-      # - name: Run ARM deploy
-      #   uses: azure/arm-deploy@v1
-      #   with:
-      #     subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      #     resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
-      #     deploymentName: rest-api-run-${{ github.run_number }}
-      #     template: rest-api.json
-      #     parameters: rest-api.parameters.production.json
-
-        # Deploy Bicep file
+        # Deploy Bicep file with Bicep
       - name: Deploy to Azure
         uses: azure/arm-deploy@v1
         with:
