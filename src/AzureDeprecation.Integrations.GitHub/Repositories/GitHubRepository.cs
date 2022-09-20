@@ -35,7 +35,7 @@ namespace AzureDeprecation.Integrations.GitHub.Repositories
 
         public async Task LockIssueAsync(int issueNumber)
         {
-            await _githubClient.Issue.Lock(_repoOwner, _repoName, issueNumber);
+            await _githubClient.Issue.LockUnlock.Lock(_repoOwner, _repoName, issueNumber);
         }
 
         public async Task<Issue> CreateIssueAsync(string title, string content, Milestone milestone, List<string> labels)

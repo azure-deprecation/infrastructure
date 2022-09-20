@@ -1,22 +1,22 @@
-﻿using System.Text;
-using System.Threading.Tasks;
+﻿using Azure.Messaging.ServiceBus;
 using AzureDeprecation.Contracts;
-using Microsoft.Azure.ServiceBus;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace AzureDeprecation.Notices.Management.MessageHandlers
 {
     public abstract class ServiceBusMessageHandler<TInputMessage, TOutputMessage>
         where TInputMessage : class
     {
-        public async Task<Message> ProcessAsync(Message queueMessage)
+        public async Task<ServiceBusMessage> ProcessAsync(ServiceBusReceivedMessage queueMessage)
         {
             var message = DeserializeMessageBody(queueMessage);
             var outputPayload = await ProcessMessageAsync(message);
             var serializedMessage = SerializeMessageBody(outputPayload);
-            return new Message(serializedMessage);
+            return new ServiceBusMessage(serializedMessage);
         }
 
-        private static TInputMessage DeserializeMessageBody(Message queueMessage)
+        private static TInputMessage DeserializeMessageBody(ServiceBusReceivedMessage queueMessage)
         {
             var rawMessageBody = Encoding.UTF8.GetString(queueMessage.Body);
             return Serializer.Deserialize<TInputMessage>(rawMessageBody);

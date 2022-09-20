@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30413.136
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDeprecation.Integrations.GitHub", "AzureDeprecation.Integrations.GitHub\AzureDeprecation.Integrations.GitHub.csproj", "{4DF77706-C1EA-4EB4-9A71-4DD0635BA825}"
 EndProject
@@ -11,9 +11,35 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDeprecation.Contracts"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDeprecation.Tests.Unit", "AzureDeprecation.Tests.Unit\AzureDeprecation.Tests.Unit.csproj", "{7A7CA43F-D57A-477B-888D-BEA63F31AAE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDeprecation.Notifications", "AzureDeprecation.Notifications\AzureDeprecation.Notifications.csproj", "{F7ECA9C9-7BBD-4596-BB60-98EC2DEB9E74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDeprecation.Notifications", "AzureDeprecation.Notifications\AzureDeprecation.Notifications.csproj", "{F7ECA9C9-7BBD-4596-BB60-98EC2DEB9E74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDeprecation.Runtimes.AzureFunctions", "AzureDeprecation.Runtimes.AzureFunctions\AzureDeprecation.Runtimes.AzureFunctions.csproj", "{94A81244-E466-403B-9625-292DE9D67449}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDeprecation.Runtimes.AzureFunctions", "AzureDeprecation.Runtimes.AzureFunctions\AzureDeprecation.Runtimes.AzureFunctions.csproj", "{94A81244-E466-403B-9625-292DE9D67449}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution", ".solution", "{0A81174D-0A8B-4895-A31E-E5E10660DF58}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Packages.props = Directory.Packages.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".reporoot", ".reporoot", "{F06AF75B-DE43-48E9-832F-4381BC639352}"
+	ProjectSection(SolutionItems) = preProject
+		..\global.json = ..\global.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".deploy", ".deploy", "{18C0327B-A43B-40D4-A495-B07AE0019D9E}"
+	ProjectSection(SolutionItems) = preProject
+		..\deploy\azure-infrastructure.json = ..\deploy\azure-infrastructure.json
+		..\deploy\azure-infrastructure.parameters.json = ..\deploy\azure-infrastructure.parameters.json
+		..\deploy\azure-infrastructure.parameters.production.json = ..\deploy\azure-infrastructure.parameters.production.json
+		..\deploy\azure-infrastructure.parameters.staging.json = ..\deploy\azure-infrastructure.parameters.staging.json
+		..\deploy\notice-management.json = ..\deploy\notice-management.json
+		..\deploy\notice-management.parameters.json = ..\deploy\notice-management.parameters.json
+		..\deploy\notice-management.parameters.production.json = ..\deploy\notice-management.parameters.production.json
+		..\deploy\notice-management.parameters.staging.json = ..\deploy\notice-management.parameters.staging.json
+		..\deploy\notifications.json = ..\deploy\notifications.json
+		..\deploy\notifications.parameters.json = ..\deploy\notifications.parameters.json
+		..\deploy\notifications.parameters.production.json = ..\deploy\notifications.parameters.production.json
+		..\deploy\notifications.parameters.staging.json = ..\deploy\notifications.parameters.staging.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
