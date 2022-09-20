@@ -29,7 +29,7 @@ jobs:
       with:
         deploymentMode: Validate
         resourceGroupName: azure-deprecation-notices-staging
-        template: ./deploy/azure-infrastructure.json
+        template: ./deploy/azure-infrastructure.bicep
         parameters: ./deploy/azure-infrastructure.parameters.staging.json
 
     - name: Lint ARM template (Notice Management)
@@ -37,7 +37,7 @@ jobs:
       with:
         deploymentMode: Validate
         resourceGroupName: azure-deprecation-notices-staging
-        template: ./deploy/notice-management.json
+        template: ./deploy/notice-management.bicep
         parameters: ./deploy/notice-management.parameters.staging.json
 
     - name: Lint ARM template (REST API)
@@ -53,7 +53,7 @@ jobs:
       with:
         deploymentMode: Validate
         resourceGroupName: azure-deprecation-notices-staging
-        template: ./deploy/notifications.json
+        template: ./deploy/notifications.bicep
         parameters: ./deploy/notifications.parameters.staging.json MailChimp.Auth.BearerToken=CI Gmail.Auth.ClientId=CI Gmail.Auth.ClientSecret=CI
 
   solution:

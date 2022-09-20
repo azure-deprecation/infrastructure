@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-    - 'deploy/azure-infrastructure.json'
+    - 'deploy/azure-infrastructure.bicep'
     - '.github/workflows/package-azure-infrastructure.yml'
     
 env:
@@ -18,11 +18,11 @@ jobs:
     environment: production
     steps:
     - uses: actions/checkout@v2
-    - name: Publish ARM template to Artifact
+    - name: Publish Bicep template to Artifact
       uses: actions/upload-artifact@v2
       with:
           name: ${{ env.ARTIFACT_NAME }}
-          path: deploy/azure-infrastructure.json
+          path: deploy/azure-infrastructure.bicep
           
     - name: Publish ARM template parameters (Tokenized) to Artifact
       uses: actions/upload-artifact@v2

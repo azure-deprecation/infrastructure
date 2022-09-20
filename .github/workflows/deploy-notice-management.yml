@@ -45,7 +45,7 @@ jobs:
         with:
           resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
           deploymentName: notifice-management-run-${{ github.run_number }}
-          template: notice-management.json
+          template: notice-management.bicep
           parameters: notice-management.parameters.staging.json GitHub.Token=${{ secrets.BOT_GITHUB_TOKEN }}
       
       - name: Deploy Azure Function
@@ -86,7 +86,7 @@ jobs:
         with:
           resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
           deploymentName: notifice-management-run-${{ github.run_number }}
-          template: notice-management.json
+          template: notice-management.bicep
           parameters: notice-management.parameters.production.json GitHub.Token=${{ secrets.BOT_GITHUB_TOKEN }}
       
       - name: Deploy Azure Function
