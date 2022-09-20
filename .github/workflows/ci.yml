@@ -5,17 +5,25 @@ on:
     - '.github/workflows/ci.yml'
     - 'deploy/**'
     - 'src/**'
-  
+
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   azure:
     name: Azure
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
+
     - name: Authenticate to Azure
       uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        client-id: ${{ secrets.AZURE_CI_CLIENT_ID }}
+
     - name: Lint ARM template (Azure Infrastructure)
       uses: azure/arm-deploy@v1
       with:
@@ -23,6 +31,7 @@ jobs:
         resourceGroupName: azure-deprecation-notices-staging
         template: ./deploy/azure-infrastructure.json
         parameters: ./deploy/azure-infrastructure.parameters.staging.json
+
     - name: Lint ARM template (Notice Management)
       uses: azure/arm-deploy@v1
       with:
@@ -30,6 +39,7 @@ jobs:
         resourceGroupName: azure-deprecation-notices-staging
         template: ./deploy/notice-management.json
         parameters: ./deploy/notice-management.parameters.staging.json
+
     - name: Lint ARM template (Notifications)
       uses: azure/arm-deploy@v1
       with:
