@@ -41,16 +41,12 @@ jobs:
           client-id: ${{ secrets.AZURE_DEPLOYMENT_STAGING_CLIENT_ID }}
 
         # Deploy ARM template
-      - name: Run ARM deploy
-        uses: whiteducksoftware/azure-arm-action@v3.3
+      - uses: azure/arm-deploy@v1
         with:
-          creds : ${{ secrets.AZURE_CREDENTIALS_STAGING }}
           resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
-          templateLocation: notice-management.json
-          parameters: notice-management.parameters.staging.json
           deploymentName: notifice-management-run-${{ github.run_number }}
-          overrideParameters: |
-            GitHub.Token=${{ secrets.BOT_GITHUB_TOKEN }}
+          template: notice-management.json
+          parameters: notice-management.parameters.staging.json GitHub.Token=${{ secrets.BOT_GITHUB_TOKEN }}
       
       - name: Deploy Azure Function
         id: deploy-to-azure
@@ -86,16 +82,12 @@ jobs:
           client-id: ${{ secrets.AZURE_DEPLOYMENT_PRODUCTION_CLIENT_ID }}
 
         # Deploy ARM template
-      - name: Run ARM deploy
-        uses: whiteducksoftware/azure-arm-action@v3.3
+      - uses: azure/arm-deploy@v1
         with:
-          creds : ${{ secrets.AZURE_CREDENTIALS_PRODUCTION }}
           resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
-          templateLocation: notice-management.json
           deploymentName: notifice-management-run-${{ github.run_number }}
-          parameters: notice-management.parameters.production.json
-          overrideParameters: |
-            GitHub.Token=${{ secrets.BOT_GITHUB_TOKEN }}
+          template: notice-management.json
+          parameters: notice-management.parameters.production.json GitHub.Token=${{ secrets.BOT_GITHUB_TOKEN }}
       
       - name: Deploy Azure Function
         id: deploy-to-azure
