@@ -6,6 +6,10 @@ on:
     branches: [main]
     types: 
       - completed
+
+permissions:
+  id-token: write
+  contents: read
     
 env:
   ARTIFACT_NAME: notifications
@@ -32,7 +36,9 @@ jobs:
           # Login to Azure
       - uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS_STAGING }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.AZURE_DEPLOYMENT_STAGING_CLIENT_ID }}
 
         # Deploy ARM template
       - name: Run ARM deploy
@@ -73,7 +79,9 @@ jobs:
           # Login to Azure
       - uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS_PRODUCTION }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.AZURE_DEPLOYMENT_PRODUCTION_CLIENT_ID }}
 
         # Deploy ARM template
       - name: Run ARM deploy
