@@ -1,4 +1,4 @@
-name: Notifications (Package)
+name: REST API (Package)
 on:
   workflow_dispatch:
   push:
