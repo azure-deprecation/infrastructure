@@ -95,6 +95,10 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
                 var cloudLabel = LabelFactory.GetForCloud(newNoticeV1MessageQueueMessage.Impact.Cloud);
                 labels.Add(cloudLabel);
             }
+            else
+            {
+                labels.Add("unknown");
+            }
 
             return labels;
         }

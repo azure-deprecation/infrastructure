@@ -55,23 +55,31 @@ namespace AzureDeprecation.Notices.Management
 
         private static void WriteNotice(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage, StringBuilder issueBuilder)
         {
+            issueBuilder.AppendLine("### Notice");
+            issueBuilder.AppendLine();
             if (!string.IsNullOrWhiteSpace(newNoticeV1MessageQueueMessage.Notice?.Description))
             {
-                issueBuilder.AppendLine("### Notice");
-                issueBuilder.AppendLine();
                 issueBuilder.AppendLine(newNoticeV1MessageQueueMessage.Notice.Description);
+            }
+            else
+            {
+                issueBuilder.AppendLine(); // TODO: come up with proper wording for missing Notice.Description
             }
         }
 
         private static void WriteImpact(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage, StringBuilder issueBuilder)
         {
+            issueBuilder.AppendLine("### Impact");
+            issueBuilder.AppendLine();
             if (!string.IsNullOrWhiteSpace(newNoticeV1MessageQueueMessage.Impact?.Description))
             {
-                issueBuilder.AppendLine("### Impact");
-                issueBuilder.AppendLine();
                 issueBuilder.AppendLine(newNoticeV1MessageQueueMessage.Impact.Description);
-                issueBuilder.AppendLine();
             }
+            else
+            {
+                issueBuilder.AppendLine(); // TODO: come up with proper wording for missing Impact.Description
+            }
+            issueBuilder.AppendLine();
         }
 
         private static void WriteTimeline(List<InputTimeLineEntry> timeline, StringBuilder issueBuilder)
@@ -117,11 +125,15 @@ namespace AzureDeprecation.Notices.Management
 
         private static void WriteRequiredAction(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage, StringBuilder issueBuilder)
         {
+            issueBuilder.AppendLine("### Required Action");
+            issueBuilder.AppendLine();
             if (!string.IsNullOrWhiteSpace(newNoticeV1MessageQueueMessage.RequiredAction?.Description))
             {
-                issueBuilder.AppendLine("### Required Action");
-                issueBuilder.AppendLine();
                 issueBuilder.AppendLine(newNoticeV1MessageQueueMessage.RequiredAction.Description);
+            }
+            else
+            {
+                issueBuilder.AppendLine(); // TODO: come up with proper wording for missing RequiredAction.Description
             }
         }
 
