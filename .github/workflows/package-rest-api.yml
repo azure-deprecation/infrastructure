@@ -41,6 +41,12 @@ jobs:
       with:
           name: ${{ env.ARTIFACT_NAME }}
           path: deploy/rest-api.json
+
+    - name: Publish Bicep template to Artifact
+      uses: actions/upload-artifact@v2
+      with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: deploy/rest-api.bicep
           
     - name: Publish ARM template parameters (Tokenized) to Artifact
       uses: actions/upload-artifact@v2
