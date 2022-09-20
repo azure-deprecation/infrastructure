@@ -1,7 +1,7 @@
 param applicationInsightsName string
 param functionAppName string
 param functionPlanName string
-param StorageAccount_Name string
+param storageAccountName string
 param defaultLocation string = resourceGroup().location
 
 resource functionPlanResource 'Microsoft.Web/serverfarms@2021-01-15' = {
@@ -33,7 +33,7 @@ resource functionAppResource 'Microsoft.Web/sites@2021-01-15' = {
         }
         {
           name: 'AzureWebJobsStorage'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${StorageAccount_Name};AccountKey=${listKeys(resourceId('Microsoft.Storage/storageAccounts', StorageAccount_Name), '2015-05-01-preview').key1}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};AccountKey=${listKeys(resourceId('Microsoft.Storage/storageAccounts', storageAccountName), '2015-05-01-preview').key1}'
         }
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'
