@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using AzureDeprecation.Contracts.Messages.v1;
 using AzureDeprecation.Integrations.GitHub.Repositories;
 using GuardNet;
@@ -69,7 +65,7 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
             var labels = DetermineRequiredLabels(newNoticeV1MessageQueueMessage);
 
             // Create GitHub issue
-            var createdIssue = await _gitHubRepository.CreateIssueAsync(newNoticeV1MessageQueueMessage.Title, issueContent, milestone, labels);
+            var createdIssue = await _gitHubRepository.CreateIssueAsync(newNoticeV1MessageQueueMessage.Title!, issueContent, milestone, labels);
 
             // Add GitHub issue to deprecation notice project
             await _gitHubRepository.AddIssueToProjectAsync(project.Id, deprecationYear.ToString(), createdIssue.Id);
@@ -84,18 +80,21 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
                 "verified"
             };
 
-            foreach (var service in newNoticeV1MessageQueueMessage.Impact.Services)
+            if (newNoticeV1MessageQueueMessage.Impact is not null)
             {
-                var label = LabelFactory.GetForService(service);
-                labels.Add(label);
-            }
+                foreach (var service in newNoticeV1MessageQueueMessage.Impact.Services)
+                {
+                    var label = LabelFactory.GetForService(service);
+                    labels.Add(label);
+                }
 
-            var areaLabel = LabelFactory.GetForImpactArea(newNoticeV1MessageQueueMessage.Impact.Area);
-            labels.Add(areaLabel);
-            var typeLabel = LabelFactory.GetForImpactType(newNoticeV1MessageQueueMessage.Impact.Type);
-            labels.Add(typeLabel);
-            var cloudLabel = LabelFactory.GetForCloud(newNoticeV1MessageQueueMessage.Impact.Cloud);
-            labels.Add(cloudLabel);
+                var areaLabel = LabelFactory.GetForImpactArea(newNoticeV1MessageQueueMessage.Impact.Area);
+                labels.Add(areaLabel);
+                var typeLabel = LabelFactory.GetForImpactType(newNoticeV1MessageQueueMessage.Impact.Type);
+                labels.Add(typeLabel);
+                var cloudLabel = LabelFactory.GetForCloud(newNoticeV1MessageQueueMessage.Impact.Cloud);
+                labels.Add(cloudLabel);
+            }
 
             return labels;
         }

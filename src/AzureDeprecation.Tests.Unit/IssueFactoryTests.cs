@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using AzureDeprecation.Contracts.Enum;
+﻿using AzureDeprecation.Contracts.Enum;
 using AzureDeprecation.Contracts.Messages.v1;
 using AzureDeprecation.Notices.Management;
 using AzureDeprecation.Tests.Unit.Generator;

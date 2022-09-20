@@ -8,8 +8,9 @@
     <PackageReference Include="Arcus.Observability.Telemetry.AzureFunctions" />
     <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Enrichers" />
     <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Sinks.ApplicationInsights" />
+    <PackageReference Include="Arcus.WebApi.Logging.AzureFunctions" />
     <PackageReference Include="Microsoft.Azure.Functions.Extensions" />
-    <PackageReference Include="Serilog.AspNetCore" />
+    <PackageReference Include="Serilog.Extensions.Logging" />
     <PackageReference Include="Serilog.Sinks.Console" />
   </ItemGroup>
 
