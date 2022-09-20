@@ -121,18 +121,27 @@ namespace AzureDeprecation.Notices.Management
             issueBuilder.AppendLine("### Contact");
             issueBuilder.AppendLine();
 
-            if (newNoticeV1MessageQueueMessage.Contact.Count == 1)
+            switch (newNoticeV1MessageQueueMessage.Contact.Count)
             {
-                var contactInformation = GetContactInformation(newNoticeV1MessageQueueMessage.Contact.First());
-                issueBuilder.AppendLine($"{contactInformation}");
-            }
-            else
-            {
-                issueBuilder.AppendLine("You can get in touch through the following options:");
-                foreach (var contactEntry in newNoticeV1MessageQueueMessage.Contact)
+                case 0:
+                    issueBuilder.AppendLine("No contact information is available.");
+                    break;
+                case 1:
                 {
-                    var contactInformation = GetContactInformation(contactEntry);
-                    issueBuilder.AppendLine($"- {contactInformation}");
+                    var contactInformation = GetContactInformation(newNoticeV1MessageQueueMessage.Contact.First());
+                    issueBuilder.AppendLine($"{contactInformation}");
+                    break;
+                }
+                default:
+                {
+                    issueBuilder.AppendLine("You can get in touch through the following options:");
+                    foreach (var contactEntry in newNoticeV1MessageQueueMessage.Contact)
+                    {
+                        var contactInformation = GetContactInformation(contactEntry);
+                        issueBuilder.AppendLine($"- {contactInformation}");
+                    }
+
+                    break;
                 }
             }
             
