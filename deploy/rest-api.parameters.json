@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "ApplicationInsights.Name": {
+      "value": "#{ApplicationInsights.Name}#"
+    },
+    "Function.App.Name": {
+      "value": "#{Function.App.Name}#"
+    },
+    "Function.Plan.Name": {
+      "value": "#{Function.Plan.Name}#"
+    },
+    "StorageAccount.Name": {
+      "value": "#{StorageAccount.Name}#"
+    }
+  }
+}

@@ -39,6 +39,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".deploy", ".deploy", "{18C0
 		..\deploy\notifications.parameters.json = ..\deploy\notifications.parameters.json
 		..\deploy\notifications.parameters.production.json = ..\deploy\notifications.parameters.production.json
 		..\deploy\notifications.parameters.staging.json = ..\deploy\notifications.parameters.staging.json
+		..\deploy\rest-api.json = ..\deploy\rest-api.json
+		..\deploy\rest-api.parameters.json = ..\deploy\rest-api.parameters.json
+		..\deploy\rest-api.parameters.production.json = ..\deploy\rest-api.parameters.production.json
+		..\deploy\rest-api.parameters.staging.json = ..\deploy\rest-api.parameters.staging.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDeprecation.APIs.REST", "AzureDeprecation.APIs.REST\AzureDeprecation.APIs.REST.csproj", "{170A41DF-52E5-4C31-A473-5C75FDD43107}"
