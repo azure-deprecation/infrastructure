@@ -13,11 +13,8 @@ namespace AzureDeprecation.Notices.Management.Functions
 {
     public class NewAzureDeprecationNotificationFunction
     {
-        // TODO: Use custom GitHub Output binding
-        //   Reference:
-        //   -https://blog.maartenballiauw.be/post/2019/07/30/indexing-searching-nuget-with-azure-functions-and-search.html
-        //   - https://github.com/ealsur/functions-extension-101)
         private readonly IServiceProvider _services;
+
         public NewAzureDeprecationNotificationFunction(IServiceProvider services)
         {
             _services = services;
