@@ -5,7 +5,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace AzureDeprecation_APIs_REST.Functions
+namespace AzureDeprecation.APIs.REST.Functions
 {
     public static class GetDeprecationsFunction
     {
