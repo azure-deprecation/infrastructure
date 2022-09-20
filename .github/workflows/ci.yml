@@ -45,7 +45,7 @@ jobs:
       with:
         deploymentMode: Validate
         resourceGroupName: azure-deprecation-notices-staging
-        template: ./deploy/rest-api.json
+        template: ./deploy/rest-api.bicep
         parameters: ./deploy/rest-api.parameters.staging.json
 
     - name: Lint ARM template (Notifications)
