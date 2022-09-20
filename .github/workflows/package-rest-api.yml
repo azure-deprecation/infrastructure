@@ -12,7 +12,7 @@ on:
     
 env:
   OUTPUT_PATH: ${{ github.workspace }}/.output
-  ARTIFACT_NAME: notifications
+  ARTIFACT_NAME: rest-api
 
 jobs:
   package:

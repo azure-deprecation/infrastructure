@@ -40,6 +40,14 @@ jobs:
         template: ./deploy/notice-management.json
         parameters: ./deploy/notice-management.parameters.staging.json
 
+    - name: Lint ARM template (REST API)
+      uses: azure/arm-deploy@v1
+      with:
+        deploymentMode: Validate
+        resourceGroupName: azure-deprecation-notices-staging
+        template: ./deploy/rest-api.json
+        parameters: ./deploy/rest-api.parameters.staging.json
+
     - name: Lint ARM template (Notifications)
       uses: azure/arm-deploy@v1
       with:
