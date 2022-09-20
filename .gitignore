@@ -330,4 +330,5 @@ ASALocalRun/
 .mfractor/
 
 # Custom
-**/**/local.settings.json
+## Azure Functions
+src/**/local.settings.json
