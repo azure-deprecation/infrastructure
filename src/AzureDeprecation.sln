@@ -17,6 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDeprecation.Runtimes.A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution", ".solution", "{0A81174D-0A8B-4895-A31E-E5E10660DF58}"
 	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
 		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
@@ -27,19 +28,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".reporoot", ".reporoot", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".deploy", ".deploy", "{18C0327B-A43B-40D4-A495-B07AE0019D9E}"
 	ProjectSection(SolutionItems) = preProject
-		..\deploy\azure-infrastructure.json = ..\deploy\azure-infrastructure.json
+		..\deploy\azure-infrastructure.bicep = ..\deploy\azure-infrastructure.bicep
 		..\deploy\azure-infrastructure.parameters.json = ..\deploy\azure-infrastructure.parameters.json
 		..\deploy\azure-infrastructure.parameters.production.json = ..\deploy\azure-infrastructure.parameters.production.json
 		..\deploy\azure-infrastructure.parameters.staging.json = ..\deploy\azure-infrastructure.parameters.staging.json
-		..\deploy\notice-management.json = ..\deploy\notice-management.json
+		..\deploy\notice-management.bicep = ..\deploy\notice-management.bicep
 		..\deploy\notice-management.parameters.json = ..\deploy\notice-management.parameters.json
 		..\deploy\notice-management.parameters.production.json = ..\deploy\notice-management.parameters.production.json
 		..\deploy\notice-management.parameters.staging.json = ..\deploy\notice-management.parameters.staging.json
-		..\deploy\notifications.json = ..\deploy\notifications.json
+		..\deploy\notifications.bicep = ..\deploy\notifications.bicep
 		..\deploy\notifications.parameters.json = ..\deploy\notifications.parameters.json
 		..\deploy\notifications.parameters.production.json = ..\deploy\notifications.parameters.production.json
 		..\deploy\notifications.parameters.staging.json = ..\deploy\notifications.parameters.staging.json
-		..\deploy\rest-api.json = ..\deploy\rest-api.json
+		..\deploy\rest-api.bicep = ..\deploy\rest-api.bicep
 		..\deploy\rest-api.parameters.json = ..\deploy\rest-api.parameters.json
 		..\deploy\rest-api.parameters.production.json = ..\deploy\rest-api.parameters.production.json
 		..\deploy\rest-api.parameters.staging.json = ..\deploy\rest-api.parameters.staging.json

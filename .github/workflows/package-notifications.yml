@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-    - 'deploy/notifications.json'
+    - 'deploy/notifications.bicep'
     - '.github/workflows/package-notifications.yml'
     - 'src/AzureDeprecation.Runtimes.AzureFunctions/*'
     - 'src/AzureDeprecation.Notifications/*'
@@ -37,11 +37,11 @@ jobs:
           name: ${{ env.ARTIFACT_NAME }}
           path: ${{ env.OUTPUT_PATH }}
 
-    - name: Publish ARM template to Artifact
+    - name: Publish Bicep to Artifact
       uses: actions/upload-artifact@v2
       with:
           name: ${{ env.ARTIFACT_NAME }}
-          path: deploy/notifications.json
+          path: deploy/notifications.bicep
           
     - name: Publish ARM template parameters (Tokenized) to Artifact
       uses: actions/upload-artifact@v2

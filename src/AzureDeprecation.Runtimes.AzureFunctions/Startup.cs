@@ -15,11 +15,11 @@ namespace AzureDeprecation.Runtimes.AzureFunctions
         public override void Configure(IFunctionsHostBuilder builder)
         {
             builder.Services.AddHttpClient();
+            builder.AddHttpCorrelation();
 
             ConfigureDependencies(builder.Services);
 
-            var serviceProvider = builder.Services.BuildServiceProvider();
-            var config = serviceProvider.GetRequiredService<IConfiguration>();
+            var config = builder.GetContext().Configuration;
             var instrumentationKey = config.GetValue<string>("APPINSIGHTS_INSTRUMENTATIONKEY");
 
             var loggerConfiguration = new LoggerConfiguration()
@@ -32,15 +32,15 @@ namespace AzureDeprecation.Runtimes.AzureFunctions
 
             if (string.IsNullOrWhiteSpace(instrumentationKey) == false)
             {
-                loggerConfiguration.WriteTo.AzureApplicationInsights(instrumentationKey);
+                loggerConfiguration.WriteTo.AzureApplicationInsightsWithInstrumentationKey(instrumentationKey);
             }
 
             var logger = loggerConfiguration.CreateLogger();
 
             builder.Services.AddLogging(loggingBuilder =>
             {
-                loggingBuilder.ClearProvidersExceptFunctionProviders();
-                loggingBuilder.AddSerilog(logger);
+                loggingBuilder.RemoveMicrosoftApplicationInsightsLoggerProvider();
+                loggingBuilder.AddSerilog(logger, dispose: true);
             });
         }
 

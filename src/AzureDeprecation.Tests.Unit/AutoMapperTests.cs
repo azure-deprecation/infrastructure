@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using AutoFixture;
+﻿using AutoFixture;
 using AutoMapper;
 using AzureDeprecation.APIs.REST.Contracts;
 using AzureDeprecation.APIs.REST.DataAccess.Models;
@@ -11,6 +8,7 @@ using AzureDeprecation.Notices.Management.Mappings;
 using AzureDeprecation.Tests.Unit.Generator;
 using Bogus;
 using DeepEqual.Syntax;
+using FluentAssertions;
 using Octokit;
 using Xunit;
 using DeprecationInfo = AzureDeprecation.Contracts.Messages.v1.DeprecationInfo;
@@ -86,15 +84,16 @@ namespace AzureDeprecation.Tests.Unit
             Assert.NotNull(publishedNotice.Contact);
             Assert.NotNull(publishedNotice.Timeline);
             Assert.Equal(deprecationInfo.Title, publishedNotice.Title);
-            Assert.Equal(deprecationInfo.RequiredAction.Description, publishedNotice.RequiredAction);
+            Assert.Equal(deprecationInfo.RequiredAction?.Description, publishedNotice.RequiredAction);
             Assert.Equal(deprecationInfo.AdditionalInformation, publishedNotice.AdditionalInformation);
             Assert.Equal(deprecationInfo.Contact.Count, publishedNotice.Contact.Count);
             foreach (var contactEntry in deprecationInfo.Contact)
             {
-                Assert.Contains(publishedNotice.Contact, entry => entry.Type == contactEntry.Type && entry.Data.Equals(contactEntry.Data, StringComparison.InvariantCultureIgnoreCase));
+                Assert.Contains(publishedNotice.Contact, entry => entry.Type == contactEntry.Type && string.Equals(entry.Data, contactEntry.Data, StringComparison.InvariantCultureIgnoreCase));
             }
             HasSameNotice(publishedNotice, deprecationInfo);
             HasSameImpact(deprecationInfo, publishedNotice);
+            HasSameTimeline(deprecationInfo, publishedNotice);
         }
 
         [Fact]
@@ -143,37 +142,30 @@ namespace AzureDeprecation.Tests.Unit
         private static void HasSameNotice(DeprecationInfo publishedNotice, NewAzureDeprecationV1Message deprecationInfo)
         {
             Assert.NotNull(publishedNotice.Notice);
-            Assert.Equal(deprecationInfo.Notice.Description, publishedNotice.Notice.Description);
-            Assert.Equal(deprecationInfo.Notice.Links, publishedNotice.Notice.Links);
+            Assert.Equal(deprecationInfo.Notice?.Description, publishedNotice.Notice?.Description);
+            Assert.Equal(deprecationInfo.Notice?.Links, publishedNotice.Notice?.Links);
         }
 
         private static void HasSameImpact(NewAzureDeprecationV1Message deprecationInfo, DeprecationInfo publishedNotice)
         {
             Assert.NotNull(publishedNotice.Impact);
             Assert.NotNull(publishedNotice.Impact.Services);
-            Assert.Equal(deprecationInfo.Impact.Area, publishedNotice.Impact.Area);
-            Assert.Equal(deprecationInfo.Impact.Cloud, publishedNotice.Impact.Cloud);
-            Assert.Equal(deprecationInfo.Impact.Description, publishedNotice.Impact.Description);
-            Assert.Equal(deprecationInfo.Impact.Type, publishedNotice.Impact.Type);
-            Assert.Equal(deprecationInfo.Impact.Services.Count, publishedNotice.Impact.Services.Count);
-            foreach (var impactedService in publishedNotice.Impact.Services)
-            {
-                Assert.Contains(impactedService, deprecationInfo.Impact.Services);
-            }
+            Assert.Equal(deprecationInfo.Impact?.Area, publishedNotice.Impact.Area);
+            Assert.Equal(deprecationInfo.Impact?.Cloud, publishedNotice.Impact.Cloud);
+            Assert.Equal(deprecationInfo.Impact?.Description, publishedNotice.Impact.Description);
+            Assert.Equal(deprecationInfo.Impact?.Type, publishedNotice.Impact.Type);
+            publishedNotice.Impact.Services.Should().BeEquivalentTo(
+                deprecationInfo.Impact?.Services,
+                options => options.ComparingRecordsByValue());
         }
 
         private static void HasSameTimeline(NewAzureDeprecationV1Message deprecationInfo, DeprecationInfo publishedNotice)
         {
             Assert.NotNull(publishedNotice.Timeline);
             Assert.Equal(deprecationInfo.Timeline.Count, publishedNotice.Timeline.Count);
-            foreach (var timelineEntry in publishedNotice.Timeline)
-            {
-                var matchCount = deprecationInfo.Timeline.Count(entry =>
-                    entry.Date == timelineEntry.Date &&
-                    entry.Description.Equals(timelineEntry.Description, StringComparison.InvariantCultureIgnoreCase) &&
-                    entry.Phase.Equals(timelineEntry.Phase, StringComparison.InvariantCultureIgnoreCase));
-                Assert.Equal(1, matchCount);
-            }
+            deprecationInfo.Timeline.Should().BeEquivalentTo(
+                publishedNotice.Timeline,
+                options => options.ComparingRecordsByValue());
         }
 
         private Issue CreateBogusGitHubIssue()

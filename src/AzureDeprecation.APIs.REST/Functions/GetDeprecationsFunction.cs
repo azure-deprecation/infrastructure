@@ -1,5 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
 using AzureDeprecation.APIs.REST.DataAccess.Contracts;
 using AzureDeprecation.APIs.REST.Utils;

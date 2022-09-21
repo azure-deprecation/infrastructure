@@ -2,28 +2,28 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-      "ApplicationInsights.Name": {
+      "applicationInsightsName": {
         "value": "#{ApplicationInsights.Name}#"
       },
-      "CosmosDb.Account.Name": {
+      "cosmosDbAccountName": {
         "value": "#{CosmosDb.Account.Name}#"
       },
-      "CosmosDb.Database.Name": {
+      "cosmosDbDatabaseName": {
         "value": "#{CosmosDb.Database.Name}#"
       },
-      "CosmosDb.Collection.Name": {
+      "cosmosDbCollectionName": {
         "value": "#{CosmosDb.Collection.Name}#"
       },
-      "EventGrid.Topic.Name": {
+      "eventGridTopicName": {
         "value": "#{EventGrid.Topic.Name}#"
       },
-      "LogAnalytics.Name": {
+      "logAnalyticsName": {
         "value": "#{LogAnalytics.Name}#"
       },
-      "ServiceBus.Namespace.Name": {
+      "serviceBusNamespaceName": {
         "value": "#{ServiceBus.Namespace.Name}#"
       },
-      "StorageAccount.Name": {
+      "storageAccountName": {
         "value": "#{StorageAccount.Name}#"
       }
     }

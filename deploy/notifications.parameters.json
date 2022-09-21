@@ -2,46 +2,37 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "ApplicationInsights.Name": {
+    "applicationInsightsName": {
       "value": "#{ApplicationInsights.Name}#"
     },
-    "Connections.CosmosDb.Name": {
+    "cosmosDbConnectionName": {
       "value": "#{Connections.CosmosDb.Name}#"
     },
-    "Connections.Gmail.Name": {
-      "value": "#{Connections.Gmail.Name}#"
-    },
-    "Connections.MailChimp.Name": {
-      "value": "#{Connections.MailChimp.Name}#"
-    },
-    "Connections.ServiceBus.Name": {
+    "serviceBusConnectionName": {
       "value": "#{Connections.ServiceBus.Name}#"
     },
-    "Connections.Twitter.Name": {
+    "twitterConnectionName": {
       "value": "#{Connections.Twitter.Name}#"
     },
-    "CosmosDb.Account.Name": {
+    "cosmosDbAccountName": {
       "value": "#{CosmosDb.Account.Name}#"
     },
-    "Function.App.Name": {
+    "functionAppName": {
       "value": "#{Function.App.Name}#"
     },
-    "Function.Plan.Name": {
+    "functionPlanName": {
       "value": "#{Function.Plan.Name}#"
     },
-    "EventGrid.Topic.Name": {
+    "eventGridTopicName": {
       "value": "#{EventGrid.Topic.Name}#"
     },
-    "ServiceBus.Namespace.Name": {
+    "serviceBusNamespaceName": {
       "value": "#{ServiceBus.Namespace.Name}#"
     },
-    "StorageAccount.Name": {
+    "storageAccountName": {
       "value": "#{StorageAccount.Name}#"
     },
-    "Workflow.MonthlySummaryNewsletter.Name": {
-        "value": "#{Workflow.MonthlySummaryNewsletter.Name}#"
-    },
-    "Workflow.TweetNewDeprecation.Name": {
+    "tweetNewDeprecationWorkflowName": {
       "value": "#{Workflow.TweetNewDeprecation.Name}#"
     }
   }

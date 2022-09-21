@@ -1,0 +1,18 @@
+<!--
+  This file is imported by any project that imports Microsoft.Common.props
+-->
+<Project>
+
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Solution wide disabled warnings. Current list:
+
+      CS1998 - Bad warning. Removing 'async' subtley changes how exceptions are returned, developers should keep async without await's.
+    
+    -->
+    <NoWarn>1998</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+</Project>
