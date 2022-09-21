@@ -1,14 +1,14 @@
 param applicationInsightsName string
 param cosmosDbAccountName string
-param cosmosDbCollectionName string
 param cosmosDbDatabaseName string
+param cosmosDbCollectionName string
 param eventGridTopicName string
 param logAnalyticsName string
 param serviceBusNamespaceName string
 param storageAccountName string
 
 param defaultLocation string = resourceGroup().location
-resource storageAccountNameResource 'Microsoft.Storage/storageAccounts@2021-04-01' = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   name: storageAccountName
   location: defaultLocation
   sku: {
@@ -19,7 +19,7 @@ resource storageAccountNameResource 'Microsoft.Storage/storageAccounts@2021-04-0
   }
 }
 
-resource eventGridTopicNameResource 'Microsoft.EventGrid/topics@2021-06-01-preview' = {
+resource eventGridTopic 'Microsoft.EventGrid/topics@2021-06-01-preview' = {
   name: eventGridTopicName
   location: defaultLocation
   sku: {
@@ -35,7 +35,7 @@ resource eventGridTopicNameResource 'Microsoft.EventGrid/topics@2021-06-01-previ
   }
 }
 
-resource logAnalyticsNameResource 'microsoft.operationalinsights/workspaces@2021-06-01' = {
+resource logAnalyticsWorkspace 'microsoft.operationalinsights/workspaces@2021-06-01' = {
   name: logAnalyticsName
   location: defaultLocation
   properties: {
@@ -52,7 +52,7 @@ resource logAnalyticsNameResource 'microsoft.operationalinsights/workspaces@2021
   }
 }
 
-resource cosmosDbAccountNameResource 'Microsoft.DocumentDB/databaseAccounts@2021-06-15' = {
+resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2021-06-15' = {
   name: cosmosDbAccountName
   location: defaultLocation
   tags: {
@@ -94,8 +94,8 @@ resource cosmosDbAccountNameResource 'Microsoft.DocumentDB/databaseAccounts@2021
   }
 }
 
-resource cosmosDbAccountName_cosmosDbDatabaseName 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2021-06-15' = {
-  parent: cosmosDbAccountNameResource
+resource cosmosDbDatabase 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2021-06-15' = {
+  parent: cosmosDbAccount
   name: cosmosDbDatabaseName
   properties: {
     resource: {
@@ -111,7 +111,7 @@ resource applicationInsightsNameResource 'microsoft.insights/components@2020-02-
   properties: {
     Application_Type: 'web'
     RetentionInDays: 30
-    WorkspaceResourceId: logAnalyticsNameResource.id
+    WorkspaceResourceId: logAnalyticsWorkspace.id
     IngestionMode: 'LogAnalytics'
   }
 }
@@ -127,7 +127,7 @@ resource serviceBusNamespaceNameResource 'Microsoft.ServiceBus/namespaces@2021-0
   }
 }
 
-resource serviceBusNamespaceName_new_azure_deprecation 'Microsoft.ServiceBus/namespaces/queues@2021-06-01-preview' = {
+resource newDeprecationQueue 'Microsoft.ServiceBus/namespaces/queues@2021-06-01-preview' = {
   parent: serviceBusNamespaceNameResource
   name: 'new-azure-deprecation'
   properties: {
@@ -135,15 +135,15 @@ resource serviceBusNamespaceName_new_azure_deprecation 'Microsoft.ServiceBus/nam
   }
 }
 
-resource serviceBusNamespaceName_new_deprecation_notices 'Microsoft.ServiceBus/namespaces/topics@2021-06-01-preview' = {
+resource newDeprecationNoticesTopic 'Microsoft.ServiceBus/namespaces/topics@2021-06-01-preview' = {
   parent: serviceBusNamespaceNameResource
   name: 'new-deprecation-notices'
   properties: {
   }
 }
 
-resource cosmosDbAccountName_cosmosDbDatabaseName_cosmosDbCollectionName 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2021-06-15' = {
-  parent: cosmosDbAccountName_cosmosDbDatabaseName
+resource cosmosDbCollection 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2021-06-15' = {
+  parent: cosmosDbDatabase
   name: cosmosDbCollectionName
   properties: {
     resource: {
@@ -179,19 +179,17 @@ resource cosmosDbAccountName_cosmosDbDatabaseName_cosmosDbCollectionName 'Micros
   }
 }
 
-resource serviceBusNamespaceName_new_deprecation_notices_archive 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-06-01-preview' = {
-  parent: serviceBusNamespaceName_new_deprecation_notices
+resource archiveNewDeprecationsTopicSubscription 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-06-01-preview' = {
+  parent: newDeprecationNoticesTopic
   name: 'archive'
-  location: defaultLocation
   properties: {
     maxDeliveryCount: 3
   }
 }
 
-resource serviceBusNamespaceName_new_deprecation_notices_archive_unfiltered 'Microsoft.ServiceBus/namespaces/topics/subscriptions/rules@2021-06-01-preview' = {
-  parent: serviceBusNamespaceName_new_deprecation_notices_archive
+resource archiveNewDeprecationsTopicSubscriptionFilter 'Microsoft.ServiceBus/namespaces/topics/subscriptions/rules@2021-06-01-preview' = {
+  parent: archiveNewDeprecationsTopicSubscription
   name: 'unfiltered'
-  location: defaultLocation
   properties: {
     action: {
     }
@@ -203,19 +201,17 @@ resource serviceBusNamespaceName_new_deprecation_notices_archive_unfiltered 'Mic
   }
 }
 
-resource serviceBusNamespaceName_new_deprecation_notices_event_grid_notifications 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-06-01-preview' = {
-  parent: serviceBusNamespaceName_new_deprecation_notices
+resource emitEventGridNotificationTopicSubscription 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-06-01-preview' = {
+  parent: newDeprecationNoticesTopic
   name: 'event-grid-notifications'
-  location: defaultLocation
   properties: {
     maxDeliveryCount: 3
   }
 }
 
-resource serviceBusNamespaceName_new_deprecation_notices_event_grid_notifications_unfiltered 'Microsoft.ServiceBus/namespaces/topics/subscriptions/rules@2021-06-01-preview' = {
-  parent: serviceBusNamespaceName_new_deprecation_notices_event_grid_notifications
+resource emitEventGridNotificationTopicSubscriptionFilter 'Microsoft.ServiceBus/namespaces/topics/subscriptions/rules@2021-06-01-preview' = {
+  parent: emitEventGridNotificationTopicSubscription
   name: 'unfiltered'
-  location: defaultLocation
   properties: {
     action: {
     }
@@ -227,16 +223,16 @@ resource serviceBusNamespaceName_new_deprecation_notices_event_grid_notification
   }
 }
 
-resource serviceBusNamespaceName_new_deprecation_notices_new_notice_tweet 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-06-01-preview' = {
-  parent: serviceBusNamespaceName_new_deprecation_notices
+resource tweetNewNoticeTopicSubscription 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-06-01-preview' = {
+  parent: newDeprecationNoticesTopic
   name: 'new-notice-tweet'
   properties: {
     maxDeliveryCount: 3
   }
 }
 
-resource serviceBusNamespaceName_new_deprecation_notices_new_notice_tweet_unfiltered 'Microsoft.ServiceBus/namespaces/topics/subscriptions/rules@2021-06-01-preview' = {
-  parent: serviceBusNamespaceName_new_deprecation_notices_new_notice_tweet
+resource tweetNewNoticeTopicSubscriptionFilter 'Microsoft.ServiceBus/namespaces/topics/subscriptions/rules@2021-06-01-preview' = {
+  parent: tweetNewNoticeTopicSubscription
   name: 'unfiltered'
   properties: {
     action: {
@@ -249,16 +245,16 @@ resource serviceBusNamespaceName_new_deprecation_notices_new_notice_tweet_unfilt
   }
 }
 
-resource serviceBusNamespaceName_new_deprecation_notices_persist_new_notice 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-06-01-preview' = {
-  parent: serviceBusNamespaceName_new_deprecation_notices
+resource persistNewNoticeTopicSubscription 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-06-01-preview' = {
+  parent: newDeprecationNoticesTopic
   name: 'persist-new-notice'
   properties: {
     maxDeliveryCount: 3
   }
 }
 
-resource serviceBusNamespaceName_new_deprecation_notices_persist_new_notice_unfiltered 'Microsoft.ServiceBus/namespaces/topics/subscriptions/rules@2021-06-01-preview' = {
-  parent: serviceBusNamespaceName_new_deprecation_notices_persist_new_notice
+resource persistNewNoticeTopicSubscriptionFilter 'Microsoft.ServiceBus/namespaces/topics/subscriptions/rules@2021-06-01-preview' = {
+  parent: persistNewNoticeTopicSubscription
   name: 'unfiltered'
   properties: {
     action: {

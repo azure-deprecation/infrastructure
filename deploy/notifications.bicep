@@ -29,7 +29,7 @@ var mailChimpConnectionId = '${subscription().id}/providers/Microsoft.Web/locati
 var serviceBusConnectionId = '${subscription().id}/providers/Microsoft.Web/locations/${defaultLocation}/managedApis/servicebus'
 var twitterConnectionId = '${subscription().id}/providers/Microsoft.Web/locations/${defaultLocation}/managedApis/twitter'
 
-resource functionPlanNameResource 'Microsoft.Web/serverfarms@2021-01-15' = {
+resource functionAppPlan 'Microsoft.Web/serverfarms@2021-01-15' = {
   name: functionPlanName
   location: defaultLocation
   sku: {
@@ -43,12 +43,12 @@ resource functionPlanNameResource 'Microsoft.Web/serverfarms@2021-01-15' = {
   }
 }
 
-resource functionAppNameResource 'Microsoft.Web/sites@2021-01-15' = {
+resource functionApp 'Microsoft.Web/sites@2021-01-15' = {
   name: functionAppName
   location: defaultLocation
   kind: 'functionapp,linux'
   properties: {
-    serverFarmId: functionPlanNameResource.id
+    serverFarmId: functionAppPlan.id
     reserved: true
     siteConfig: {
       appSettings: [
@@ -85,7 +85,7 @@ resource functionAppNameResource 'Microsoft.Web/sites@2021-01-15' = {
   }
 }
 
-resource serviceBusConnectionNameResource 'Microsoft.Web/connections@2016-06-01' = {
+resource serviceBusConnection 'Microsoft.Web/connections@2016-06-01' = {
   name: serviceBusConnectionName
   location: defaultLocation
   properties: {
@@ -102,7 +102,7 @@ resource serviceBusConnectionNameResource 'Microsoft.Web/connections@2016-06-01'
   dependsOn: []
 }
 
-resource twitterConnectionNameResource 'Microsoft.Web/connections@2016-06-01' = {
+resource twitterConnection 'Microsoft.Web/connections@2016-06-01' = {
   name: twitterConnectionName
   location: defaultLocation
   properties: {
@@ -264,12 +264,12 @@ resource tweetNewDeprecationWorkflowNameResource 'Microsoft.Logic/workflows@2017
       '$connections': {
         value: {
           servicebus: {
-            connectionId: serviceBusConnectionNameResource.id
+            connectionId: serviceBusConnection.id
             connectionName: serviceBusConnectionName
             id: serviceBusConnectionId
           }
           twitter: {
-            connectionId: twitterConnectionNameResource.id
+            connectionId: twitterConnection.id
             connectionName: twitterConnectionName
             id: twitterConnectionId
           }
@@ -279,7 +279,7 @@ resource tweetNewDeprecationWorkflowNameResource 'Microsoft.Logic/workflows@2017
   }
 }
 
-resource cosmosDbConnectionNameResource 'Microsoft.Web/connections@2016-06-01' = {
+resource cosmosDbConnection 'Microsoft.Web/connections@2016-06-01' = {
   name: cosmosDbConnectionName
   location: defaultLocation
   properties: {
@@ -297,7 +297,7 @@ resource cosmosDbConnectionNameResource 'Microsoft.Web/connections@2016-06-01' =
   dependsOn: []
 }
 
-resource mailChimpConnectionNameResource 'Microsoft.Web/connections@2016-06-01' = {
+resource mailChimpConnection 'Microsoft.Web/connections@2016-06-01' = {
   name: mailChimpConnectionName
   location: defaultLocation
   properties: {
@@ -313,7 +313,7 @@ resource mailChimpConnectionNameResource 'Microsoft.Web/connections@2016-06-01' 
   dependsOn: []
 }
 
-resource gmailConnectionNameResource 'Microsoft.Web/connections@2018-07-01-preview' = {
+resource gmailConnection 'Microsoft.Web/connections@2018-07-01-preview' = {
   name: gmailConnectionName
   location: defaultLocation
   kind: 'V1'
@@ -626,17 +626,17 @@ resource monthlyNewsletterWorkflowNameResource 'Microsoft.Logic/workflows@2017-0
       '$connections': {
         value: {
           documentdb: {
-            connectionId: cosmosDbConnectionNameResource.id
+            connectionId: cosmosDbConnection.id
             connectionName: cosmosDbConnectionName
             id: cosmosDbConnectionId
           }
           mailchimp: {
-            connectionId: mailChimpConnectionNameResource.id
+            connectionId: mailChimpConnection.id
             connectionName: mailChimpConnectionName
             id: mailChimpConnectionId
           }
           gmail: {
-            connectionId: gmailConnectionNameResource.id
+            connectionId: gmailConnection.id
             connectionName: gmailConnectionName
             id: gmailConnectionId
           }

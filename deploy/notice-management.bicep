@@ -17,7 +17,7 @@ param defaultLocation string = resourceGroup().location
 var cosmosDbConnectionId = '${subscription().id}/providers/Microsoft.Web/locations/${defaultLocation}/managedApis/documentdb'
 var serviceBusConnectionId = '${subscription().id}/providers/Microsoft.Web/locations/${defaultLocation}/managedApis/servicebus'
 
-resource functionPlanNameResource 'Microsoft.Web/serverfarms@2021-01-15' = {
+resource functionAppPlan 'Microsoft.Web/serverfarms@2021-01-15' = {
   name: functionPlanName
   location: defaultLocation
   sku: {
@@ -36,7 +36,7 @@ resource functionAppNameResource 'Microsoft.Web/sites@2021-01-15' = {
   location: defaultLocation
   kind: 'functionapp,linux'
   properties: {
-    serverFarmId: functionPlanNameResource.id
+    serverFarmId: functionAppPlan.id
     reserved: true
     siteConfig: {
       appSettings: [
@@ -77,7 +77,7 @@ resource functionAppNameResource 'Microsoft.Web/sites@2021-01-15' = {
   }
 }
 
-resource serviceBusConnectionNameResource 'Microsoft.Web/connections@2016-06-01' = {
+resource serviceBusConnection 'Microsoft.Web/connections@2016-06-01' = {
   name: serviceBusConnectionName
   location: defaultLocation
   properties: {
@@ -94,7 +94,7 @@ resource serviceBusConnectionNameResource 'Microsoft.Web/connections@2016-06-01'
   dependsOn: []
 }
 
-resource cosmosDbConnectionNameResource 'Microsoft.Web/connections@2016-06-01' = {
+resource cosmosDbConnection 'Microsoft.Web/connections@2016-06-01' = {
   name: cosmosDbConnectionName
   location: defaultLocation
   properties: {
@@ -194,12 +194,12 @@ resource persistDeprecationWorkflowNameResource 'Microsoft.Logic/workflows@2017-
       '$connections': {
         value: {
           documentdb: {
-            connectionId: cosmosDbConnectionNameResource.id
+            connectionId: cosmosDbConnection.id
             connectionName: cosmosDbConnectionName
             id: cosmosDbConnectionId
           }
           servicebus: {
-            connectionId: serviceBusConnectionNameResource.id
+            connectionId: serviceBusConnection.id
             connectionName: serviceBusConnectionName
             id: serviceBusConnectionId
           }

@@ -2,40 +2,40 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "ApplicationInsights.Name": {
+    "applicationInsightsName": {
       "value": "azure-deprecation-notices-telemetry-staging"
     },
-    "Connections.CosmosDb.Name": {
+    "cosmosDbConnectionName": {
       "value": "azure-deprecation-notices-connections-cosmos-db-staging"
     },
-    "Connections.ServiceBus.Name": {
+    "serviceBusConnectionName": {
       "value": "azure-deprecation-notices-connections-service-bus-staging"
     },
-    "CosmosDb.Account.Name": {
+    "cosmosDbAccountName": {
       "value": "azure-deprecation-notices-staging"
     },
-    "Function.App.Name": {
+    "functionAppName": {
       "value": "azure-deprecation-notices-notice-management-staging"
     },
-    "Function.Plan.Name": {
+    "functionPlanName": {
       "value": "azure-deprecation-notices-notice-management-staging"
     },
-    "GitHub.Owner": {
+    "githubOwner": {
       "value": "azure-deprecation-automation"
     },
-    "GitHub.Repo.Name": {
+    "githubRepoName": {
       "value": "sandbox"
     },
-    "GitHub.Token": {
+    "githubPersonalAccessToken": {
       "value": "github-ci-token"
     },
-    "ServiceBus.Namespace.Name": {
+    "serviceBusNamespaceName": {
       "value": "azure-deprecation-notices-staging"
     },
-    "StorageAccount.Name": {
+    "storageAccountName": {
       "value": "azuredeprecationstaging"
     },
-    "Workflow.Name": {
+    "persistDeprecationWorkflowName": {
       "value": "azure-deprecation-notices-persist-new-notice-staging"
     }
   }
