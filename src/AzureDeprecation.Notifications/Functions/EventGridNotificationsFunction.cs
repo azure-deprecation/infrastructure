@@ -28,7 +28,7 @@ namespace AzureDeprecation.Notifications.Functions
             [ServiceBusTrigger("new-deprecation-notices", "event-grid-notifications", Connection = "ServiceBus_ConnectionString")]
             NewDeprecationNoticePublishedV1Message newDeprecationNoticePublishedV1Message)
         {
-            var sw = ValueStopwatch.StartNew();
+            var stopwatch = ValueStopwatch.StartNew();
 
             var eventGridTopicEndpoint = _configuration["EVENTGRID_ENDPOINT"];
             var eventGridAuthKey = _configuration["EVENTGRID_AUTH_KEY"];
@@ -50,7 +50,7 @@ namespace AzureDeprecation.Notifications.Functions
 
             await eventGridPublisher.PublishAsync(@event).ConfigureAwait(false);
 
-            LogTiming(sw.GetElapsedTotalMilliseconds());
+            LogTiming(stopwatch.GetElapsedTotalMilliseconds());
         }
 
         [LoggerMessage(EventId = 200, EventName = "Timing", Level = LogLevel.Debug,

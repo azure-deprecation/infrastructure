@@ -29,45 +29,60 @@ namespace AzureDeprecation.Notices.Management.Functions
             [ServiceBus("new-deprecation-notices", SBEntityType.Topic, Connection = "ServiceBus_ConnectionString")]
             IAsyncCollector<ServiceBusMessage> publishedDeprecationNotice)
         {
-            var sw = ValueStopwatch.StartNew();
+            var stopwatch = ValueStopwatch.StartNew();
             using var loggerMessageScope = _logger.BeginScope(new Dictionary<string, object>()
             {
                 ["ServiceBusQueueMessageId"] = queueMessage.MessageId,
                 ["ServiceBusQueueMessageCorrelationId"] = queueMessage.CorrelationId
             });
-
             if (!queueMessage.ApplicationProperties.TryGetValue("MessageType", out var rawMessageType) ||
                 rawMessageType is not string messageTypeString)
             {
-                LogRejectedQueueMessageWithNoMessageType(sw.GetElapsedTotalMilliseconds());
-                throw new ArgumentException($@"The annotated message type was either missing or invalid. Currently supported types are: [""{nameof(MessageType.NewAzureDeprecationV1)}""].");
+                LogRejectedQueueMessageWithNoMessageType(stopwatch.GetElapsedTotalMilliseconds());
+                throw new ArgumentException(
+                    $@"The annotated message type was either missing or invalid. Currently supported types are: [""{nameof(MessageType.NewAzureDeprecationV1)}""].");
             }
+
             if (!Enum.TryParse<MessageType>(messageTypeString, true, out var messageType))
             {
-                LogRejectedQueueMessageWithInvalidMessageType(messageTypeString, sw.GetElapsedTotalMilliseconds());
-                throw new ArgumentException($@"Invalid annotated message type. Currently supported types are: [""{nameof(MessageType.NewAzureDeprecationV1)}""].");
+                LogRejectedQueueMessageWithInvalidMessageType(messageTypeString,
+                    stopwatch.GetElapsedTotalMilliseconds());
+                throw new ArgumentException(
+                    $@"Invalid annotated message type. Currently supported types are: [""{nameof(MessageType.NewAzureDeprecationV1)}""].");
             }
 
-            ServiceBusMessage? outputMessage;
-            switch (messageType)
+            try
             {
-                case MessageType.NewAzureDeprecationV1:
-                    var messageHandler = _services.GetRequiredService<NewAzureDeprecationNotificationV1MessageHandler>();
-                    outputMessage = await messageHandler.ProcessAsync(queueMessage);
-                    break;
-                default:
-                    LogRejectedQueueMessageWithUnsupportedMessageType(messageType, sw.GetElapsedTotalMilliseconds());
-                    throw new NotSupportedException($"Message type '{messageType}' is not supported");
-            }
+                ServiceBusMessage? outputMessage;
+                switch (messageType)
+                {
+                    case MessageType.NewAzureDeprecationV1:
+                        var messageHandler =
+                            _services.GetRequiredService<NewAzureDeprecationNotificationV1MessageHandler>();
+                        outputMessage = await messageHandler.ProcessAsync(queueMessage);
+                        break;
+                    default:
+                        LogRejectedQueueMessageWithUnsupportedMessageType(messageType,
+                            stopwatch.GetElapsedTotalMilliseconds());
+                        throw new NotSupportedException($"Message type '{messageType}' is not supported");
+                }
 
-            if (outputMessage is null)
+                if (outputMessage is null)
+                {
+                    throw new Exception("Message processing failed.");
+                }
+
+                await publishedDeprecationNotice.AddAsync(outputMessage).ConfigureAwait(false);
+            }
+            catch (Exception)
             {
-                throw new Exception("Message processing failed.");
+                LogFailedProcessing(messageType, stopwatch.GetElapsedTotalMilliseconds());
+                throw;
             }
-
-            await publishedDeprecationNotice.AddAsync(outputMessage).ConfigureAwait(false);
-
-            LogTiming(sw.GetElapsedTotalMilliseconds());
+            finally
+            {
+                LogTiming(stopwatch.GetElapsedTotalMilliseconds());
+            }
         }
 
         [LoggerMessage(EventId = 200, EventName = "Timing", Level = LogLevel.Debug,

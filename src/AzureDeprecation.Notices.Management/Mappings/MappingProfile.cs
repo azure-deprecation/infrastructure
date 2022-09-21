@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AzureDeprecation.Contracts.Messages.v1;
+using AzureDeprecation.Notices.Management.Functions;
 using Octokit;
 using ApiInfo = AzureDeprecation.Contracts.Messages.v1.ApiInfo;
 
@@ -38,6 +39,7 @@ namespace AzureDeprecation.Notices.Management.Mappings
                 .ForMember(notice => notice.ApiInfo, x => x.MapFrom(issue => issue))
                 .ForMember(notice => notice.DashboardInfo, x => x.MapFrom(issue => issue))
                 .ForMember(notice => notice.Labels, x => x.MapFrom(issue => issue.Labels.Select(s=>s.Name)));
+            CreateMap<NewDeprecationNoticePublishedV1Message, DeprecationNoticeDocument>();
         }
     }
 }

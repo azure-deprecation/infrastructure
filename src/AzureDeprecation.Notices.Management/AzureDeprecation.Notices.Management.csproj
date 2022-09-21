@@ -8,6 +8,7 @@
     <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Enrichers" />
     <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Sinks.ApplicationInsights" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.CosmosDB" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.ServiceBus" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" />
   </ItemGroup>
