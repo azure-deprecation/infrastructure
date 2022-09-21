@@ -4,8 +4,8 @@ namespace AzureDeprecation.Contracts.Messages.v1
 {
     public class ComposedInfo
     {
-        public string OfficialReport { get; set; }
-        public string AdditionalInfo { get; set; }
+        public string? OfficialReport { get; set; }
+        public string? AdditionalInfo { get; set; }
         public string Description => ComposeMessage();
 
         private string ComposeMessage()

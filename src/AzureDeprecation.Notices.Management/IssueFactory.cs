@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AzureDeprecation.Contracts.Enum;
+﻿using AzureDeprecation.Contracts.Enum;
 using AzureDeprecation.Contracts.Messages.v1;
 using Humanizer;
+using System.Text;
 
 namespace AzureDeprecation.Notices.Management
 {
@@ -33,14 +30,17 @@ namespace AzureDeprecation.Notices.Management
             issueBuilder.AppendLine($"**Deadline:** {dueDate:MMM dd, yyyy}");
             issueBuilder.AppendLine("**Impacted Services:**");
 
-            foreach (var impactedService in newNoticeV1MessageQueueMessage.Impact.Services)
+            if (newNoticeV1MessageQueueMessage.Impact is not null)
             {
-                issueBuilder.AppendLine($"- Azure {impactedService.Humanize(LetterCasing.Title)}");
+                foreach (var impactedService in newNoticeV1MessageQueueMessage.Impact.Services)
+                {
+                    issueBuilder.AppendLine($"- Azure {impactedService.Humanize(LetterCasing.Title)}");
+                }
             }
 
             issueBuilder.AppendLine();
 
-            if (newNoticeV1MessageQueueMessage.Notice.Links?.Any() == true)
+            if (newNoticeV1MessageQueueMessage.Notice?.Links?.Any() == true)
             {
                 issueBuilder.AppendLine("**More information:**");
 
@@ -57,14 +57,30 @@ namespace AzureDeprecation.Notices.Management
         {
             issueBuilder.AppendLine("### Notice");
             issueBuilder.AppendLine();
-            issueBuilder.AppendLine(newNoticeV1MessageQueueMessage.Notice.Description);
+            if (!string.IsNullOrWhiteSpace(newNoticeV1MessageQueueMessage.Notice?.Description))
+            {
+                issueBuilder.AppendLine(newNoticeV1MessageQueueMessage.Notice.Description);
+            }
+            else
+            {
+                issueBuilder.AppendLine("No notice information is available.");
+
+            }
         }
 
         private static void WriteImpact(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage, StringBuilder issueBuilder)
         {
             issueBuilder.AppendLine("### Impact");
             issueBuilder.AppendLine();
-            issueBuilder.AppendLine(newNoticeV1MessageQueueMessage.Impact.Description);
+            if (!string.IsNullOrWhiteSpace(newNoticeV1MessageQueueMessage.Impact?.Description))
+            {
+                issueBuilder.AppendLine(newNoticeV1MessageQueueMessage.Impact.Description);
+            }
+            else
+            {
+                issueBuilder.AppendLine("No impact information is available.");
+
+            }
             issueBuilder.AppendLine();
         }
 
@@ -113,7 +129,15 @@ namespace AzureDeprecation.Notices.Management
         {
             issueBuilder.AppendLine("### Required Action");
             issueBuilder.AppendLine();
-            issueBuilder.AppendLine(newNoticeV1MessageQueueMessage.RequiredAction.Description);
+            if (!string.IsNullOrWhiteSpace(newNoticeV1MessageQueueMessage.RequiredAction?.Description))
+            {
+                issueBuilder.AppendLine(newNoticeV1MessageQueueMessage.RequiredAction.Description);
+            }
+            else
+            {
+                issueBuilder.AppendLine("No required action information is available.");
+
+            }
         }
 
         private static void WriteContact(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage, StringBuilder issueBuilder)
