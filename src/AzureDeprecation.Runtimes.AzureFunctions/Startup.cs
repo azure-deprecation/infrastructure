@@ -44,7 +44,7 @@ namespace AzureDeprecation.Runtimes.AzureFunctions
             });
         }
 
-        protected virtual void ConfigureDependencies(IServiceCollection builderServices)
+        protected virtual void ConfigureDependencies(IServiceCollection services)
         {
         }
     }

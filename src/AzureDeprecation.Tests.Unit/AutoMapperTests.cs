@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoFixture;
 using AutoMapper;
+using AzureDeprecation.APIs.REST.Contracts;
+using AzureDeprecation.APIs.REST.DataAccess.Models;
+using AzureDeprecation.APIs.REST.Mappings;
 using AzureDeprecation.Contracts.Messages.v1;
 using AzureDeprecation.Notices.Management.Mappings;
 using AzureDeprecation.Tests.Unit.Generator;
 using Bogus;
+using DeepEqual.Syntax;
 using Octokit;
 using Xunit;
+using DeprecationInfo = AzureDeprecation.Contracts.Messages.v1.DeprecationInfo;
+using PublishedNotice = AzureDeprecation.Contracts.Messages.v1.PublishedNotice;
 
 namespace AzureDeprecation.Tests.Unit
 {
@@ -19,7 +26,13 @@ namespace AzureDeprecation.Tests.Unit
         public AutoMapperTests()
         {
             var mappingProfile = new MappingProfile();
-            var mapperConfiguration = new MapperConfiguration(cfg => cfg.AddProfile(mappingProfile));
+            var deprecationNoticeProfile = new DeprecationNoticeProfile();
+            var mapperConfiguration = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(deprecationNoticeProfile);
+                cfg.AddProfile(mappingProfile);
+            });
+            
             _mapper = mapperConfiguration.CreateMapper();
         }
 
@@ -82,6 +95,49 @@ namespace AzureDeprecation.Tests.Unit
             }
             HasSameNotice(publishedNotice, deprecationInfo);
             HasSameImpact(deprecationInfo, publishedNotice);
+        }
+
+        [Fact]
+        public void AutoMapper_MapEntityToPresentationModel_AllPropertiesMapped()
+        {
+            var fixture = new Fixture();
+            var dbEntity = fixture.Create<NoticeEntity>();
+
+            var resultModel = _mapper.Map<AzureDeprecation.APIs.REST.Contracts.DeprecationInfo>(dbEntity);
+            
+            resultModel.DeprecationData
+                .WithDeepEqual(dbEntity.DeprecationInfo)
+                .Assert();
+            
+            resultModel
+                .WithDeepEqual(dbEntity)
+                .IgnoreDestinationProperty(x => x.DeprecationInfo)
+                .IgnoreSourceProperty(x => x.DeprecationData)
+                .Assert();
+        }
+        
+        [Fact]
+        public void AutoMapper_MapEntitiesToPresentationModel_AllPropertiesMapped()
+        {
+            var fixture = new Fixture();
+            var dbEntities = fixture.Create<DeprecationNoticesResult>();
+
+            var resultModels = _mapper.Map<DeprecationNoticesResponse>(dbEntities);
+            
+            Assert.NotEmpty(dbEntities.Deprecations);
+            Assert.Equal(dbEntities.Deprecations.Count, resultModels.Deprecations.Count);
+            for (var i = 0; i < resultModels.Deprecations.Count; i++)
+            {
+                resultModels.Deprecations[i].DeprecationData
+                    .WithDeepEqual(dbEntities.Deprecations[i].DeprecationInfo)
+                    .Assert();
+            
+                resultModels.Deprecations[i]
+                    .WithDeepEqual(dbEntities.Deprecations[i])
+                    .IgnoreDestinationProperty(x => x.DeprecationInfo)
+                    .IgnoreSourceProperty(x => x.DeprecationData)
+                    .Assert();
+            }
         }
 
         private static void HasSameNotice(DeprecationInfo publishedNotice, NewAzureDeprecationV1Message deprecationInfo)
