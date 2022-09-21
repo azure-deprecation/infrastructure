@@ -63,7 +63,8 @@ namespace AzureDeprecation.Notices.Management
             }
             else
             {
-                issueBuilder.AppendLine(); // TODO: come up with proper wording for missing Notice.Description
+                issueBuilder.AppendLine("No notice information is available.");
+
             }
         }
 
@@ -77,7 +78,8 @@ namespace AzureDeprecation.Notices.Management
             }
             else
             {
-                issueBuilder.AppendLine(); // TODO: come up with proper wording for missing Impact.Description
+                issueBuilder.AppendLine("No impact information is available.");
+
             }
             issueBuilder.AppendLine();
         }
@@ -133,7 +135,8 @@ namespace AzureDeprecation.Notices.Management
             }
             else
             {
-                issueBuilder.AppendLine(); // TODO: come up with proper wording for missing RequiredAction.Description
+                issueBuilder.AppendLine("No required action information is available.");
+
             }
         }
 

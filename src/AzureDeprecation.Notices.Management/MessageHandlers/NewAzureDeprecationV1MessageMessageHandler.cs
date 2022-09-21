@@ -97,7 +97,10 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
             }
             else
             {
-                labels.Add("unknown");
+                labels.Add("services:unknown");
+                labels.Add("area:unknown");
+                labels.Add("cloud:unknown");
+                labels.Add("impact:unknown");
             }
 
             return labels;
