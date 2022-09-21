@@ -1,24 +1,24 @@
-param ApplicationInsights_Name string
-param Connections_CosmosDb_Name string
-param Connections_ServiceBus_Name string
-param CosmosDb_Account_Name string
-param Function_App_Name string
-param Function_Plan_Name string
-param GitHub_Owner string
-param GitHub_Repo_Name string
+param applicationInsightsName string
+param cosmosDbConnectionName string
+param serviceBusConnectionName string
+param cosmosDbAccountName string
+param functionAppName string
+param functionPlanName string
+param githubOwner string
+param githubRepoName string
 
 @secure()
-param GitHub_Token string
-param ServiceBus_Namespace_Name string
-param StorageAccount_Name string
-param Workflow_Name string
+param githubPersonalAccessToken string
+param serviceBusNamespaceName string
+param storageAccountName string
+param persistDeprecationWorkflowName string
 
 param defaultLocation string = resourceGroup().location
 var cosmosDbConnectionId = '${subscription().id}/providers/Microsoft.Web/locations/${defaultLocation}/managedApis/documentdb'
 var serviceBusConnectionId = '${subscription().id}/providers/Microsoft.Web/locations/${defaultLocation}/managedApis/servicebus'
 
-resource Function_Plan_Name_resource 'Microsoft.Web/serverfarms@2021-01-15' = {
-  name: Function_Plan_Name
+resource functionPlanNameResource 'Microsoft.Web/serverfarms@2021-01-15' = {
+  name: functionPlanName
   location: defaultLocation
   sku: {
     name: 'Y1'
@@ -31,22 +31,22 @@ resource Function_Plan_Name_resource 'Microsoft.Web/serverfarms@2021-01-15' = {
   }
 }
 
-resource Function_App_Name_resource 'Microsoft.Web/sites@2021-01-15' = {
-  name: Function_App_Name
+resource functionAppNameResource 'Microsoft.Web/sites@2021-01-15' = {
+  name: functionAppName
   location: defaultLocation
   kind: 'functionapp,linux'
   properties: {
-    serverFarmId: Function_Plan_Name_resource.id
+    serverFarmId: functionPlanNameResource.id
     reserved: true
     siteConfig: {
       appSettings: [
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          value: reference(resourceId('microsoft.insights/components/', ApplicationInsights_Name), '2015-05-01').InstrumentationKey
+          value: reference(resourceId('microsoft.insights/components/', applicationInsightsName), '2015-05-01').InstrumentationKey
         }
         {
           name: 'AzureWebJobsStorage'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${StorageAccount_Name};AccountKey=${listKeys(resourceId('Microsoft.Storage/storageAccounts', StorageAccount_Name), '2015-05-01-preview').key1}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};AccountKey=${listKeys(resourceId('Microsoft.Storage/storageAccounts', storageAccountName), '2015-05-01-preview').key1}'
         }
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'
@@ -57,63 +57,63 @@ resource Function_App_Name_resource 'Microsoft.Web/sites@2021-01-15' = {
           value: 'dotnet'
         }
         {
-          name: 'GitHub_Owner'
-          value: GitHub_Owner
+          name: 'githubOwner'
+          value: githubOwner
         }
         {
           name: 'GitHub_RepoName'
-          value: GitHub_Repo_Name
+          value: githubRepoName
         }
         {
-          name: 'GitHub_Token'
-          value: GitHub_Token
+          name: 'githubPersonalAccessToken'
+          value: githubPersonalAccessToken
         }
         {
           name: 'ServiceBus_ConnectionString'
-          value: listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', ServiceBus_Namespace_Name, 'RootManageSharedAccessKey'), '2017-04-01').primaryConnectionString
+          value: listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', serviceBusNamespaceName, 'RootManageSharedAccessKey'), '2017-04-01').primaryConnectionString
         }
       ]
     }
   }
 }
 
-resource Connections_ServiceBus_Name_resource 'Microsoft.Web/connections@2016-06-01' = {
-  name: Connections_ServiceBus_Name
+resource serviceBusConnectionNameResource 'Microsoft.Web/connections@2016-06-01' = {
+  name: serviceBusConnectionName
   location: defaultLocation
   properties: {
-    displayName: Connections_ServiceBus_Name
+    displayName: serviceBusConnectionName
     customParameterValues: {
     }
     api: {
       id: serviceBusConnectionId
     }
     parameterValues: {
-      connectionString: listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', ServiceBus_Namespace_Name, 'RootManageSharedAccessKey'), '2017-04-01').primaryConnectionString
+      connectionString: listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', serviceBusNamespaceName, 'RootManageSharedAccessKey'), '2017-04-01').primaryConnectionString
     }
   }
   dependsOn: []
 }
 
-resource Connections_CosmosDb_Name_resource 'Microsoft.Web/connections@2016-06-01' = {
-  name: Connections_CosmosDb_Name
+resource cosmosDbConnectionNameResource 'Microsoft.Web/connections@2016-06-01' = {
+  name: cosmosDbConnectionName
   location: defaultLocation
   properties: {
-    displayName: Connections_CosmosDb_Name
+    displayName: cosmosDbConnectionName
     customParameterValues: {
     }
     api: {
       id: cosmosDbConnectionId
     }
     parameterValues: {
-      databaseAccount: CosmosDb_Account_Name
-      accessKey: listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', CosmosDb_Account_Name), '2015-04-08').primaryMasterKey
+      databaseAccount: cosmosDbAccountName
+      accessKey: listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', cosmosDbAccountName), '2015-04-08').primaryMasterKey
     }
   }
   dependsOn: []
 }
 
-resource Workflow_Name_resource 'Microsoft.Logic/workflows@2017-07-01' = {
-  name: Workflow_Name
+resource persistDeprecationWorkflowNameResource 'Microsoft.Logic/workflows@2017-07-01' = {
+  name: persistDeprecationWorkflowName
   location: defaultLocation
   properties: {
     definition: {
@@ -194,13 +194,13 @@ resource Workflow_Name_resource 'Microsoft.Logic/workflows@2017-07-01' = {
       '$connections': {
         value: {
           documentdb: {
-            connectionId: Connections_CosmosDb_Name_resource.id
-            connectionName: Connections_CosmosDb_Name
+            connectionId: cosmosDbConnectionNameResource.id
+            connectionName: cosmosDbConnectionName
             id: cosmosDbConnectionId
           }
           servicebus: {
-            connectionId: Connections_ServiceBus_Name_resource.id
-            connectionName: Connections_ServiceBus_Name
+            connectionId: serviceBusConnectionNameResource.id
+            connectionName: serviceBusConnectionName
             id: serviceBusConnectionId
           }
         }

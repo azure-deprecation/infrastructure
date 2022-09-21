@@ -1,26 +1,26 @@
-param ApplicationInsights_Name string
-param Connections_CosmosDb_Name string
-param Connections_Gmail_Name string
-param Connections_MailChimp_Name string
-param Connections_ServiceBus_Name string
-param Connections_Twitter_Name string
-param CosmosDb_Account_Name string
-param Function_App_Name string
-param Function_Plan_Name string
-param EventGrid_Topic_Name string
-param Gmail_Auth_ClientId string
+param applicationInsightsName string
+param cosmosDbConnectionName string
+param gmailConnectionName string
+param mailChimpConnectionName string
+param serviceBusConnectionName string
+param twitterConnectionName string
+param cosmosDbAccountName string
+param functionAppName string
+param functionPlanName string
+param eventGridTopicName string
+param gmailClientId string
 
 @secure()
-param Gmail_Auth_ClientSecret string
+param gmailClientSecret string
 
 @secure()
-param MailChimp_Auth_BearerToken string
-param MailChimp_MailingList_Id string
-param MailChimp_Template_Id int
-param ServiceBus_Namespace_Name string
-param StorageAccount_Name string
-param Workflow_MonthlySummaryNewsletter_Name string
-param Workflow_TweetNewDeprecation_Name string
+param mailchimpBearerToken string
+param mailchimpMailingListId string
+param mailchimpTemplateId int
+param serviceBusNamespaceName string
+param storageAccountName string
+param monthlyNewsletterWorkflowName string
+param tweetNewDeprecationWorkflowName string
 
 param defaultLocation string = resourceGroup().location
 var cosmosDbConnectionId = '${subscription().id}/providers/Microsoft.Web/locations/${defaultLocation}/managedApis/documentdb'
@@ -29,8 +29,8 @@ var mailChimpConnectionId = '${subscription().id}/providers/Microsoft.Web/locati
 var serviceBusConnectionId = '${subscription().id}/providers/Microsoft.Web/locations/${defaultLocation}/managedApis/servicebus'
 var twitterConnectionId = '${subscription().id}/providers/Microsoft.Web/locations/${defaultLocation}/managedApis/twitter'
 
-resource Function_Plan_Name_resource 'Microsoft.Web/serverfarms@2021-01-15' = {
-  name: Function_Plan_Name
+resource functionPlanNameResource 'Microsoft.Web/serverfarms@2021-01-15' = {
+  name: functionPlanName
   location: defaultLocation
   sku: {
     name: 'Y1'
@@ -43,22 +43,22 @@ resource Function_Plan_Name_resource 'Microsoft.Web/serverfarms@2021-01-15' = {
   }
 }
 
-resource Function_App_Name_resource 'Microsoft.Web/sites@2021-01-15' = {
-  name: Function_App_Name
+resource functionAppNameResource 'Microsoft.Web/sites@2021-01-15' = {
+  name: functionAppName
   location: defaultLocation
   kind: 'functionapp,linux'
   properties: {
-    serverFarmId: Function_Plan_Name_resource.id
+    serverFarmId: functionPlanNameResource.id
     reserved: true
     siteConfig: {
       appSettings: [
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          value: reference(resourceId('microsoft.insights/components/', ApplicationInsights_Name), '2015-05-01').InstrumentationKey
+          value: reference(resourceId('microsoft.insights/components/', applicationInsightsName), '2015-05-01').InstrumentationKey
         }
         {
           name: 'AzureWebJobsStorage'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${StorageAccount_Name};AccountKey=${listKeys(resourceId('Microsoft.Storage/storageAccounts', StorageAccount_Name), '2015-05-01-preview').key1}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};AccountKey=${listKeys(resourceId('Microsoft.Storage/storageAccounts', storageAccountName), '2015-05-01-preview').key1}'
         }
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'
@@ -70,43 +70,43 @@ resource Function_App_Name_resource 'Microsoft.Web/sites@2021-01-15' = {
         }
         {
           name: 'EVENTGRID_AUTH_KEY'
-          value: listKeys(resourceId('Microsoft.EventGrid/topics', EventGrid_Topic_Name), '2020-06-01').key1
+          value: listKeys(resourceId('Microsoft.EventGrid/topics', eventGridTopicName), '2020-06-01').key1
         }
         {
           name: 'EVENTGRID_ENDPOINT'
-          value: 'https://${EventGrid_Topic_Name}.${defaultLocation}-1.eventgrid.azure.net/api/events'
+          value: 'https://${eventGridTopicName}.${defaultLocation}-1.eventgrid.azure.net/api/events'
         }
         {
           name: 'ServiceBus_ConnectionString'
-          value: listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', ServiceBus_Namespace_Name, 'RootManageSharedAccessKey'), '2017-04-01').primaryConnectionString
+          value: listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', serviceBusNamespaceName, 'RootManageSharedAccessKey'), '2017-04-01').primaryConnectionString
         }
       ]
     }
   }
 }
 
-resource Connections_ServiceBus_Name_resource 'Microsoft.Web/connections@2016-06-01' = {
-  name: Connections_ServiceBus_Name
+resource serviceBusConnectionNameResource 'Microsoft.Web/connections@2016-06-01' = {
+  name: serviceBusConnectionName
   location: defaultLocation
   properties: {
-    displayName: Connections_ServiceBus_Name
+    displayName: serviceBusConnectionName
     customParameterValues: {
     }
     api: {
       id: serviceBusConnectionId
     }
     parameterValues: {
-      connectionString: listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', ServiceBus_Namespace_Name, 'RootManageSharedAccessKey'), '2017-04-01').primaryConnectionString
+      connectionString: listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', serviceBusNamespaceName, 'RootManageSharedAccessKey'), '2017-04-01').primaryConnectionString
     }
   }
   dependsOn: []
 }
 
-resource Connections_Twitter_Name_resource 'Microsoft.Web/connections@2016-06-01' = {
-  name: Connections_Twitter_Name
+resource twitterConnectionNameResource 'Microsoft.Web/connections@2016-06-01' = {
+  name: twitterConnectionName
   location: defaultLocation
   properties: {
-    displayName: Connections_Twitter_Name
+    displayName: twitterConnectionName
     customParameterValues: {
     }
     api: {
@@ -118,8 +118,8 @@ resource Connections_Twitter_Name_resource 'Microsoft.Web/connections@2016-06-01
   dependsOn: []
 }
 
-resource Workflow_TweetNewDeprecation_Name_resource 'Microsoft.Logic/workflows@2017-07-01' = {
-  name: Workflow_TweetNewDeprecation_Name
+resource tweetNewDeprecationWorkflowNameResource 'Microsoft.Logic/workflows@2017-07-01' = {
+  name: tweetNewDeprecationWorkflowName
   location: defaultLocation
   properties: {
     definition: {
@@ -264,13 +264,13 @@ resource Workflow_TweetNewDeprecation_Name_resource 'Microsoft.Logic/workflows@2
       '$connections': {
         value: {
           servicebus: {
-            connectionId: Connections_ServiceBus_Name_resource.id
-            connectionName: Connections_ServiceBus_Name
+            connectionId: serviceBusConnectionNameResource.id
+            connectionName: serviceBusConnectionName
             id: serviceBusConnectionId
           }
           twitter: {
-            connectionId: Connections_Twitter_Name_resource.id
-            connectionName: Connections_Twitter_Name
+            connectionId: twitterConnectionNameResource.id
+            connectionName: twitterConnectionName
             id: twitterConnectionId
           }
         }
@@ -279,29 +279,29 @@ resource Workflow_TweetNewDeprecation_Name_resource 'Microsoft.Logic/workflows@2
   }
 }
 
-resource Connections_CosmosDb_Name_resource 'Microsoft.Web/connections@2016-06-01' = {
-  name: Connections_CosmosDb_Name
+resource cosmosDbConnectionNameResource 'Microsoft.Web/connections@2016-06-01' = {
+  name: cosmosDbConnectionName
   location: defaultLocation
   properties: {
-    displayName: Connections_CosmosDb_Name
+    displayName: cosmosDbConnectionName
     customParameterValues: {
     }
     api: {
       id: cosmosDbConnectionId
     }
     parameterValues: {
-      databaseAccount: CosmosDb_Account_Name
-      accessKey: listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', CosmosDb_Account_Name), '2015-04-08').primaryMasterKey
+      databaseAccount: cosmosDbAccountName
+      accessKey: listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', cosmosDbAccountName), '2015-04-08').primaryMasterKey
     }
   }
   dependsOn: []
 }
 
-resource Connections_MailChimp_Name_resource 'Microsoft.Web/connections@2016-06-01' = {
-  name: Connections_MailChimp_Name
+resource mailChimpConnectionNameResource 'Microsoft.Web/connections@2016-06-01' = {
+  name: mailChimpConnectionName
   location: defaultLocation
   properties: {
-    displayName: Connections_MailChimp_Name
+    displayName: mailChimpConnectionName
     customParameterValues: {
     }
     api: {
@@ -313,23 +313,23 @@ resource Connections_MailChimp_Name_resource 'Microsoft.Web/connections@2016-06-
   dependsOn: []
 }
 
-resource Connections_Gmail_Name_resource 'Microsoft.Web/connections@2018-07-01-preview' = {
-  name: Connections_Gmail_Name
+resource gmailConnectionNameResource 'Microsoft.Web/connections@2018-07-01-preview' = {
+  name: gmailConnectionName
   location: defaultLocation
   kind: 'V1'
   properties: {
     api: {
       id: gmailConnectionId
     }
-    displayName: Connections_Gmail_Name
+    displayName: gmailConnectionName
     parameterValueSet: {
       name: 'byoa'
       values: {
         'token-byoa:clientId': {
-          value: Gmail_Auth_ClientId
+          value: gmailClientId
         }
         'token-byoa:clientSecret': {
-          value: Gmail_Auth_ClientSecret
+          value: gmailClientSecret
         }
         'token-byoa': {
           value: 'https://global.consent.azure-apim.net/redirect'
@@ -339,8 +339,8 @@ resource Connections_Gmail_Name_resource 'Microsoft.Web/connections@2018-07-01-p
   }
 }
 
-resource Workflow_MonthlySummaryNewsletter_Name_resource 'Microsoft.Logic/workflows@2017-07-01' = {
-  name: Workflow_MonthlySummaryNewsletter_Name
+resource monthlyNewsletterWorkflowNameResource 'Microsoft.Logic/workflows@2017-07-01' = {
+  name: monthlyNewsletterWorkflowName
   location: defaultLocation
   properties: {
     definition: {
@@ -353,15 +353,15 @@ resource Workflow_MonthlySummaryNewsletter_Name_resource 'Microsoft.Logic/workfl
           type: 'Object'
         }
         'MailChimp.BearerToken': {
-          defaultValue: MailChimp_Auth_BearerToken
+          defaultValue: mailchimpBearerToken
           type: 'SecureString'
         }
         'MailChimp.MailingList.Id': {
-          defaultValue: MailChimp_MailingList_Id
+          defaultValue: mailchimpMailingListId
           type: 'String'
         }
         'MailChimp.Template.Id': {
-          defaultValue: MailChimp_Template_Id
+          defaultValue: mailchimpTemplateId
           type: 'Int'
         }
       }
@@ -626,18 +626,18 @@ resource Workflow_MonthlySummaryNewsletter_Name_resource 'Microsoft.Logic/workfl
       '$connections': {
         value: {
           documentdb: {
-            connectionId: Connections_CosmosDb_Name_resource.id
-            connectionName: Connections_CosmosDb_Name
+            connectionId: cosmosDbConnectionNameResource.id
+            connectionName: cosmosDbConnectionName
             id: cosmosDbConnectionId
           }
           mailchimp: {
-            connectionId: Connections_MailChimp_Name_resource.id
-            connectionName: Connections_MailChimp_Name
+            connectionId: mailChimpConnectionNameResource.id
+            connectionName: mailChimpConnectionName
             id: mailChimpConnectionId
           }
           gmail: {
-            connectionId: Connections_Gmail_Name_resource.id
-            connectionName: Connections_Gmail_Name
+            connectionId: gmailConnectionNameResource.id
+            connectionName: gmailConnectionName
             id: gmailConnectionId
           }
         }
