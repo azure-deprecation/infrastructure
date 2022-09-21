@@ -2,52 +2,52 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "ApplicationInsights.Name": {
+    "applicationInsightsName": {
       "value": "azure-deprecation-notices-telemetry"
     },
-    "Connections.CosmosDb.Name": {
+    "cosmosDbConnectionName": {
       "value": "azure-deprecation-notices-connections-cosmos-db"
     },
-    "Connections.Gmail.Name": {
+    "gmailConnectionName": {
       "value": "azure-deprecation-notices-connections-gmail"
     },
-    "Connections.MailChimp.Name": {
+    "mailChimpConnectionName": {
       "value": "azure-deprecation-notices-connections-mailchimp"
     },
-    "Connections.ServiceBus.Name": {
+    "serviceBusConnectionName": {
       "value": "azure-deprecation-notices-connections-service-bus"
     },
-    "Connections.Twitter.Name": {
+    "twitterConnectionName": {
       "value": "azure-deprecation-notices-connections-twitter"
     },
-    "CosmosDb.Account.Name": {
+    "cosmosDbAccountName": {
       "value": "azure-deprecation-notices"
     },
-    "EventGrid.Topic.Name": {
+    "eventGridTopicName": {
       "value": "azure-deprecation-notices"
     },
-    "Function.App.Name": {
+    "functionAppName": {
       "value": "azure-deprecation-notices-notifications"
     },
-    "Function.Plan.Name": {
+    "functionPlanName": {
       "value": "azure-deprecation-notices-notifications"
     },
-    "MailChimp.MailingList.Id": {
+    "mailchimpMailingListId": {
         "value": "b0f0db5931"
     },
-    "MailChimp.Template.Id": {
+    "mailchimpTemplateId": {
         "value": 11355345
     },
-    "ServiceBus.Namespace.Name": {
+    "serviceBusNamespaceName": {
       "value": "azure-deprecation-notices"
     },
-    "StorageAccount.Name": {
+    "storageAccountName": {
       "value": "azuredeprecationnotices"
     },
-    "Workflow.MonthlySummaryNewsletter.Name": {
+    "monthlyNewsletterWorkflowName": {
         "value": "azure-deprecation-notices-monthly-summary-newsletter"
     },
-    "Workflow.TweetNewDeprecation.Name": {
+    "tweetNewDeprecationWorkflowName": {
       "value": "azure-deprecation-notices-tweet-new-notice"
     }
   }

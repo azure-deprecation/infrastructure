@@ -2,40 +2,40 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "ApplicationInsights.Name": {
+    "applicationInsightsName": {
       "value": "#{ApplicationInsights.Name}#"
     },
-    "Connections.CosmosDb.Name": {
+    "cosmosDbConnectionName": {
       "value": "#{Connections.CosmosDb.Name}#"
     },
-    "Connections.ServiceBus.Name": {
+    "serviceBusConnectionName": {
       "value": "#{Connections.ServiceBus.Name}#"
     },
-    "CosmosDb.Account.Name": {
+    "cosmosDbAccountName": {
       "value": "#{CosmosDb.Account.Name}#"
     },
-    "Function.App.Name": {
+    "functionAppName": {
       "value": "#{Function.App.Name}#"
     },
-    "Function.Plan.Name": {
+    "functionPlanName": {
       "value": "#{Function.Plan.Name}#"
     },
-    "GitHub.Owner": {
+    "githubOwner": {
       "value": "#{GitHub.Owner}#"
     },
-    "GitHub.Repo.Name": {
+    "githubRepoName": {
       "value": "#{GitHub.Repo.Name}#"
     },
-    "GitHub.Token": {
+    "githubPersonalAccessToken": {
       "value": "#{GitHub.Token}#"
     },
-    "ServiceBus.Namespace.Name": {
+    "serviceBusNamespaceName": {
       "value": "#{ServiceBus.Namespace.Name}#"
     },
-    "StorageAccount.Name": {
+    "storageAccountName": {
       "value": "#{StorageAccount.Name}#"
     },
-    "Workflow.Name": {
+    "persistDeprecationWorkflowName": {
       "value": "#{Workflow.Name}#"
     }
   }
