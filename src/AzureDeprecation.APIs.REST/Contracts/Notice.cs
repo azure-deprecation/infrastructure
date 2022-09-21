@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace AzureDeprecation.APIs.REST.Contracts;
 
 public class Notice

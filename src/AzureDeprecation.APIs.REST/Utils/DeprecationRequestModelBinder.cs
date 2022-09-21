@@ -1,6 +1,4 @@
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Reflection;
 using AzureDeprecation.APIs.REST.DataAccess.Models;
 using CodeJam;
@@ -13,6 +11,9 @@ namespace AzureDeprecation.APIs.REST.Utils;
 
 public static class DeprecationRequestModelBinder
 {
+    static Dictionary<Type, Dictionary<string, PropertyInfo>> _typePropertiesCache =
+        new Dictionary<Type, Dictionary<string, PropertyInfo>>();
+
     public static DeprecationsRequestModel CreateModel(IQueryCollection requestQuery)
     {
         return new DeprecationsRequestModel
@@ -44,9 +45,9 @@ public static class DeprecationRequestModelBinder
         if (!filterProperties.Any())
             return result;
 
-        var objectProps = typeof(TResult)
+        var objectProps = _typePropertiesCache.GetOrAdd(typeof(TResult), t => t
             .GetProperties()
-            .ToDictionary(x => x.Name, v => v, StringComparer.OrdinalIgnoreCase);
+            .ToDictionary(x => x.Name, v => v, StringComparer.OrdinalIgnoreCase));
         
         foreach (var filterProperty in filterProperties)
         {

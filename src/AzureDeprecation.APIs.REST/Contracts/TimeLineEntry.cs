@@ -1,5 +1,3 @@
-using System;
-
 namespace AzureDeprecation.APIs.REST.Contracts;
 
 public class TimeLineEntry

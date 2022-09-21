@@ -1,6 +1,5 @@
 ﻿using AzureDeprecation.APIs.REST;
 using AzureDeprecation.APIs.REST.DataAccess.Repositories;
-using AzureDeprecation.APIs.REST.Contracts;
 using AzureDeprecation.APIs.REST.DataAccess.Contracts;
 using AzureDeprecation.APIs.REST.Settings;
 using AzureDeprecation.Runtimes.AzureFunctions;

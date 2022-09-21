@@ -1,15 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using AzureDeprecation.APIs.REST.Contracts;
-using AzureDeprecation.APIs.REST.DataAccess.Contracts;
+﻿using AzureDeprecation.APIs.REST.DataAccess.Contracts;
 using AzureDeprecation.APIs.REST.DataAccess.Models;
 using AzureDeprecation.APIs.REST.DataAccess.Utils;
 using AzureDeprecation.APIs.REST.Settings;
 using CodeJam;
-using CodeJam.Collections;
-using CodeJam.Strings;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.Extensions.Options;

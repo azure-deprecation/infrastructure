@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace AzureDeprecation.APIs.REST.Contracts;
 
 public class Impact
@@ -8,5 +6,5 @@ public class Impact
     public ImpactType Type { get; set; }
     public ImpactArea Area { get; set; }
     public AzureCloud Cloud { get; set; }
-    public List<AzureService> Services { get; set; } = new List<AzureService>();
+    public List<AzureService> Services { get; set; } = new();
 }

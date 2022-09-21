@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace AzureDeprecation.APIs.REST.Contracts;
+﻿namespace AzureDeprecation.APIs.REST.Contracts;
 
 public class DeprecationInfo
 {

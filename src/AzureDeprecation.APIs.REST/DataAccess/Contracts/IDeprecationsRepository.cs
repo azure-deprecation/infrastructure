@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AzureDeprecation.APIs.REST.DataAccess.Models;
+﻿using AzureDeprecation.APIs.REST.DataAccess.Models;
 
 namespace AzureDeprecation.APIs.REST.DataAccess.Contracts;
 
