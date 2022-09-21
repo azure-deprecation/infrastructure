@@ -32,10 +32,10 @@
     "functionPlanName": {
       "value": "azure-deprecation-notices-notifications-staging"
     },
-    "MailChimp.MailingList.Id": {
+    "mailchimpMailingListId": {
         "value": "b0f0db5931"
     },
-    "MailChimp.Template.Id": {
+    "mailchimpTemplateId": {
         "value": 11355345
     },
     "serviceBusNamespaceName": {
