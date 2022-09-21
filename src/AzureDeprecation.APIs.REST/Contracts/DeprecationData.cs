@@ -14,10 +14,10 @@ public class DeprecationInfo
 
 public class PublishedNotice
 {
-    public string Title { get; set; }
-    public ApiInfo ApiInfo { get; set; }
-    public DashboardInfo DashboardInfo { get; set; }
-    public List<string> Labels { get; set; } = new List<string>();
+    public string? Title { get; set; }
+    public ApiInfo? ApiInfo { get; set; }
+    public DashboardInfo? DashboardInfo { get; set; }
+    public List<string> Labels { get; set; } = new();
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset? UpdatedAt { get; set; }
     public DateTimeOffset? ClosedAt { get; set; }
@@ -25,13 +25,13 @@ public class PublishedNotice
 
 public class ApiInfo
 {
-    public string Url { get; set; }
+    public string? Url { get; set; }
     public int Id { get; set; }
 }
 
 public class DashboardInfo
 {
-    public string Url { get; set; }
+    public string? Url { get; set; }
     public int Id { get; set; }
 }
 

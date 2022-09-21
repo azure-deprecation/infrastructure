@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using AzureDeprecation.APIs.REST.Contracts;
+﻿using System.ComponentModel.DataAnnotations;
 using AzureDeprecation.APIs.REST.DataAccess.Models;
 using AzureDeprecation.APIs.REST.Utils;
 using Microsoft.AspNetCore.Http;
@@ -178,7 +173,7 @@ public class DeprecationRequestModelBinderTests
         {
             var propNames = typeof(FilterNoticesRequest).GetProperties()
                 .Where(it => Nullable.GetUnderlyingType(it.PropertyType)?.IsEnum ?? false)
-                .Select(it => (it.Name, Nullable.GetUnderlyingType(it.PropertyType)) );
+                .Select(it => (it.Name, Nullable.GetUnderlyingType(it.PropertyType)!));
             
             foreach (var (propName, enumType) in propNames)
             {

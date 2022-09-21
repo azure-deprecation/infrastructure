@@ -12,6 +12,10 @@
     
     -->
     <NoWarn>1998</NoWarn>
+
+    <!--    https://github.com/dotnet/sdk/issues/25379
+    -->
+    <NoWarn>NU1507</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 

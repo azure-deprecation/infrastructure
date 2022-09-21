@@ -26,22 +26,22 @@ public static class QueryExtensions
 
         if (filters.Area != null)
         {
-            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo.Impact.Area == filters.Area.Value);
+            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo.Impact!.Area == filters.Area.Value);
         }
         
         if (filters.Cloud != null)
         {
-            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo.Impact.Cloud == filters.Cloud);
+            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo.Impact!.Cloud == filters.Cloud);
         }
         
         if (filters.ImpactType != null)
         {
-            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo.Impact.Type == filters.ImpactType);
+            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo.Impact!.Type == filters.ImpactType);
         }
         
         if (filters.Service != null)
         {
-            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo.Impact.Services.Contains(filters.Service.Value));
+            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo.Impact!.Services.Contains(filters.Service.Value));
         }
 
         if (filters.Year != null)

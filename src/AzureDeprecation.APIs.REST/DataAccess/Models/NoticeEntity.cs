@@ -6,7 +6,7 @@ public class NoticeEntity
 {
     public string Id { get; set; } = null!;
 
-    public DeprecationInfo DeprecationInfo { get; set; } = null!;
+    public DeprecationInfo DeprecationInfo { get; set; } = new();
     
-    public PublishedNotice PublishedNotice { get; set; } = null!;
+    public PublishedNotice PublishedNotice { get; set; } = new();
 }
