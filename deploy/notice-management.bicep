@@ -1,7 +1,7 @@
 param applicationInsightsName string
-param cosmosDbConnectionName string
-param serviceBusConnectionName string
 param cosmosDbAccountName string
+param cosmosDbDatabaseName string
+param cosmosDbCollectionName string
 param functionAppName string
 param functionPlanName string
 param githubOwner string
@@ -11,11 +11,8 @@ param githubRepoName string
 param githubPersonalAccessToken string
 param serviceBusNamespaceName string
 param storageAccountName string
-param persistDeprecationWorkflowName string
 
 param defaultLocation string = resourceGroup().location
-var cosmosDbConnectionId = subscriptionResourceId('Microsoft.Web/locations/managedApis', defaultLocation, 'documentdb')
-var serviceBusConnectionId = subscriptionResourceId('Microsoft.Web/locations/managedApis', defaultLocation, 'servicebus')
 
 resource functionAppPlan 'Microsoft.Web/serverfarms@2021-01-15' = {
   name: functionPlanName
@@ -72,139 +69,19 @@ resource functionAppNameResource 'Microsoft.Web/sites@2021-01-15' = {
           name: 'ServiceBus_ConnectionString'
           value: listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', serviceBusNamespaceName, 'RootManageSharedAccessKey'), '2017-04-01').primaryConnectionString
         }
+        {
+          name: 'CosmosDb_DatabaseName'
+          value: cosmosDbDatabaseName
+        }
+        {
+          name: 'CosmosDb_ContainerName'
+          value: cosmosDbCollectionName
+        }
+        {
+          name: 'CosmosDb_ConnectionString'
+          value: first(listConnectionStrings(resourceId('Microsoft.DocumentDB/databaseAccounts', cosmosDbAccountName), '2019-12-12')).connectionString
+        }
       ]
-    }
-  }
-}
-
-resource serviceBusConnection 'Microsoft.Web/connections@2016-06-01' = {
-  name: serviceBusConnectionName
-  location: defaultLocation
-  properties: {
-    displayName: serviceBusConnectionName
-    customParameterValues: {
-    }
-    api: {
-      id: serviceBusConnectionId
-    }
-    parameterValues: {
-      connectionString: listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', serviceBusNamespaceName, 'RootManageSharedAccessKey'), '2017-04-01').primaryConnectionString
-    }
-  }
-  dependsOn: []
-}
-
-resource cosmosDbConnection 'Microsoft.Web/connections@2016-06-01' = {
-  name: cosmosDbConnectionName
-  location: defaultLocation
-  properties: {
-    displayName: cosmosDbConnectionName
-    customParameterValues: {
-    }
-    api: {
-      id: cosmosDbConnectionId
-    }
-    parameterValues: {
-      databaseAccount: cosmosDbAccountName
-      accessKey: listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', cosmosDbAccountName), '2015-04-08').primaryMasterKey
-    }
-  }
-  dependsOn: []
-}
-
-resource persistDeprecationWorkflowNameResource 'Microsoft.Logic/workflows@2019-05-01' = {
-  name: persistDeprecationWorkflowName
-  location: defaultLocation
-  properties: {
-    definition: {
-      '$schema': 'https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#'
-      contentVersion: '1.0.0.0'
-      parameters: {
-        '$connections': {
-          defaultValue: {
-          }
-          type: 'Object'
-        }
-      }
-      triggers: {
-        'When_a_deprecation_notice_is_published_(peek-lock)': {
-          recurrence: {
-            frequency: 'Hour'
-            interval: 1
-          }
-          type: 'ApiConnection'
-          inputs: {
-            host: {
-              connection: {
-                name: '@parameters(\'$connections\')[\'servicebus\'][\'connectionId\']'
-              }
-            }
-            method: 'get'
-            path: '/@{encodeURIComponent(encodeURIComponent(\'new-deprecation-notices\'))}/subscriptions/@{encodeURIComponent(\'persist-new-notice\')}/messages/head/peek'
-            queries: {
-              sessionId: 'None'
-              subscriptionType: 'Main'
-            }
-          }
-        }
-      }
-      actions: {
-        Complete_the_message: {
-          runAfter: {
-            Create_or_update_new_deprecation_document: [
-              'Succeeded'
-            ]
-          }
-          type: 'ApiConnection'
-          inputs: {
-            host: {
-              connection: {
-                name: '@parameters(\'$connections\')[\'servicebus\'][\'connectionId\']'
-              }
-            }
-            method: 'delete'
-            path: '/@{encodeURIComponent(encodeURIComponent(\'new-deprecation-notices\'))}/subscriptions/@{encodeURIComponent(\'persist-new-notice\')}/messages/complete'
-            queries: {
-              lockToken: '@triggerBody()?[\'LockToken\']'
-              sessionId: ''
-              subscriptionType: 'Main'
-            }
-          }
-        }
-        Create_or_update_new_deprecation_document: {
-          runAfter: {
-          }
-          type: 'ApiConnection'
-          inputs: {
-            body: '@addProperty(json(decodeBase64(triggerBody()?[\'ContentData\'])), \'id\', guid())'
-            host: {
-              connection: {
-                name: '@parameters(\'$connections\')[\'documentdb\'][\'connectionId\']'
-              }
-            }
-            method: 'post'
-            path: '/v2/cosmosdb/@{encodeURIComponent(\'AccountNameFromSettings\')}/dbs/@{encodeURIComponent(\'deprecation-db\')}/colls/@{encodeURIComponent(\'deprecations\')}/docs'
-          }
-        }
-      }
-      outputs: {
-      }
-    }
-    parameters: {
-      '$connections': {
-        value: {
-          documentdb: {
-            connectionId: cosmosDbConnection.id
-            connectionName: cosmosDbConnectionName
-            id: cosmosDbConnectionId
-          }
-          servicebus: {
-            connectionId: serviceBusConnection.id
-            connectionName: serviceBusConnectionName
-            id: serviceBusConnectionId
-          }
-        }
-      }
     }
   }
 }
