@@ -8,6 +8,12 @@
     "cosmosDbAccountName": {
       "value": "#{CosmosDb.Account.Name}#"
     },
+    "cosmosDbDatabaseName": {
+      "value": "#{CosmosDb.Database.Name}#"
+    },
+    "cosmosDbCollectionName": {
+      "value": "#{CosmosDb.Collection.Name}#"
+    },
     "functionAppName": {
       "value": "#{Function.App.Name}#"
     },
