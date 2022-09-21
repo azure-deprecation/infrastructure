@@ -1,20 +1,14 @@
 using AutoMapper;
 using Azure.Messaging.ServiceBus;
 using AzureDeprecation.Contracts;
-using AzureDeprecation.Contracts.Messages.v1;
+using AzureDeprecation.Contracts.v1.Documents;
+using AzureDeprecation.Contracts.v1.Messages;
 using AzureDeprecation.Runtimes.AzureFunctions;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 
 namespace AzureDeprecation.Notices.Management.Functions
 {
-    public class DeprecationNoticeDocument
-    {
-        public string Id { get; set; } = Guid.NewGuid().ToString();
-        public DeprecationInfo? DeprecationInfo { get; set; }
-        public PublishedNotice? PublishedNotice { get; set; }
-    }
-
     public partial class PersistNewAzureDeprecationFunction
     {
         private readonly ILogger<PersistNewAzureDeprecationFunction> _logger;
@@ -40,14 +34,27 @@ namespace AzureDeprecation.Notices.Management.Functions
                 ["ServiceBusQueueMessageCorrelationId"] = receivedSubscriptionMessage.CorrelationId
             });
 
-            // Map contracts
-            var newDeprecationNoticePublishedV1Message = receivedSubscriptionMessage.Body.ToObjectFromJson<NewDeprecationNoticePublishedV1Message>();
-            var deprecationNoticeDocument = _mapper.Map<DeprecationNoticeDocument>(newDeprecationNoticePublishedV1Message);
+            try
+            {
+                // Map contracts
+                // TODO: Implement test
+                var newDeprecationNoticePublishedV1Message = receivedSubscriptionMessage.Body.ToObjectFromJson<NewDeprecationNoticePublishedV1Message>();
+                var deprecationNoticeDocument = _mapper.Map<DeprecationNoticeDocument>(newDeprecationNoticePublishedV1Message);
+                deprecationNoticeDocument.CreatedAt = newDeprecationNoticePublishedV1Message.PublishedNotice!.CreatedAt;
+                deprecationNoticeDocument.LastUpdatedAt = deprecationNoticeDocument.CreatedAt;
 
-            // Persist
-            await documentsToPersist.AddAsync(deprecationNoticeDocument).ConfigureAwait(false);
-
-            LogTiming(stopwatch.GetElapsedTotalMilliseconds());
+                // Persist
+                await documentsToPersist.AddAsync(deprecationNoticeDocument).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                LogFailedProcessing(stopwatch.GetElapsedTotalMilliseconds());
+                throw;
+            }
+            finally
+            {
+                LogTiming(stopwatch.GetElapsedTotalMilliseconds());
+            }
         }
 
         [LoggerMessage(EventId = 200, EventName = "Timing", Level = LogLevel.Debug,
@@ -55,7 +62,7 @@ namespace AzureDeprecation.Notices.Management.Functions
         partial void LogTiming(double elapsedMilliseconds);
 
         [LoggerMessage(EventId = 500, EventName = "ErrorMessageProcessingFailed", Level = LogLevel.Error,
-            Message = "Failed processing Service Bus queue message with type: `{MessageType}`. Timing: {ElapsedMilliseconds} ms.")]
-        partial void LogFailedProcessing(MessageType messageType, double elapsedMilliseconds);
+            Message = "Failed processing Service Bus queue message. Timing: {ElapsedMilliseconds} ms.")]
+        partial void LogFailedProcessing(double elapsedMilliseconds);
     }
 }

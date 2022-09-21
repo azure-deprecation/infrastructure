@@ -1,7 +1,8 @@
 ﻿using AzureDeprecation.Contracts.Enum;
-using AzureDeprecation.Contracts.Messages.v1;
+using AzureDeprecation.Contracts.v1.Messages;
 using Humanizer;
 using System.Text;
+using AzureDeprecation.Contracts.v1.Shared;
 
 namespace AzureDeprecation.Notices.Management
 {
@@ -84,7 +85,7 @@ namespace AzureDeprecation.Notices.Management
             issueBuilder.AppendLine();
         }
 
-        private static void WriteTimeline(List<InputTimeLineEntry> timeline, StringBuilder issueBuilder)
+        private static void WriteTimeline(List<TimeLineEntry> timeline, StringBuilder issueBuilder)
         {
             if (timeline == null || timeline.Any() == false)
             {
@@ -109,14 +110,14 @@ namespace AzureDeprecation.Notices.Management
             issueBuilder.AppendLine();
         }
 
-        private static void WriteTimelineForSinglePhase(StringBuilder issueBuilder, InputTimeLineEntry timelineEntry)
+        private static void WriteTimelineForSinglePhase(StringBuilder issueBuilder, TimeLineEntry timelineEntry)
         {
             var phase = string.IsNullOrWhiteSpace(timelineEntry.Phase) ? "Deprecation" : timelineEntry.Phase;
             var description = string.IsNullOrWhiteSpace(timelineEntry.Description) ? "N/A" : timelineEntry.Description;
             issueBuilder.AppendLine($"|{phase}|{timelineEntry.Date:MMM dd, yyyy}|{description}|");
         }
 
-        private static void WriteTimelineEntriesForAllPhases(List<InputTimeLineEntry> timeline, StringBuilder issueBuilder)
+        private static void WriteTimelineEntriesForAllPhases(List<TimeLineEntry> timeline, StringBuilder issueBuilder)
         {
             foreach (var entry in timeline.OrderBy(x => x.Date))
             {

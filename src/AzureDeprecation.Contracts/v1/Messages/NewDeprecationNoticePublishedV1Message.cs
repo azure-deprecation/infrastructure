@@ -1,4 +1,6 @@
-﻿namespace AzureDeprecation.Contracts.Messages.v1
+﻿using AzureDeprecation.Contracts.v1.Shared;
+
+namespace AzureDeprecation.Contracts.v1.Messages
 {
     public class NewDeprecationNoticePublishedV1Message
     {

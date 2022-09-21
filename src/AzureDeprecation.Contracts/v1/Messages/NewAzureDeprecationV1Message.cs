@@ -1,9 +1,11 @@
-﻿namespace AzureDeprecation.Contracts.Messages.v1
+﻿using AzureDeprecation.Contracts.v1.Shared;
+
+namespace AzureDeprecation.Contracts.v1.Messages
 {
     public class NewAzureDeprecationV1Message
     {
         public string? Title { get; set; }
-        public List<InputTimeLineEntry> Timeline { get; set; } = new();
+        public List<TimeLineEntry> Timeline { get; set; } = new();
         public Impact? Impact { get; set; }
         public DraftNotice? Notice { get; set; }
         public RequiredAction? RequiredAction { get; set; }

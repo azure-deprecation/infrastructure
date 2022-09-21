@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using AzureDeprecation.Contracts.Messages.v1;
+using AzureDeprecation.Contracts.v1.Messages;
+using AzureDeprecation.Contracts.v1.Shared;
 using AzureDeprecation.Integrations.GitHub.Repositories;
 using GuardNet;
 using Octokit;

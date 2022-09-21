@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using AzureDeprecation.Contracts.Messages.v1;
-using AzureDeprecation.Notices.Management.Functions;
+using AzureDeprecation.Contracts.v1.Documents;
+using AzureDeprecation.Contracts.v1.Messages;
+using AzureDeprecation.Contracts.v1.Shared;
 using Octokit;
-using ApiInfo = AzureDeprecation.Contracts.Messages.v1.ApiInfo;
+using ApiInfo = AzureDeprecation.Contracts.v1.Shared.ApiInfo;
 
 namespace AzureDeprecation.Notices.Management.Mappings
 {
@@ -13,10 +14,6 @@ namespace AzureDeprecation.Notices.Management.Mappings
             CreateMap<DraftNotice, Notice>()
                 .ForMember(notice => notice.Description, x => x.MapFrom(draftNotice => draftNotice.Description))
                 .ForMember(notice => notice.Links, x => x.MapFrom(draftNotice => draftNotice.Links));
-            CreateMap<InputTimeLineEntry, TimeLineEntry>()
-                .ForMember(timeLineEntry => timeLineEntry.Phase, x => x.MapFrom(inputTimeLineEntry => inputTimeLineEntry.Phase))
-                .ForMember(timeLineEntry => timeLineEntry.Description, x => x.MapFrom(inputTimeLineEntry => inputTimeLineEntry.Description))
-                .ForMember(timeLineEntry => timeLineEntry.Date, x => x.MapFrom(inputTimeLineEntry => inputTimeLineEntry.Date));
             CreateMap<NewAzureDeprecationV1Message, DeprecationInfo>()
                 .ForMember(deprecationInfo => deprecationInfo.Title, x => x.MapFrom(issue => issue.Title))
                 .ForMember(deprecationInfo => deprecationInfo.RequiredAction, x => x.MapFrom((issue, _) => issue.RequiredAction?.Description))

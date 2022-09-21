@@ -1,5 +1,7 @@
 ﻿using AzureDeprecation.Contracts.Enum;
-using AzureDeprecation.Contracts.Messages.v1;
+using AzureDeprecation.Contracts.v1;
+using AzureDeprecation.Contracts.v1.Messages;
+using AzureDeprecation.Contracts.v1.Shared;
 
 namespace AzureDeprecation.Tests.Unit.Generator
 {

@@ -1,6 +1,6 @@
 using Arcus.EventGrid.Publishing;
 using AzureDeprecation.Contracts;
-using AzureDeprecation.Contracts.Messages.v1;
+using AzureDeprecation.Contracts.v1.Messages;
 using AzureDeprecation.Runtimes.AzureFunctions;
 using CloudNative.CloudEvents;
 using Microsoft.Azure.WebJobs;

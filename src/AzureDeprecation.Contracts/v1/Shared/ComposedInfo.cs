@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace AzureDeprecation.Contracts.Messages.v1
+namespace AzureDeprecation.Contracts.v1.Shared
 {
     public class ComposedInfo
     {

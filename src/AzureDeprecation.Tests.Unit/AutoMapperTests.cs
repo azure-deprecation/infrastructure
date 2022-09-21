@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using AzureDeprecation.Contracts.Messages.v1;
+using AzureDeprecation.Contracts.v1.Messages;
+using AzureDeprecation.Contracts.v1.Shared;
 using AzureDeprecation.Notices.Management.Mappings;
 using AzureDeprecation.Tests.Unit.Generator;
 using Bogus;
@@ -81,6 +82,33 @@ namespace AzureDeprecation.Tests.Unit
             HasSameNotice(publishedNotice, deprecationInfo);
             HasSameImpact(deprecationInfo, publishedNotice);
             HasSameTimeline(deprecationInfo, publishedNotice);
+        }
+
+        [Fact]
+        public void AutoMapper_MapNewDeprecationNoticePublishedV1MessageToDeprecationNoticeDocument_IsValid()
+        {
+            // TODO: Implement test
+            ////Arrange
+            //var deprecationInfo = NewAzureDeprecationGenerator.GenerateSample(useAdvancedTimeline: true);
+
+            ////Act
+            //var publishedNotice = _mapper.Map<NewDeprecationNoticePublishedV1Message, DeprecationNoticeDocument>(deprecationInfo);
+
+            ////Assert
+            //Assert.NotNull(publishedNotice);
+            //Assert.NotNull(publishedNotice.Contact);
+            //Assert.NotNull(publishedNotice.Timeline);
+            //Assert.Equal(deprecationInfo.Title, publishedNotice.Title);
+            //Assert.Equal(deprecationInfo.RequiredAction?.Description, publishedNotice.RequiredAction);
+            //Assert.Equal(deprecationInfo.AdditionalInformation, publishedNotice.AdditionalInformation);
+            //Assert.Equal(deprecationInfo.Contact.Count, publishedNotice.Contact.Count);
+            //foreach (var contactEntry in deprecationInfo.Contact)
+            //{
+            //    Assert.Contains(publishedNotice.Contact, entry => entry.Type == contactEntry.Type && string.Equals(entry.Data, contactEntry.Data, StringComparison.InvariantCultureIgnoreCase));
+            //}
+            //HasSameNotice(publishedNotice, deprecationInfo);
+            //HasSameImpact(deprecationInfo, publishedNotice);
+            //HasSameTimeline(deprecationInfo, publishedNotice);
         }
 
         private static void HasSameNotice(DeprecationInfo publishedNotice, NewAzureDeprecationV1Message deprecationInfo)

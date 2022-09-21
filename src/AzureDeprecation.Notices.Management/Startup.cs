@@ -13,6 +13,8 @@ namespace AzureDeprecation.Notices.Management
 
         protected override void ConfigureDependencies(IServiceCollection services)
         {
+            base.ConfigureDependencies(services);
+
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<GitHubRepository>();
             services.AddScoped<NewAzureDeprecationNotificationV1MessageHandler>();
