@@ -14,8 +14,8 @@ param storageAccountName string
 param persistDeprecationWorkflowName string
 
 param defaultLocation string = resourceGroup().location
-var cosmosDbConnectionId = '${subscription().id}/providers/Microsoft.Web/locations/${defaultLocation}/managedApis/documentdb'
-var serviceBusConnectionId = '${subscription().id}/providers/Microsoft.Web/locations/${defaultLocation}/managedApis/servicebus'
+var cosmosDbConnectionId = subscriptionResourceId('Microsoft.Web/locations/managedApis', defaultLocation, 'documentdb')
+var serviceBusConnectionId = subscriptionResourceId('Microsoft.Web/locations/managedApis', defaultLocation, 'servicebus')
 
 resource functionAppPlan 'Microsoft.Web/serverfarms@2021-01-15' = {
   name: functionPlanName
@@ -112,7 +112,7 @@ resource cosmosDbConnection 'Microsoft.Web/connections@2016-06-01' = {
   dependsOn: []
 }
 
-resource persistDeprecationWorkflowNameResource 'Microsoft.Logic/workflows@2017-07-01' = {
+resource persistDeprecationWorkflowNameResource 'Microsoft.Logic/workflows@2019-05-01' = {
   name: persistDeprecationWorkflowName
   location: defaultLocation
   properties: {

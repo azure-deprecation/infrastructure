@@ -8,12 +8,6 @@
     "cosmosDbConnectionName": {
       "value": "#{Connections.CosmosDb.Name}#"
     },
-    "gmailConnectionName": {
-      "value": "#{Connections.Gmail.Name}#"
-    },
-    "mailChimpConnectionName": {
-      "value": "#{Connections.MailChimp.Name}#"
-    },
     "serviceBusConnectionName": {
       "value": "#{Connections.ServiceBus.Name}#"
     },
@@ -37,9 +31,6 @@
     },
     "storageAccountName": {
       "value": "#{StorageAccount.Name}#"
-    },
-    "monthlyNewsletterWorkflowName": {
-        "value": "#{Workflow.MonthlySummaryNewsletter.Name}#"
     },
     "tweetNewDeprecationWorkflowName": {
       "value": "#{Workflow.TweetNewDeprecation.Name}#"
