@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using AutoMapper;
+﻿using AutoMapper;
 using AzureDeprecation.Contracts.Messages.v1;
 using Octokit;
 using ApiInfo = AzureDeprecation.Contracts.Messages.v1.ApiInfo;
@@ -19,7 +18,7 @@ namespace AzureDeprecation.Notices.Management.Mappings
                 .ForMember(timeLineEntry => timeLineEntry.Date, x => x.MapFrom(inputTimeLineEntry => inputTimeLineEntry.Date));
             CreateMap<NewAzureDeprecationV1Message, DeprecationInfo>()
                 .ForMember(deprecationInfo => deprecationInfo.Title, x => x.MapFrom(issue => issue.Title))
-                .ForMember(deprecationInfo => deprecationInfo.RequiredAction, x => x.MapFrom(issue => issue.RequiredAction.Description))
+                .ForMember(deprecationInfo => deprecationInfo.RequiredAction, x => x.MapFrom((issue, _) => issue.RequiredAction?.Description))
                 .ForMember(deprecationInfo => deprecationInfo.Contact, x => x.MapFrom(issue => issue.Contact))
                 .ForMember(deprecationInfo => deprecationInfo.Notice, x => x.MapFrom(issue => issue.Notice))
                 .ForMember(deprecationInfo => deprecationInfo.Impact, x => x.MapFrom(issue => issue.Impact))

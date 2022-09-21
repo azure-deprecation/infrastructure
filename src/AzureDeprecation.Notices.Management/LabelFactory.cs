@@ -1,5 +1,4 @@
-﻿using System;
-using AzureDeprecation.Contracts.Enum;
+﻿using AzureDeprecation.Contracts.Enum;
 
 namespace AzureDeprecation.Notices.Management
 {

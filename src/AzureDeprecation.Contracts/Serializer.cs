@@ -3,9 +3,9 @@ using Newtonsoft.Json.Converters;
 
 namespace AzureDeprecation.Contracts
 {
-    public class Serializer
+    public static class Serializer
     {
-        public static TContract Deserialize<TContract>(string rawPayload)
+        public static TContract? Deserialize<TContract>(string rawPayload)
         {
             var message = JsonConvert.DeserializeObject<TContract>(rawPayload);
             return message;
