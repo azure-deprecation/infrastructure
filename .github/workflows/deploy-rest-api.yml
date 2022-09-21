@@ -56,7 +56,7 @@ jobs:
         with:
           app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
           package: ${{ env.FUNCTION_PACKAGE_PATH }}
-          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          publish-profile: ${{ secrets.AZURE_REST_API_PUBLISH_PROFILE }}
 
   deploy_to_production:
       name: Deploy to Production environment
@@ -99,4 +99,4 @@ jobs:
         with:
           app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
           package: ${{ env.FUNCTION_PACKAGE_PATH }}
-          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          publish-profile: ${{ secrets.AZURE_REST_API_PUBLISH_PROFILE }}

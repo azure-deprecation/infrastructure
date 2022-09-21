@@ -47,8 +47,8 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
           deploymentName: notifications-run-${{ github.run_number }}
-          template: notifications.json
-          parameters: notifications.parameters.staging.json MailChimp.Auth.BearerToken=${{ secrets.MAILCHIMP_AUTH_BEARERTOKEN }} Gmail.Auth.ClientId=${{ secrets.GMAIL_AUTH_CLIENTID }} Gmail.Auth.ClientSecret=${{ secrets.GMAIL_AUTH_CLIENTSECRET }}
+          template: notifications.bicep
+          parameters: notifications.parameters.staging.json mailchimpBearerToken=${{ secrets.MAILCHIMP_AUTH_BEARERTOKEN }} gmailClientId=${{ secrets.GMAIL_AUTH_CLIENTID }} gmailClientSecret=${{ secrets.GMAIL_AUTH_CLIENTSECRET }}
       
       - name: Deploy Azure Function
         id: deploy-to-azure
@@ -90,8 +90,8 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
           deploymentName: notifications-run-${{ github.run_number }}
-          template: notifications.json
-          parameters: notifications.parameters.production.json MailChimp.Auth.BearerToken=${{ secrets.MAILCHIMP_AUTH_BEARERTOKEN }} Gmail.Auth.ClientId=${{ secrets.GMAIL_AUTH_CLIENTID }} Gmail.Auth.ClientSecret=${{ secrets.GMAIL_AUTH_CLIENTSECRET }}
+          template: notifications.bicep
+          parameters: notifications.parameters.production.json mailchimpBearerToken=${{ secrets.MAILCHIMP_AUTH_BEARERTOKEN }} gmailClientId=${{ secrets.GMAIL_AUTH_CLIENTID }} gmailClientSecret=${{ secrets.GMAIL_AUTH_CLIENTSECRET }}
       
       - name: Deploy Azure Function
         id: deploy-to-azure

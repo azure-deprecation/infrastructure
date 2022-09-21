@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-    - 'deploy/notice-management.json'
+    - 'deploy/notice-management.bicep'
     - '.github/workflows/package-notice-management.yml'
     - 'src/AzureDeprecation.Runtimes.AzureFunctions/*'
     - 'src/AzureDeprecation.Integrations.GitHub/*'
@@ -38,11 +38,11 @@ jobs:
           name: ${{ env.ARTIFACT_NAME }}
           path: ${{ env.OUTPUT_PATH }}
 
-    - name: Publish ARM template to Artifact
+    - name: Publish Bicep template to Artifact
       uses: actions/upload-artifact@v2
       with:
           name: ${{ env.ARTIFACT_NAME }}
-          path: deploy/notice-management.json
+          path: deploy/notice-management.bicep
           
     - name: Publish ARM template parameters (Tokenized) to Artifact
       uses: actions/upload-artifact@v2

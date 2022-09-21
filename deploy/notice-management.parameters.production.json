@@ -2,37 +2,37 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "ApplicationInsights.Name": {
+    "applicationInsightsName": {
       "value": "azure-deprecation-notices-telemetry"
     },
-    "Connections.CosmosDb.Name": {
+    "cosmosDbConnectionName": {
       "value": "azure-deprecation-notices-connections-cosmos-db"
     },
-    "Connections.ServiceBus.Name": {
+    "serviceBusConnectionName": {
       "value": "azure-deprecation-notices-connections-service-bus"
     },
-    "CosmosDb.Account.Name": {
+    "cosmosDbAccountName": {
       "value": "azure-deprecation-notices"
     },
-    "Function.App.Name": {
+    "functionAppName": {
       "value": "azure-deprecation-notices-notice-management"
     },
-    "Function.Plan.Name": {
+    "functionPlanName": {
       "value": "azure-deprecation-notices-notice-management"
     },
-    "GitHub.Owner": {
+    "githubOwner": {
       "value": "azure-deprecation"
     },
-    "GitHub.Repo.Name": {
+    "githubRepoName": {
       "value": "dashboard"
     },
-    "ServiceBus.Namespace.Name": {
+    "serviceBusNamespaceName": {
       "value": "azure-deprecation-notices"
     },
-    "StorageAccount.Name": {
+    "storageAccountName": {
       "value": "azuredeprecationnotices"
     },
-    "Workflow.Name": {
+    "persistDeprecationWorkflowName": {
       "value": "azure-deprecation-notices-persist-new-notice"
     }
   }
