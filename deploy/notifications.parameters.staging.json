@@ -8,12 +8,6 @@
     "cosmosDbConnectionName": {
       "value": "azure-deprecation-notices-connections-cosmos-db-staging"
     },
-    "gmailConnectionName": {
-      "value": "azure-deprecation-notices-connections-gmail-staging"
-    },
-    "mailChimpConnectionName": {
-      "value": "azure-deprecation-notices-connections-mailchimp-staging"
-    },
     "serviceBusConnectionName": {
       "value": "azure-deprecation-notices-connections-service-bus-staging"
     },
@@ -32,20 +26,11 @@
     "functionPlanName": {
       "value": "azure-deprecation-notices-notifications-staging"
     },
-    "mailchimpMailingListId": {
-        "value": "b0f0db5931"
-    },
-    "mailchimpTemplateId": {
-        "value": 11355345
-    },
     "serviceBusNamespaceName": {
       "value": "azure-deprecation-notices-staging"
     },
     "storageAccountName": {
       "value": "azuredeprecationstaging"
-    },
-    "monthlyNewsletterWorkflowName": {
-      "value": "azure-deprecation-notices-monthly-summary-newsletter-staging"
     },
     "tweetNewDeprecationWorkflowName": {
       "value": "azure-deprecation-notices-tweet-new-notice-staging"

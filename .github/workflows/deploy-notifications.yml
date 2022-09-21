@@ -48,7 +48,7 @@ jobs:
           resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
           deploymentName: notifications-run-${{ github.run_number }}
           template: notifications.bicep
-          parameters: notifications.parameters.staging.json mailchimpBearerToken=${{ secrets.MAILCHIMP_AUTH_BEARERTOKEN }} gmailClientId=${{ secrets.GMAIL_AUTH_CLIENTID }} gmailClientSecret=${{ secrets.GMAIL_AUTH_CLIENTSECRET }}
+          parameters: notifications.parameters.staging.json
       
       - name: Deploy Azure Function
         id: deploy-to-azure
@@ -91,7 +91,7 @@ jobs:
           resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
           deploymentName: notifications-run-${{ github.run_number }}
           template: notifications.bicep
-          parameters: notifications.parameters.production.json mailchimpBearerToken=${{ secrets.MAILCHIMP_AUTH_BEARERTOKEN }} gmailClientId=${{ secrets.GMAIL_AUTH_CLIENTID }} gmailClientSecret=${{ secrets.GMAIL_AUTH_CLIENTSECRET }}
+          parameters: notifications.parameters.production.json
       
       - name: Deploy Azure Function
         id: deploy-to-azure
