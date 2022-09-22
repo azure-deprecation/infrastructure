@@ -19,7 +19,7 @@ namespace AzureDeprecation.Tests.Unit
     [Trait("Category", "Unit")]
     public class AutoMapperTests
     {
-        private readonly IMapper _mapper;
+        readonly IMapper _mapper;
 
         public AutoMapperTests()
         {
@@ -97,56 +97,33 @@ namespace AzureDeprecation.Tests.Unit
         }
 
         [Fact]
-        public void AutoMapper_MapEntityToPresentationModel_AllPropertiesMapped()
+        public void AutoMapper_MapNoticeEntityToDeprecationInfoApiContract_AllPropertiesMapped()
         {
             var fixture = new Fixture();
             var dbEntity = fixture.Create<NoticeEntity>();
 
             var resultModel = _mapper.Map<AzureDeprecation.APIs.REST.Contracts.DeprecationInfo>(dbEntity);
             
-            resultModel.DeprecationData
-                .WithDeepEqual(dbEntity.DeprecationInfo)
-                .Assert();
+            Assert.Equal(dbEntity.Id, resultModel.Id);
+            Assert.Contains(ExternalLinkType.GitHubNoticeUrl, (IDictionary<ExternalLinkType, string>)resultModel.Links);
+            Assert.Equal(dbEntity.PublishedNotice?.DashboardInfo?.Url, resultModel.Links[ExternalLinkType.GitHubNoticeUrl]);
             
             resultModel
-                .WithDeepEqual(dbEntity)
-                .IgnoreDestinationProperty(x => x.DeprecationInfo)
-                .IgnoreSourceProperty(x => x.DeprecationData)
+                .WithDeepEqual(dbEntity.DeprecationInfo)
+                .IgnoreDestinationProperty(x => x.AdditionalInformation)
+                .IgnoreSourceProperty(x => x.Id)
+                .IgnoreSourceProperty(x => x.Links)
                 .Assert();
         }
-        
-        [Fact]
-        public void AutoMapper_MapEntitiesToPresentationModel_AllPropertiesMapped()
-        {
-            var fixture = new Fixture();
-            var dbEntities = fixture.Create<DeprecationNoticesResult>();
 
-            var resultModels = _mapper.Map<DeprecationNoticesResponse>(dbEntities);
-            
-            Assert.NotEmpty(dbEntities.Deprecations);
-            Assert.Equal(dbEntities.Deprecations.Count, resultModels.Deprecations.Count);
-            for (var i = 0; i < resultModels.Deprecations.Count; i++)
-            {
-                resultModels.Deprecations[i].DeprecationData
-                    .WithDeepEqual(dbEntities.Deprecations[i].DeprecationInfo)
-                    .Assert();
-            
-                resultModels.Deprecations[i]
-                    .WithDeepEqual(dbEntities.Deprecations[i])
-                    .IgnoreDestinationProperty(x => x.DeprecationInfo)
-                    .IgnoreSourceProperty(x => x.DeprecationData)
-                    .Assert();
-            }
-        }
-
-        private static void HasSameNotice(DeprecationInfo publishedNotice, NewAzureDeprecationV1Message deprecationInfo)
+        static void HasSameNotice(DeprecationInfo publishedNotice, NewAzureDeprecationV1Message deprecationInfo)
         {
             Assert.NotNull(publishedNotice.Notice);
             Assert.Equal(deprecationInfo.Notice?.Description, publishedNotice.Notice?.Description);
             Assert.Equal(deprecationInfo.Notice?.Links, publishedNotice.Notice?.Links);
         }
 
-        private static void HasSameImpact(NewAzureDeprecationV1Message deprecationInfo, DeprecationInfo publishedNotice)
+        static void HasSameImpact(NewAzureDeprecationV1Message deprecationInfo, DeprecationInfo publishedNotice)
         {
             Assert.NotNull(publishedNotice.Impact);
             Assert.NotNull(publishedNotice.Impact.Services);
@@ -159,7 +136,7 @@ namespace AzureDeprecation.Tests.Unit
                 options => options.ComparingRecordsByValue());
         }
 
-        private static void HasSameTimeline(NewAzureDeprecationV1Message deprecationInfo, DeprecationInfo publishedNotice)
+        static void HasSameTimeline(NewAzureDeprecationV1Message deprecationInfo, DeprecationInfo publishedNotice)
         {
             Assert.NotNull(publishedNotice.Timeline);
             Assert.Equal(deprecationInfo.Timeline.Count, publishedNotice.Timeline.Count);
@@ -168,7 +145,7 @@ namespace AzureDeprecation.Tests.Unit
                 options => options.ComparingRecordsByValue());
         }
 
-        private Issue CreateBogusGitHubIssue()
+        Issue CreateBogusGitHubIssue()
         {
             var labels = new List<Label>();
 

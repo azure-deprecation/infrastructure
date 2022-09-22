@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CodeJam.Strings;
 
 namespace AzureDeprecation.APIs.REST.Mappings;
 
@@ -13,18 +14,28 @@ public class DeprecationNoticeProfile : Profile
         CreateMap<Db.DeprecationNoticesResult, Presentation.DeprecationNoticesResponse>();
         
         CreateMap<Db.NoticeEntity, Presentation.DeprecationInfo>()
-            .ForMember(d => d.DeprecationData, o => o.MapFrom(s => s.DeprecationInfo))
-            .ForMember(d => d.PublishedNotice, o => o.MapFrom(s => s.PublishedNotice))
-            .ForMember(d => d.Id, o => o.MapFrom(s => s.Id));
+            .IncludeMembers(i => i.DeprecationInfo)
+            .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
+            .ForMember(d => d.Links, o => 
+                o.MapFrom((x, _) =>
+                {
+                    if (x.PublishedNotice?.DashboardInfo?.Url.IsNullOrEmpty() ?? true)
+                        return new Dictionary<Presentation.ExternalLinkType, string?>();
+                    
+                    return new Dictionary<Presentation.ExternalLinkType, string?>
+                    {
+                        { Presentation.ExternalLinkType.GitHubNoticeUrl, x.PublishedNotice!.DashboardInfo!.Url }
+                    };
+                }));
+        
+        CreateMap<Messages.DeprecationInfo, Presentation.DeprecationInfo>()
+            .ForMember(x => x.Id, opt => opt.Ignore())
+            .ForMember(x => x.Links, opt => opt.Ignore());
         
         CreateMap<Messages.Notice, Presentation.Notice>();
         CreateMap<Messages.ContactEntry, Presentation.ContactEntry>();
         CreateMap<Messages.Impact, Presentation.Impact>();
         CreateMap<Messages.TimeLineEntry, Presentation.TimeLineEntry>();
-        CreateMap<Messages.ApiInfo, Presentation.ApiInfo>();
-        CreateMap<Messages.DashboardInfo, Presentation.DashboardInfo>();
-        
-        CreateMap<Messages.DeprecationInfo, Presentation.DeprecationData>();
-        CreateMap<Messages.PublishedNotice, Presentation.PublishedNotice>();
+
     }
 }

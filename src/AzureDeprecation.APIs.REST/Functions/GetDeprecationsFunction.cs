@@ -1,11 +1,13 @@
 using AutoMapper;
-using AzureDeprecation.APIs.REST.DataAccess.Contracts;
+using AzureDeprecation.APIs.REST.DataAccess.Interfaces;
 using AzureDeprecation.APIs.REST.Utils;
+using AzureDeprecation.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
+
 using Presentation = AzureDeprecation.APIs.REST.Contracts;
 
 namespace AzureDeprecation.APIs.REST.Functions
@@ -32,7 +34,12 @@ namespace AzureDeprecation.APIs.REST.Functions
             var filter = DeprecationRequestModelBinder.CreateModel(request.Query);
             var entities = await _deprecationsRepository.GetDeprecationsAsync(filter, cancellationToken);
             var result = _mapper.Map<Presentation.DeprecationNoticesResponse>(entities);
-            return new JsonResult(result, JsonSettingsProvider.GetDefault());
+            
+            return new ContentResult
+            {
+                ContentType = "application/json",
+                Content = Serializer.Serialize(result)
+            };
         }
     }
 }

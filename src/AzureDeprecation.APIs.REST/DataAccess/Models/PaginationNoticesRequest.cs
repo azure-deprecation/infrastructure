@@ -4,7 +4,7 @@ namespace AzureDeprecation.APIs.REST.DataAccess.Models;
 
 public class PaginationNoticesRequest
 {
-    public const int DefaultPageSize = 100;
+    public const int DefaultPageSize = 25;
     public const int MaxPageSize = 500;
     
     [Range(0, Int32.MaxValue)]

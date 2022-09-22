@@ -1,6 +1,6 @@
 ﻿using AzureDeprecation.APIs.REST.DataAccess.Models;
 
-namespace AzureDeprecation.APIs.REST.DataAccess.Contracts;
+namespace AzureDeprecation.APIs.REST.DataAccess.Interfaces;
 
 public interface IDeprecationsRepository
 {
