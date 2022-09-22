@@ -72,6 +72,83 @@ resource functionApp 'Microsoft.Web/sites@2021-01-15' = {
   }
 }
 
+resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-06-01-preview' existing = {
+  name: serviceBusNamespaceName
+}
+
+resource newDeprecationNoticesTopic 'Microsoft.ServiceBus/namespaces/topics@2021-06-01-preview' = {
+  parent: serviceBusNamespace
+  name: 'new-deprecation-notices'
+  properties: {
+  }
+}
+
+resource emitEventGridNotificationTopicSubscription 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-06-01-preview' = {
+  parent: newDeprecationNoticesTopic
+  name: 'event-grid-notifications'
+  properties: {
+    maxDeliveryCount: 3
+  }
+}
+
+resource emitEventGridNotificationTopicSubscriptionFilter 'Microsoft.ServiceBus/namespaces/topics/subscriptions/rules@2021-06-01-preview' = {
+  parent: emitEventGridNotificationTopicSubscription
+  name: 'unfiltered'
+  properties: {
+    action: {
+    }
+    filterType: 'SqlFilter'
+    sqlFilter: {
+      sqlExpression: '1=1'
+      compatibilityLevel: 20
+    }
+  }
+}
+
+resource tweetNewNoticeTopicSubscription 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-06-01-preview' = {
+  parent: newDeprecationNoticesTopic
+  name: 'new-notice-tweet'
+  properties: {
+    maxDeliveryCount: 3
+  }
+}
+
+resource tweetNewNoticeTopicSubscriptionFilter 'Microsoft.ServiceBus/namespaces/topics/subscriptions/rules@2021-06-01-preview' = {
+  parent: tweetNewNoticeTopicSubscription
+  name: 'unfiltered'
+  properties: {
+    action: {
+    }
+    filterType: 'SqlFilter'
+    sqlFilter: {
+      sqlExpression: '1=1'
+      compatibilityLevel: 20
+    }
+  }
+}
+
+resource persistNewNoticeTopicSubscription 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-06-01-preview' = {
+  parent: newDeprecationNoticesTopic
+  name: 'persist-new-notice'
+  properties: {
+    maxDeliveryCount: 3
+  }
+}
+
+resource persistNewNoticeTopicSubscriptionFilter 'Microsoft.ServiceBus/namespaces/topics/subscriptions/rules@2021-06-01-preview' = {
+  parent: persistNewNoticeTopicSubscription
+  name: 'unfiltered'
+  properties: {
+    action: {
+    }
+    filterType: 'SqlFilter'
+    sqlFilter: {
+      sqlExpression: '1=1'
+      compatibilityLevel: 20
+    }
+  }
+}
+
 resource serviceBusConnection 'Microsoft.Web/connections@2016-06-01' = {
   name: serviceBusConnectionName
   location: defaultLocation

@@ -77,6 +77,25 @@ resource functionAppNameResource 'Microsoft.Web/sites@2021-01-15' = {
   }
 }
 
+resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-06-01-preview' existing = {
+  name: serviceBusNamespaceName
+}
+
+resource deprecationLifecycleUpdatesQueue 'Microsoft.ServiceBus/namespaces/queues@2021-06-01-preview' = {
+  parent: serviceBusNamespace
+  name: 'deprecation-lifecycle-updates'
+  properties: {
+    maxDeliveryCount: 5
+  }
+}
+
+resource deprecationNoticeLifecycleTopic 'Microsoft.ServiceBus/namespaces/topics@2021-06-01-preview' = {
+  parent: serviceBusNamespace
+  name: 'deprecation-notice-lifecycle-changes'
+  properties: {
+  }
+}
+
 resource serviceBusConnection 'Microsoft.Web/connections@2016-06-01' = {
   name: serviceBusConnectionName
   location: defaultLocation
