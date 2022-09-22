@@ -77,9 +77,12 @@ resource functionAppNameResource 'Microsoft.Web/sites@2021-01-15' = {
   }
 }
 
-var serviceBusNamespaceNameResource = resourceId('Microsoft.ServiceBus/namespaces', serviceBusNamespaceName)
+resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-06-01-preview' existing = {
+  name: serviceBusNamespaceName
+}
+
 resource deprecationLifecycleUpdatesQueue 'Microsoft.ServiceBus/namespaces/queues@2021-06-01-preview' = {
-  parent: serviceBusNamespaceNameResource
+  parent: serviceBusNamespace
   name: 'deprecation-lifecycle-updates'
   properties: {
     maxDeliveryCount: 5
@@ -87,7 +90,7 @@ resource deprecationLifecycleUpdatesQueue 'Microsoft.ServiceBus/namespaces/queue
 }
 
 resource deprecationNoticeLifecycleTopic 'Microsoft.ServiceBus/namespaces/topics@2021-06-01-preview' = {
-  parent: serviceBusNamespaceNameResource
+  parent: serviceBusNamespace
   name: 'deprecation-notice-lifecycle-changes'
   properties: {
   }
