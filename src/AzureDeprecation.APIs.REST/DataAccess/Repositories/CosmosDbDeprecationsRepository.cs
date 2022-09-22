@@ -14,29 +14,35 @@ namespace AzureDeprecation.APIs.REST.DataAccess.Repositories;
 
 internal class CosmosDbDeprecationsRepository : IDeprecationsRepository
 {
-    readonly ILogger<CosmosDbDeprecationsRepository> _logger;
     readonly CosmosClient _client;
     readonly CosmosDbOptions _dbOptions;
-    
+    readonly ILogger<CosmosDbDeprecationsRepository> _logger;
+
+    bool _isDatabaseInitialized;
+    readonly SemaphoreSlim _locker = new(1, 1);
+
     public CosmosDbDeprecationsRepository(
         CosmosClient cosmosClient,
-        IOptions<CosmosDbOptions> dbSettings, 
+        IOptions<CosmosDbOptions> dbSettings,
         ILogger<CosmosDbDeprecationsRepository> logger)
     {
         Code.NotNull(dbSettings?.Value, nameof(dbSettings));
         Code.NotNullNorEmpty(dbSettings.Value.ConnectionString, nameof(dbSettings.Value.ConnectionString));
-        
-        _logger = logger;
-        _dbOptions = dbSettings.Value;
+
         _client = cosmosClient;
+        _dbOptions = dbSettings.Value;
+        _logger = logger;
     }
 
     public async IAsyncEnumerable<NoticeEntity> GetDeprecationsAsync(
-        DeprecationsRequestModel deprecationsRequestModel, [EnumeratorCancellation] CancellationToken cancellation = default)
+        DeprecationsRequestModel deprecationsRequestModel,
+        [EnumeratorCancellation] CancellationToken cancellation = default)
     {
+        await EnsureDatabaseInitializedAsync(cancellation);
+
         var db = _client.GetDatabase(_dbOptions.DatabaseName);
         var container = db.GetContainer(_dbOptions.ContainerName);
-  
+
         var queryBuilder = container
             .GetItemLinqQueryable<NoticeEntity>()
             .WithFilters(deprecationsRequestModel.Filters)
@@ -50,6 +56,31 @@ internal class CosmosDbDeprecationsRepository : IDeprecationsRepository
             {
                 yield return entity;
             }
+        }
+    }
+
+    async Task EnsureDatabaseInitializedAsync(CancellationToken cancellationToken)
+    {
+        if (_isDatabaseInitialized)
+            return;
+
+        try
+        {
+            await _locker.WaitAsync(cancellationToken);
+            if (_isDatabaseInitialized)
+                return;
+
+            var db = await _client.CreateDatabaseIfNotExistsAsync(_dbOptions.DatabaseName,
+                cancellationToken: cancellationToken);
+            
+            await db.Database.CreateContainerIfNotExistsAsync(_dbOptions.ContainerName,
+                $"/{nameof(NoticeEntity.Id).ToLower()}", cancellationToken: cancellationToken);
+            
+            _isDatabaseInitialized = true;
+        }
+        finally
+        {
+            _locker.Release();
         }
     }
 }
