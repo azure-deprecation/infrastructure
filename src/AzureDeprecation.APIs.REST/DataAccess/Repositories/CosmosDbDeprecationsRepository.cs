@@ -6,18 +6,23 @@ using AzureDeprecation.APIs.REST.Settings;
 using CodeJam;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace AzureDeprecation.APIs.REST.DataAccess.Repositories;
 
 internal class CosmosDbDeprecationsRepository : IDeprecationsRepository
 {
+    readonly ILogger<CosmosDbDeprecationsRepository> _logger;
     readonly CosmosClient _client;
     readonly CosmosDbOptions _dbOptions;
     
-    public CosmosDbDeprecationsRepository(IOptions<CosmosDbOptions> dbSettings)
+    public CosmosDbDeprecationsRepository(IOptions<CosmosDbOptions> dbSettings, ILogger<CosmosDbDeprecationsRepository> logger)
     {
         Code.NotNull(dbSettings?.Value, nameof(dbSettings));
+        Code.NotNullNorEmpty(dbSettings.Value.ConnectionString, nameof(dbSettings.Value.ConnectionString));
+        
+        _logger = logger;
         _dbOptions = dbSettings.Value;
         _client = new CosmosClient(dbSettings.Value.ConnectionString);
     }
@@ -49,6 +54,7 @@ internal class CosmosDbDeprecationsRepository : IDeprecationsRepository
         }
         catch (CosmosException ex)  when (ex.StatusCode == HttpStatusCode.NotFound)
         {
+            _logger.LogError(ex, "Database {Db} or container {Container} not exists", _dbOptions.DbName, _dbOptions.ContainerId);
             throw new ArgumentException("Container does exist");
         }
 
