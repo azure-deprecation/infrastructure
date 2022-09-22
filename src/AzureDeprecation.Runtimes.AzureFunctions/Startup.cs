@@ -54,7 +54,7 @@ namespace AzureDeprecation.Runtimes.AzureFunctions
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 Converters = new List<JsonConverter>
                 {
-                    new StringEnumConverter(new StringEnumConverter(false))
+                    new StringEnumConverter()
                 }
             };
         }
