@@ -96,6 +96,94 @@ resource deprecationNoticeLifecycleTopic 'Microsoft.ServiceBus/namespaces/topics
   }
 }
 
+resource emitEventGridNotificationTopicSubscription 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-06-01-preview' = {
+  parent: deprecationNoticeLifecycleTopic
+  name: 'event-grid-notifications'
+  properties: {
+    maxDeliveryCount: 3
+  }
+}
+
+resource emitEventGridNotificationTopicSubscriptionFilter 'Microsoft.ServiceBus/namespaces/topics/subscriptions/rules@2021-06-01-preview' = {
+  parent: emitEventGridNotificationTopicSubscription
+  name: 'unfiltered'
+  properties: {
+    action: {
+    }
+    filterType: 'SqlFilter'
+    sqlFilter: {
+      sqlExpression: '1=1'
+      compatibilityLevel: 20
+    }
+  }
+}
+
+resource tweetDeprecationExtendedTopicSubscription 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-06-01-preview' = {
+  parent: deprecationNoticeLifecycleTopic
+  name: 'tweet-deprecation-extended'
+  properties: {
+    maxDeliveryCount: 3
+  }
+}
+
+resource tweetDeprecationExtendedTopicSubscriptionFilter 'Microsoft.ServiceBus/namespaces/topics/subscriptions/rules@2021-06-01-preview' = {
+  parent: tweetDeprecationExtendedTopicSubscription
+  name: 'unfiltered'
+  properties: {
+    action: {
+    }
+    filterType: 'SqlFilter'
+    sqlFilter: {
+      sqlExpression: 'MessageType=\'AzureDeprecationWasExtendedV1\''
+      compatibilityLevel: 20
+    }
+  }
+}
+
+resource tweetDeprecationClosureTopicSubscription 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-06-01-preview' = {
+  parent: deprecationNoticeLifecycleTopic
+  name: 'tweet-deprecation-closure'
+  properties: {
+    maxDeliveryCount: 3
+  }
+}
+
+resource tweetDeprecationClosureTopicSubscriptionFilter 'Microsoft.ServiceBus/namespaces/topics/subscriptions/rules@2021-06-01-preview' = {
+  parent: tweetDeprecationClosureTopicSubscription
+  name: 'unfiltered'
+  properties: {
+    action: {
+    }
+    filterType: 'SqlFilter'
+    sqlFilter: {
+      sqlExpression: 'MessageType=\'AzureDeprecationWasClosedV1\''
+      compatibilityLevel: 20
+    }
+  }
+}
+
+resource persistNoticeChangedTopicSubscription 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-06-01-preview' = {
+  parent: deprecationNoticeLifecycleTopic
+  name: 'persist-notice-update'
+  properties: {
+    maxDeliveryCount: 3
+  }
+}
+
+resource persistNoticeChangeTopicSubscriptionFilter 'Microsoft.ServiceBus/namespaces/topics/subscriptions/rules@2021-06-01-preview' = {
+  parent: persistNoticeChangedTopicSubscription
+  name: 'unfiltered'
+  properties: {
+    action: {
+    }
+    filterType: 'SqlFilter'
+    sqlFilter: {
+      sqlExpression: '1=1'
+      compatibilityLevel: 20
+    }
+  }
+}
+
 resource serviceBusConnection 'Microsoft.Web/connections@2016-06-01' = {
   name: serviceBusConnectionName
   location: defaultLocation
