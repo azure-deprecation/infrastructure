@@ -2,6 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using Serilog;
 using Serilog.Configuration;
 using Serilog.Events;
@@ -46,6 +49,14 @@ namespace AzureDeprecation.Runtimes.AzureFunctions
 
         protected virtual void ConfigureDependencies(IServiceCollection services)
         {
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                Converters = new List<Newtonsoft.Json.JsonConverter>
+                {
+                    new StringEnumConverter(camelCaseText: false)
+                }
+            };
         }
     }
 }

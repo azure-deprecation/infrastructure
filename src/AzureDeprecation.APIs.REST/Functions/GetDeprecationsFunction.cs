@@ -34,12 +34,8 @@ namespace AzureDeprecation.APIs.REST.Functions
             var filter = DeprecationRequestModelBinder.CreateModel(request.Query);
             var entities = await _deprecationsRepository.GetDeprecationsAsync(filter, cancellationToken);
             var result = _mapper.Map<Presentation.DeprecationNoticesResponse>(entities);
-            
-            return new ContentResult
-            {
-                ContentType = "application/json",
-                Content = Serializer.Serialize(result)
-            };
+
+            return new OkObjectResult(result);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using AzureDeprecation.APIs.REST.DataAccess.Interfaces;
+﻿using System.Net;
+using AzureDeprecation.APIs.REST.DataAccess.Interfaces;
 using AzureDeprecation.APIs.REST.DataAccess.Models;
 using AzureDeprecation.APIs.REST.DataAccess.Utils;
 using AzureDeprecation.APIs.REST.Settings;
@@ -36,12 +37,19 @@ internal class CosmosDbDeprecationsRepository : IDeprecationsRepository
 
         using var queryIterator = queryBuilder.ToFeedIterator();
 
-        while (queryIterator.HasMoreResults)
+        try
         {
-            foreach (var entity in await queryIterator.ReadNextAsync(cancellation))
+            while (queryIterator.HasMoreResults)
             {
-                result.Add(entity);
+                foreach (var entity in await queryIterator.ReadNextAsync(cancellation))
+                {
+                    result.Add(entity);
+                }
             }
+        }
+        catch (CosmosException ex)  when (ex.StatusCode == HttpStatusCode.NotFound)
+        {
+            throw new ArgumentException("Container does exist");
         }
 
         return new DeprecationNoticesResult
