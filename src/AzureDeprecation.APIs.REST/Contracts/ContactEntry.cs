@@ -1,3 +1,5 @@
+using AzureDeprecation.Contracts.Enum;
+
 namespace AzureDeprecation.APIs.REST.Contracts;
 
 public class ContactEntry

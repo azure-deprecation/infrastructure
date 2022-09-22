@@ -34,8 +34,8 @@ internal class CosmosDbDeprecationsRepository : IDeprecationsRepository
     public async IAsyncEnumerable<NoticeEntity> GetDeprecationsAsync(
         DeprecationsRequestModel deprecationsRequestModel, [EnumeratorCancellation] CancellationToken cancellation = default)
     {
-        var db = _client.GetDatabase(_dbOptions.DbName);
-        var container = db.GetContainer(_dbOptions.ContainerId);
+        var db = _client.GetDatabase(_dbOptions.DatabaseName);
+        var container = db.GetContainer(_dbOptions.ContainerName);
   
         var queryBuilder = container
             .GetItemLinqQueryable<NoticeEntity>()
