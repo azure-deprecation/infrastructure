@@ -7,6 +7,6 @@ public interface IDeprecationsRepository
     /// <summary>
     /// Get List of deprecations by filter
     /// </summary>
-    Task<DeprecationNoticesResult> GetDeprecationsAsync(DeprecationsRequestModel deprecationsRequestModel,
+    IAsyncEnumerable<NoticeEntity> GetDeprecationsAsync(DeprecationsRequestModel deprecationsRequestModel,
         CancellationToken cancellation = default);
 }

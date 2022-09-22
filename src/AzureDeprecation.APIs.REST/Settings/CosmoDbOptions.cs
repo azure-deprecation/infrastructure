@@ -3,10 +3,10 @@
 public class CosmosDbOptions
 {
     public const string SectionName = "CosmosDb";
+
+    public string DatabaseName { get; set; } = null!;
     
-    public string? DbName { get; set; }
+    public string ContainerName { get; set; } = null!;
     
-    public string? ContainerId { get; set; }
-    
-    public string? ConnectionString { get; set; }
+    public string ConnectionString { get; set; } = null!;
 }

@@ -2,5 +2,5 @@
 
 public class DeprecationNoticesResult
 {
-    public IReadOnlyList<NoticeEntity> Deprecations { get; set; } = new List<NoticeEntity>();
+    public List<NoticeEntity> Deprecations { get; set; } = new();
 }

@@ -19,12 +19,14 @@ public class DeprecationNoticeProfile : Profile
             .ForMember(d => d.Links, o => 
                 o.MapFrom((x, _) =>
                 {
-                    if (x.PublishedNotice?.DashboardInfo?.Url.IsNullOrEmpty() ?? true)
-                        return new Dictionary<Presentation.ExternalLinkType, string?>();
-                    
-                    return new Dictionary<Presentation.ExternalLinkType, string?>
+                    if (x.PublishedNotice?.DashboardInfo?.Url.IsNullOrEmpty() == true)
                     {
-                        { Presentation.ExternalLinkType.GitHubNoticeUrl, x.PublishedNotice!.DashboardInfo!.Url }
+                        return new Dictionary<Presentation.ExternalLinkType, string>();
+                    }
+
+                    return new Dictionary<Presentation.ExternalLinkType, string>
+                    {
+                        { Presentation.ExternalLinkType.GitHubNoticeUrl, x.PublishedNotice!.DashboardInfo!.Url! }
                     };
                 }));
         

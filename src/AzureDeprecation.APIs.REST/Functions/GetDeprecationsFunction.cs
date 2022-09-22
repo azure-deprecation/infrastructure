@@ -1,5 +1,6 @@
 using AutoMapper;
 using AzureDeprecation.APIs.REST.DataAccess.Interfaces;
+using AzureDeprecation.APIs.REST.DataAccess.Models;
 using AzureDeprecation.APIs.REST.Utils;
 using AzureDeprecation.Contracts;
 using Microsoft.AspNetCore.Http;
@@ -32,8 +33,14 @@ namespace AzureDeprecation.APIs.REST.Functions
             CancellationToken cancellationToken = default)
         {
             var filter = DeprecationRequestModelBinder.CreateModel(request.Query);
-            var entities = await _deprecationsRepository.GetDeprecationsAsync(filter, cancellationToken);
-            var result = _mapper.Map<Presentation.DeprecationNoticesResponse>(entities);
+            var dbModel = new DeprecationNoticesResult();
+            
+            await foreach (var entity in _deprecationsRepository.GetDeprecationsAsync(filter, cancellationToken))
+            {
+                dbModel.Deprecations.Add(entity);  
+            }
+
+            var result = _mapper.Map<Presentation.DeprecationNoticesResponse>(dbModel);
 
             return new OkObjectResult(result);
         }

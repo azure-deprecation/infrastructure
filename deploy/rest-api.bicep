@@ -2,7 +2,11 @@ param applicationInsightsName string
 param functionAppName string
 param functionPlanName string
 param storageAccountName string
+param cosmosDbAccountName string
+param cosmosDbDatabaseName string
+param cosmosDbCollectionName string
 param defaultLocation string = resourceGroup().location
+
 
 resource functionPlanResource 'Microsoft.Web/serverfarms@2021-01-15' = {
   name: functionPlanName
@@ -42,6 +46,18 @@ resource functionAppResource 'Microsoft.Web/sites@2021-01-15' = {
         {
           name: 'FUNCTIONS_WORKER_RUNTIME'
           value: 'dotnet'
+        }
+        {
+          name: 'CosmosDb_DatabaseName'
+          value: cosmosDbDatabaseName
+        }
+        {
+          name: 'CosmosDb_ContainerName'
+          value: cosmosDbCollectionName
+        }
+        {
+          name: 'CosmosDb_ConnectionString'
+          value: first(listConnectionStrings(resourceId('Microsoft.DocumentDB/databaseAccounts', cosmosDbAccountName), '2019-12-12')).connectionString
         }
       ]
     }

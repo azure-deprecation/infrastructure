@@ -13,6 +13,15 @@
     },
     "storageAccountName": {
       "value": "azuredeprecationstaging"
+    },
+    "cosmosDbAccountName": {
+      "value": "azure-deprecation-notices-staging"
+    },
+    "cosmosDbDatabaseName": {
+      "value": "deprecation-db"
+    },
+    "cosmosDbCollectionName": {
+      "value": "deprecations"
     }
   }
 }
