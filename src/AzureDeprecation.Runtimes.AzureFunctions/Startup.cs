@@ -52,9 +52,9 @@ namespace AzureDeprecation.Runtimes.AzureFunctions
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                Converters = new List<Newtonsoft.Json.JsonConverter>
+                Converters = new List<JsonConverter>
                 {
-                    new StringEnumConverter(camelCaseText: false)
+                    new StringEnumConverter(new StringEnumConverter(false))
                 }
             };
         }
