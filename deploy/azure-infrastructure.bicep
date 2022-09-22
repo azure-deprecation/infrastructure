@@ -135,9 +135,24 @@ resource newDeprecationQueue 'Microsoft.ServiceBus/namespaces/queues@2021-06-01-
   }
 }
 
+resource deprecationLifecycleUpdatesQueue 'Microsoft.ServiceBus/namespaces/queues@2021-06-01-preview' = {
+  parent: serviceBusNamespaceNameResource
+  name: 'deprecation-lifecycle-updates'
+  properties: {
+    maxDeliveryCount: 5
+  }
+}
+
 resource newDeprecationNoticesTopic 'Microsoft.ServiceBus/namespaces/topics@2021-06-01-preview' = {
   parent: serviceBusNamespaceNameResource
   name: 'new-deprecation-notices'
+  properties: {
+  }
+}
+
+resource deprecationNoticeLifecycleTopic 'Microsoft.ServiceBus/namespaces/topics@2021-06-01-preview' = {
+  parent: serviceBusNamespaceNameResource
+  name: 'deprecation-notice-lifecycle-changes'
   properties: {
   }
 }
