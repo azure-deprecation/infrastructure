@@ -74,7 +74,6 @@ internal class CosmosDbDeprecationsRepository : IDeprecationsRepository
             var db = await _client.CreateDatabaseIfNotExistsAsync(_dbOptions.DatabaseName,
                 cancellationToken: cancellationToken);
             
-            _logger.LogInformation("Database {DbName} created or existed before", _dbOptions.DatabaseName);
             
             await db.Database.CreateContainerIfNotExistsAsync(_dbOptions.ContainerName,
                 $"/{nameof(NoticeEntity.Id).ToLower()}", cancellationToken: cancellationToken);
