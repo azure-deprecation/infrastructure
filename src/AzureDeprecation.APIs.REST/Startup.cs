@@ -40,6 +40,6 @@ public class Startup : DefaultStartup
             return new CosmosClient(dbSettings.Value.ConnectionString);
         });
         
-        services.AddSingleton<IDeprecationsRepository, CosmosDbDeprecationsRepository>();
+        services.AddTransient<IDeprecationsRepository, CosmosDbDeprecationsRepository>();
     }
 }

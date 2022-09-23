@@ -17,9 +17,10 @@ internal class CosmosDbDeprecationsRepository : IDeprecationsRepository
     readonly CosmosClient _client;
     readonly CosmosDbOptions _dbOptions;
     readonly ILogger<CosmosDbDeprecationsRepository> _logger;
-
-    bool _isDatabaseInitialized;
+    
     readonly SemaphoreSlim _locker = new(1, 1);
+    
+    static bool _isDatabaseInitialized;
 
     public CosmosDbDeprecationsRepository(
         CosmosClient cosmosClient,
@@ -73,8 +74,12 @@ internal class CosmosDbDeprecationsRepository : IDeprecationsRepository
             var db = await _client.CreateDatabaseIfNotExistsAsync(_dbOptions.DatabaseName,
                 cancellationToken: cancellationToken);
             
+            _logger.LogInformation("Database {DbName} created or existed before", _dbOptions.DatabaseName);
+            
             await db.Database.CreateContainerIfNotExistsAsync(_dbOptions.ContainerName,
                 $"/{nameof(NoticeEntity.Id).ToLower()}", cancellationToken: cancellationToken);
+            
+            _logger.LogInformation("Container {ContainerName} created or existed before", _dbOptions.ContainerName);
             
             _isDatabaseInitialized = true;
         }
