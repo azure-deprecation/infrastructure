@@ -1,5 +1,9 @@
-﻿namespace AzureDeprecation.Contracts.Enum
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace AzureDeprecation.Contracts.Enum
 {
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum ImpactArea
     {
         Unknown,

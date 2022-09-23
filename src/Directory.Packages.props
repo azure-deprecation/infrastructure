@@ -23,6 +23,8 @@
     <PackageVersion Include="Octokit" Version="3.0.0" />
     <PackageVersion Include="Serilog.Extensions.Logging" Version="3.1.0" />
     <PackageVersion Include="Serilog.Sinks.Console" Version="4.1.0" />
+    <PackageVersion Include="AutoFixture" Version="4.17.0" />
+    <PackageVersion Include="DeepEqual" Version="4.1.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Bogus" Version="34.0.2" />
@@ -30,6 +32,10 @@
     <PackageVersion Include="Moq" Version="4.18.2" />
     <PackageVersion Include="xunit" Version="2.4.2" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageVersion Include="CodeJam" Version="4.1.0" />
+    <PackageVersion Include="Microsoft.Azure.Cosmos" Version="3.30.1" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" PrivateAssets="All" />
