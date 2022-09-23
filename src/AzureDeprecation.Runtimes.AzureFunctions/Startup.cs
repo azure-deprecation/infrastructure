@@ -49,10 +49,10 @@ namespace AzureDeprecation.Runtimes.AzureFunctions
             });
         }
 
-        protected virtual void ConfigureDependencies(IServiceCollection builderServices)
+        protected virtual void ConfigureDependencies(IServiceCollection services)
         {
-            builderServices.AddMvcCore()
-                           .AddJsonOptions(jsonOptions => jsonOptions.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)));
+            services.AddMvcCore()
+                    .AddJsonOptions(jsonOptions => jsonOptions.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)));
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {

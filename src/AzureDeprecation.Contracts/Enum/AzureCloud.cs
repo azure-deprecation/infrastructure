@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Converters;
 using System.Text.Json.Serialization;
 
 namespace AzureDeprecation.Contracts.Enum

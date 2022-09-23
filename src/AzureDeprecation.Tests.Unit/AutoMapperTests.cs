@@ -1,24 +1,37 @@
 ﻿using AutoMapper;
 using AzureDeprecation.Contracts.v1.Messages;
 using AzureDeprecation.Contracts.v1.Shared;
+using AzureDeprecation.APIs.REST.Contracts;
+using AzureDeprecation.APIs.REST.DataAccess.Models;
+using AzureDeprecation.APIs.REST.Mappings;
+using AzureDeprecation.Contracts.Messages.v1;
 using AzureDeprecation.Notices.Management.Mappings;
 using AzureDeprecation.Tests.Unit.Generator;
 using Bogus;
+using DeepEqual.Syntax;
 using FluentAssertions;
 using Octokit;
 using Xunit;
+using DeprecationInfo = AzureDeprecation.Contracts.Messages.v1.DeprecationInfo;
+using PublishedNotice = AzureDeprecation.Contracts.Messages.v1.PublishedNotice;
 
 namespace AzureDeprecation.Tests.Unit
 {
     [Trait("Category", "Unit")]
     public class AutoMapperTests
     {
-        private readonly IMapper _mapper;
+        readonly IMapper _mapper;
 
         public AutoMapperTests()
         {
             var mappingProfile = new MappingProfile();
-            var mapperConfiguration = new MapperConfiguration(cfg => cfg.AddProfile(mappingProfile));
+            var deprecationNoticeProfile = new DeprecationNoticeProfile();
+            var mapperConfiguration = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(deprecationNoticeProfile);
+                cfg.AddProfile(mappingProfile);
+            });
+            
             _mapper = mapperConfiguration.CreateMapper();
         }
 
@@ -111,14 +124,33 @@ namespace AzureDeprecation.Tests.Unit
             //HasSameTimeline(deprecationInfo, publishedNotice);
         }
 
-        private static void HasSameNotice(DeprecationInfo publishedNotice, NewAzureDeprecationV1Message deprecationInfo)
+        public void AutoMapper_MapNoticeEntityToDeprecationInfoApiContract_AllPropertiesMapped()
+        {
+            var fixture = new Fixture();
+            var dbEntity = fixture.Create<NoticeEntity>();
+
+            var resultModel = _mapper.Map<AzureDeprecation.APIs.REST.Contracts.DeprecationInfo>(dbEntity);
+            
+            Assert.Equal(dbEntity.Id, resultModel.Id);
+            Assert.Contains(ExternalLinkType.GitHubNoticeUrl, (IDictionary<ExternalLinkType, string>)resultModel.Links);
+            Assert.Equal(dbEntity.PublishedNotice?.DashboardInfo?.Url, resultModel.Links[ExternalLinkType.GitHubNoticeUrl]);
+            
+            resultModel
+                .WithDeepEqual(dbEntity.DeprecationInfo)
+                .IgnoreDestinationProperty(x => x.AdditionalInformation)
+                .IgnoreSourceProperty(x => x.Id)
+                .IgnoreSourceProperty(x => x.Links)
+                .Assert();
+        }
+
+        static void HasSameNotice(DeprecationInfo publishedNotice, NewAzureDeprecationV1Message deprecationInfo)
         {
             Assert.NotNull(publishedNotice.Notice);
             Assert.Equal(deprecationInfo.Notice?.Description, publishedNotice.Notice?.Description);
             Assert.Equal(deprecationInfo.Notice?.Links, publishedNotice.Notice?.Links);
         }
 
-        private static void HasSameImpact(NewAzureDeprecationV1Message deprecationInfo, DeprecationInfo publishedNotice)
+        static void HasSameImpact(NewAzureDeprecationV1Message deprecationInfo, DeprecationInfo publishedNotice)
         {
             Assert.NotNull(publishedNotice.Impact);
             Assert.NotNull(publishedNotice.Impact.Services);
@@ -131,7 +163,7 @@ namespace AzureDeprecation.Tests.Unit
                 options => options.ComparingRecordsByValue());
         }
 
-        private static void HasSameTimeline(NewAzureDeprecationV1Message deprecationInfo, DeprecationInfo publishedNotice)
+        static void HasSameTimeline(NewAzureDeprecationV1Message deprecationInfo, DeprecationInfo publishedNotice)
         {
             Assert.NotNull(publishedNotice.Timeline);
             Assert.Equal(deprecationInfo.Timeline.Count, publishedNotice.Timeline.Count);
@@ -140,7 +172,7 @@ namespace AzureDeprecation.Tests.Unit
                 options => options.ComparingRecordsByValue());
         }
 
-        private Issue CreateBogusGitHubIssue()
+        Issue CreateBogusGitHubIssue()
         {
             var labels = new List<Label>();
 
