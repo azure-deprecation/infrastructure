@@ -1,10 +1,9 @@
-﻿using AutoMapper;
+﻿using AutoFixture;
+using AutoMapper;
 using AzureDeprecation.Contracts.v1.Messages;
-using AzureDeprecation.Contracts.v1.Shared;
 using AzureDeprecation.APIs.REST.Contracts;
 using AzureDeprecation.APIs.REST.DataAccess.Models;
 using AzureDeprecation.APIs.REST.Mappings;
-using AzureDeprecation.Contracts.Messages.v1;
 using AzureDeprecation.Notices.Management.Mappings;
 using AzureDeprecation.Tests.Unit.Generator;
 using Bogus;
@@ -12,8 +11,8 @@ using DeepEqual.Syntax;
 using FluentAssertions;
 using Octokit;
 using Xunit;
-using DeprecationInfo = AzureDeprecation.Contracts.Messages.v1.DeprecationInfo;
-using PublishedNotice = AzureDeprecation.Contracts.Messages.v1.PublishedNotice;
+using DeprecationInfo = AzureDeprecation.Contracts.v1.Shared.DeprecationInfo;
+using PublishedNotice = AzureDeprecation.Contracts.v1.Shared.PublishedNotice;
 
 namespace AzureDeprecation.Tests.Unit
 {
@@ -124,6 +123,7 @@ namespace AzureDeprecation.Tests.Unit
             //HasSameTimeline(deprecationInfo, publishedNotice);
         }
 
+        [Fact]
         public void AutoMapper_MapNoticeEntityToDeprecationInfoApiContract_AllPropertiesMapped()
         {
             var fixture = new Fixture();
@@ -133,7 +133,7 @@ namespace AzureDeprecation.Tests.Unit
             
             Assert.Equal(dbEntity.Id, resultModel.Id);
             Assert.Contains(ExternalLinkType.GitHubNoticeUrl, (IDictionary<ExternalLinkType, string>)resultModel.Links);
-            Assert.Equal(dbEntity.PublishedNotice?.DashboardInfo?.Url, resultModel.Links[ExternalLinkType.GitHubNoticeUrl]);
+            Assert.Equal(dbEntity.PublishedNotice.DashboardInfo?.Url, resultModel.Links[ExternalLinkType.GitHubNoticeUrl]);
             
             resultModel
                 .WithDeepEqual(dbEntity.DeprecationInfo)
@@ -146,8 +146,9 @@ namespace AzureDeprecation.Tests.Unit
         static void HasSameNotice(DeprecationInfo publishedNotice, NewAzureDeprecationV1Message deprecationInfo)
         {
             Assert.NotNull(publishedNotice.Notice);
-            Assert.Equal(deprecationInfo.Notice?.Description, publishedNotice.Notice?.Description);
-            Assert.Equal(deprecationInfo.Notice?.Links, publishedNotice.Notice?.Links);
+            Assert.NotNull(deprecationInfo.Notice);
+            Assert.Equal(deprecationInfo.Notice.Description, publishedNotice.Notice.Description);
+            Assert.Equal(deprecationInfo.Notice.Links, publishedNotice.Notice.Links);
         }
 
         static void HasSameImpact(NewAzureDeprecationV1Message deprecationInfo, DeprecationInfo publishedNotice)
@@ -194,7 +195,7 @@ namespace AzureDeprecation.Tests.Unit
                 .RuleFor(s => s.UpdatedAt, f => f.Date.Past())
                 .RuleFor(s => s.Url, f => f.Internet.Url())
                 .RuleFor(s => s.HtmlUrl, f => f.Internet.Url())
-                .RuleFor(s => s.Labels, f => labels)
+                .RuleFor(s => s.Labels, _ => labels)
                 .Generate();
 
             return queryResponseDevice;

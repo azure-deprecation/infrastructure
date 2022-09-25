@@ -50,19 +50,19 @@ namespace AzureDeprecation.Tests.Unit.Generator
                         Data = "example@example.com"
                     }
                 },
-                Timeline = new List<InputTimeLineEntry>(),
+                Timeline = new List<TimeLineEntry>(),
                 AdditionalInformation = "https://docs.microsoft.com/en-us/azure/cognitive-services/translator/migrate-to-v3"
             };
 
             if (useAdvancedTimeline)
             {
-                newAzureDeprecationV1Message.Timeline.Add(new InputTimeLineEntry
+                newAzureDeprecationV1Message.Timeline.Add(new TimeLineEntry
                 {
                     Date = new DateTimeOffset(2021, 5, 24, 0, 0, 0, TimeSpan.Zero),
                     Description = "Feature will no longer work",
                     IsDueDate = true
                 });
-                newAzureDeprecationV1Message.Timeline.Add(new InputTimeLineEntry
+                newAzureDeprecationV1Message.Timeline.Add(new TimeLineEntry
                 {
                     Date = new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero),
                     Description = "No longer able to create new resources with type V1",
@@ -71,7 +71,7 @@ namespace AzureDeprecation.Tests.Unit.Generator
             }
             else
             {
-                newAzureDeprecationV1Message.Timeline.Add(new InputTimeLineEntry
+                newAzureDeprecationV1Message.Timeline.Add(new TimeLineEntry
                 {
                     Date = new DateTimeOffset(2021, 5, 24, 0, 0, 0, TimeSpan.Zero),
                     Description = "Feature will no longer work"
