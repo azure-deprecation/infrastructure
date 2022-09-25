@@ -21,11 +21,11 @@ namespace AzureDeprecation.Notices.Management.Functions
         }
 
         [FunctionName("persist-new-notice")]
-        public async Task Run(
+        public Task Run(
             [ServiceBusTrigger("new-deprecation-notices-tom", "persist-new-notice", Connection = "ServiceBus_ConnectionString")]
-            ServiceBusReceivedMessage receivedSubscriptionMessage,
-            [CosmosDB(databaseName: "%CosmosDb_DatabaseName%", containerName: "%CosmosDb_ContainerName%", Connection = "CosmosDb_ConnectionString")]
-            IAsyncCollector<DeprecationNoticeDocument> documentsToPersist)
+            ServiceBusReceivedMessage receivedSubscriptionMessage)
+            //[CosmosDB(databaseName: "%CosmosDb_DatabaseName%", containerName: "%CosmosDb_ContainerName%", Connection = "CosmosDb_ConnectionString")]
+            //IAsyncCollector<DeprecationNoticeDocument> documentsToPersist)
         {
             var stopwatch = ValueStopwatch.StartNew();
             using var loggerMessageScope = _logger.BeginScope(new Dictionary<string, object>()
@@ -44,7 +44,7 @@ namespace AzureDeprecation.Notices.Management.Functions
                 deprecationNoticeDocument.LastUpdatedAt = deprecationNoticeDocument.CreatedAt;
 
                 // Persist
-                await documentsToPersist.AddAsync(deprecationNoticeDocument).ConfigureAwait(false);
+                //await documentsToPersist.AddAsync(deprecationNoticeDocument).ConfigureAwait(false);
             }
             catch (Exception)
             {
@@ -55,6 +55,8 @@ namespace AzureDeprecation.Notices.Management.Functions
             {
                 LogTiming(stopwatch.GetElapsedTotalMilliseconds());
             }
+
+            return Task.CompletedTask;
         }
 
         [LoggerMessage(EventId = 200, EventName = "Timing", Level = LogLevel.Debug,

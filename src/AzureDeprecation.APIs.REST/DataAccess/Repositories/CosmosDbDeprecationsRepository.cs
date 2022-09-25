@@ -3,8 +3,8 @@ using System.Runtime.CompilerServices;
 using AzureDeprecation.APIs.REST.DataAccess.Interfaces;
 using AzureDeprecation.APIs.REST.DataAccess.Models;
 using AzureDeprecation.APIs.REST.DataAccess.Utils;
-using AzureDeprecation.APIs.REST.Settings;
-using CodeJam;
+using AzureDeprecation.Integrations.Azure.CosmosDb.Configuration;
+using GuardNet;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.Extensions.Logging;
@@ -27,8 +27,8 @@ internal class CosmosDbDeprecationsRepository : IDeprecationsRepository
         IOptions<CosmosDbOptions> dbSettings,
         ILogger<CosmosDbDeprecationsRepository> logger)
     {
-        Code.NotNull(dbSettings?.Value, nameof(dbSettings));
-        Code.NotNullNorEmpty(dbSettings.Value.ConnectionString, nameof(dbSettings.Value.ConnectionString));
+        Guard.NotNull(dbSettings.Value, nameof(dbSettings));
+        Guard.NotNullOrWhitespace(dbSettings.Value.ConnectionString, nameof(dbSettings.Value.ConnectionString));
 
         _client = cosmosClient;
         _dbOptions = dbSettings.Value;

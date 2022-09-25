@@ -16,6 +16,7 @@ namespace AzureDeprecation.Notices.Management
             base.ConfigureDependencies(services);
 
             services.AddAutoMapper(typeof(Startup));
+            services.AddCosmosDbClient();
             services.AddScoped<GitHubRepository>();
             services.AddScoped<NewAzureDeprecationNotificationV1MessageHandler>();
         }

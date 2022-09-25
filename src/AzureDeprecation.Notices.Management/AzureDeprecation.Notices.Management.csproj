@@ -8,12 +8,12 @@
     <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Enrichers" />
     <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Sinks.ApplicationInsights" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
-    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.CosmosDB" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.ServiceBus" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AzureDeprecation.Contracts\AzureDeprecation.Contracts.csproj" />
+    <ProjectReference Include="..\AzureDeprecation.Integrations.Azure.CosmosDb\AzureDeprecation.Integrations.Azure.CosmosDb.csproj" />
     <ProjectReference Include="..\AzureDeprecation.Integrations.GitHub\AzureDeprecation.Integrations.GitHub.csproj" />
     <ProjectReference Include="..\AzureDeprecation.Runtimes.AzureFunctions\AzureDeprecation.Runtimes.AzureFunctions.csproj" />
   </ItemGroup>
