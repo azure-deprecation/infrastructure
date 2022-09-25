@@ -79,7 +79,7 @@ resource functionAppNameResource 'Microsoft.Web/sites@2021-01-15' = {
         }
         {
           name: 'CosmosDb_ConnectionString'
-          value: first(listConnectionStrings(resourceId('Microsoft.DocumentDB/databaseAccounts', cosmosDbAccountName), '2019-12-12')).connectionString
+          value: first(listConnectionStrings(resourceId('Microsoft.DocumentDB/databaseAccounts', cosmosDbAccountName), '2019-12-12').connectionStrings).connectionString
         }
       ]
     }
