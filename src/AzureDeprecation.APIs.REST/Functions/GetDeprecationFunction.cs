@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Web.Http;
 using AutoMapper;
 using AzureDeprecation.APIs.REST.DataAccess.Interfaces;
 using AzureDeprecation.APIs.REST.DataAccess.Models;
@@ -33,9 +34,12 @@ public class GetDeprecationFunction
         CancellationToken cancellationToken = default)
     {
         NoticeEntity deprecation;
+        Presentation.DeprecationInfo result;
+        
         try
         {
             deprecation = await _deprecationsRepository.GetDeprecationAsync(id, cancellationToken);
+            result = _mapper.Map<Presentation.DeprecationInfo>(deprecation);
         }
         catch (Presentation.ServiceException exception) when (exception.HttpStatusCode == HttpStatusCode.NotFound)
         {
@@ -43,10 +47,8 @@ public class GetDeprecationFunction
         }
         catch
         {
-            return new BadRequestResult();
+            return new InternalServerErrorResult();
         }
-
-        var result = _mapper.Map<Presentation.DeprecationInfo>(deprecation);
 
         return new OkObjectResult(result);
     }
