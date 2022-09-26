@@ -10,4 +10,9 @@ public interface IDeprecationsRepository
     /// </summary>
     IAsyncEnumerable<DeprecationNoticeDocument> GetDeprecationsAsync(DeprecationsRequestModel deprecationsRequestModel,
         CancellationToken cancellation = default);
+
+    /// <summary>
+    /// Get deprecations by its id
+    /// </summary>
+    Task<DeprecationNoticeDocument> GetDeprecationAsync(Guid id, CancellationToken cancellation = default);
 }

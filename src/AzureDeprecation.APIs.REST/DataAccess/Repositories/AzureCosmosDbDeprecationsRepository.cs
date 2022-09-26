@@ -1,10 +1,12 @@
 ﻿using System.Runtime.CompilerServices;
+using AzureDeprecation.APIs.REST.Contracts;
 using AzureDeprecation.APIs.REST.DataAccess.Interfaces;
 using AzureDeprecation.APIs.REST.DataAccess.Models;
 using AzureDeprecation.APIs.REST.DataAccess.Utils;
 using AzureDeprecation.Contracts.v1.Documents;
 using AzureDeprecation.Integrations.Azure.CosmosDb.Configuration;
 using AzureDeprecation.Integrations.Azure.CosmosDb.Repositories;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.Extensions.Logging;
@@ -44,6 +46,24 @@ internal class AzureCosmosDbDeprecationsRepository : AzureCosmosDbRepository, ID
             {
                 yield return entity;
             }
+        }
+    }
+
+    public async Task<DeprecationNoticeDocument> GetDeprecationAsync(Guid id, CancellationToken cancellation)
+    {
+        var container = await GetContainerAsync(cancellation);
+
+        try
+        {
+            return await container
+                .ReadItemAsync<DeprecationNoticeDocument>(id.ToString(), new PartitionKey(id.ToString()), cancellationToken: cancellation);
+        }
+        catch (CosmosException ex)
+        {
+            throw new ServiceException
+            {
+                HttpStatusCode = ex.StatusCode
+            };
         }
     }
 }
