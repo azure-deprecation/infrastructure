@@ -2,7 +2,7 @@
 {
     public interface ICosmosDbDocument
     {
-        public string Id { get; }
+        public string? Id { get; }
         public string SchemaVersion { get; }
     }
 }

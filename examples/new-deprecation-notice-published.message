@@ -1,4 +1,5 @@
 {
+  "Id": "example-id",
   "DeprecationInfo": {
     "Title": "Azure Synapse Analytics Compute Optimized data flows is retiring on 31 August 2024",
     "Timeline": [

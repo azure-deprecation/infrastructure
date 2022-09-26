@@ -28,6 +28,6 @@ public class Startup : DefaultStartup
             dbSettings.ContainerName = config.GetValue<string>($"{CosmosDbOptions.SectionName}_{nameof(CosmosDbOptions.ContainerName)}");
         });
 
-        services.AddTransient<IDeprecationsRepository, CosmosDbDeprecationsRepository>();
+        services.AddTransient<IDeprecationsRepository, AzureCosmosDbDeprecationsRepository>();
     }
 }

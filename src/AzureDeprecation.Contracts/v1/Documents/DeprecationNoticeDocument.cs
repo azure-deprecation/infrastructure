@@ -7,7 +7,7 @@ namespace AzureDeprecation.Contracts.v1.Documents
     public class DeprecationNoticeDocument : ICosmosDbDocument
     {
         [JsonProperty("id")]
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string? Id { get; set; }
 
         [JsonProperty("schemaVersion")]
         public string SchemaVersion => "v1";

@@ -3,21 +3,25 @@ using AzureDeprecation.Contracts.v1.Messages;
 using AzureDeprecation.Contracts.v1.Shared;
 using AzureDeprecation.Integrations.GitHub.Repositories;
 using GuardNet;
+using Microsoft.Extensions.Logging;
 using Octokit;
 
 namespace AzureDeprecation.Notices.Management.MessageHandlers
 {
     public class NewAzureDeprecationNotificationV1MessageHandler : ServiceBusMessageHandler<NewAzureDeprecationV1Message, NewDeprecationNoticePublishedV1Message>
     {
+        private readonly ILogger<NewAzureDeprecationNotificationV1MessageHandler> _logger;
         private readonly GitHubRepository _gitHubRepository;
         private readonly IMapper _mapper;
 
-        public NewAzureDeprecationNotificationV1MessageHandler(GitHubRepository gitHubRepository, IMapper mapper)
+        public NewAzureDeprecationNotificationV1MessageHandler(GitHubRepository gitHubRepository, IMapper mapper, ILogger<NewAzureDeprecationNotificationV1MessageHandler> logger)
         {
             Guard.NotNull(gitHubRepository, nameof(gitHubRepository));
             Guard.NotNull(mapper, nameof(mapper));
+            Guard.NotNull(logger, nameof(logger));
 
             _mapper = mapper;
+            _logger = logger;
             _gitHubRepository = gitHubRepository;
         }
 
@@ -32,7 +36,13 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
             // Lock conversation
             await LockConversationAsync(createdIssue);
 
-            return GenerateNewDeprecationNoticePublishedV1Message(newNoticeV1MessageQueueMessage, createdIssue);
+            var uniqueNoticeId = Guid.NewGuid().ToString();
+            var messageToPublish = GenerateNewDeprecationNoticePublishedV1Message(uniqueNoticeId, newNoticeV1MessageQueueMessage, createdIssue);
+
+            // Provide logging
+            this._logger.LogInformation("Created GitHub issue #{IssueId} which is available on {IssueUrl} for deprecation with ID {DeprecationId}", createdIssue.Id, createdIssue.Url, uniqueNoticeId);
+
+            return messageToPublish;
         }
 
         private async Task PostCommentToSteerPeopleToGitHubDiscussionsAsync(Issue createdIssue)
@@ -70,7 +80,7 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
 
             // Add GitHub issue to deprecation notice project
             await _gitHubRepository.AddIssueToProjectAsync(project.Id, deprecationYear.ToString(), createdIssue.Id);
-            
+
             return createdIssue;
         }
 
@@ -107,13 +117,14 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
             return labels;
         }
 
-        private NewDeprecationNoticePublishedV1Message GenerateNewDeprecationNoticePublishedV1Message(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage, Issue createdIssue)
+        private NewDeprecationNoticePublishedV1Message GenerateNewDeprecationNoticePublishedV1Message(string uniqueNoticeId, NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage, Issue createdIssue)
         {
             var deprecationInfo = _mapper.Map<DeprecationInfo>(newNoticeV1MessageQueueMessage);
             var publishedNotice = _mapper.Map<PublishedNotice>(createdIssue);
 
             return new NewDeprecationNoticePublishedV1Message
             {
+                Id = uniqueNoticeId,
                 DeprecationInfo = deprecationInfo,
                 PublishedNotice = publishedNotice
             };

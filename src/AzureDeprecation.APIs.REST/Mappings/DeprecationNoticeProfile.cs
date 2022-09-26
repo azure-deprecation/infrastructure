@@ -6,6 +6,7 @@ namespace AzureDeprecation.APIs.REST.Mappings;
 using Presentation = Contracts;
 using Db = DataAccess.Models;
 using Shared = AzureDeprecation.Contracts.v1.Shared;
+using Docs = AzureDeprecation.Contracts.v1.Documents;
 
 public class DeprecationNoticeProfile : Profile
 {
@@ -13,13 +14,13 @@ public class DeprecationNoticeProfile : Profile
     {
         CreateMap<Db.DeprecationNoticesResult, Presentation.DeprecationNoticesResponse>();
         
-        CreateMap<Db.NoticeEntity, Presentation.DeprecationInfo>()
+        CreateMap<Docs.DeprecationNoticeDocument, Presentation.DeprecationInfo>()
             .IncludeMembers(i => i.DeprecationInfo)
             .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
             .ForMember(d => d.Links, o => 
                 o.MapFrom((x, _) =>
                 {
-                    if (x.PublishedNotice?.DashboardInfo?.Url.IsNullOrEmpty() == true)
+                    if (x.PublishedNotice?.DashboardInfo?.Url?.IsNullOrEmpty() == true)
                     {
                         return new Dictionary<Presentation.ExternalLinkType, string>();
                     }

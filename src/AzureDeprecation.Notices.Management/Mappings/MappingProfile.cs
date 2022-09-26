@@ -36,7 +36,9 @@ namespace AzureDeprecation.Notices.Management.Mappings
                 .ForMember(notice => notice.ApiInfo, x => x.MapFrom(issue => issue))
                 .ForMember(notice => notice.DashboardInfo, x => x.MapFrom(issue => issue))
                 .ForMember(notice => notice.Labels, x => x.MapFrom(issue => issue.Labels.Select(s=>s.Name)));
-            CreateMap<NewDeprecationNoticePublishedV1Message, DeprecationNoticeDocument>();
+            CreateMap<NewDeprecationNoticePublishedV1Message, DeprecationNoticeDocument>()
+                .ForMember(message => message.CreatedAt, opt => opt.Ignore())
+                .ForMember(message => message.LastUpdatedAt, opt => opt.Ignore());
         }
     }
 }

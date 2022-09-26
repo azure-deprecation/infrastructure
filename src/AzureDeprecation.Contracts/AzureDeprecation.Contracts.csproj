@@ -11,8 +11,4 @@
     <PackageReference Include="Octokit" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="v1\Documents\v1\" />
-  </ItemGroup>
-
 </Project>

@@ -4,6 +4,7 @@ using AzureDeprecation.Contracts.v1.Messages;
 using AzureDeprecation.APIs.REST.Contracts;
 using AzureDeprecation.APIs.REST.DataAccess.Models;
 using AzureDeprecation.APIs.REST.Mappings;
+using AzureDeprecation.Contracts.v1.Documents;
 using AzureDeprecation.Notices.Management.Mappings;
 using AzureDeprecation.Tests.Unit.Generator;
 using Bogus;
@@ -127,17 +128,17 @@ namespace AzureDeprecation.Tests.Unit
         public void AutoMapper_MapNoticeEntityToDeprecationInfoApiContract_AllPropertiesMapped()
         {
             var fixture = new Fixture();
-            var dbEntity = fixture.Create<NoticeEntity>();
+            var dbEntity = fixture.Create<DeprecationNoticeDocument>();
 
             var resultModel = _mapper.Map<AzureDeprecation.APIs.REST.Contracts.DeprecationInfo>(dbEntity);
             
             Assert.Equal(dbEntity.Id, resultModel.Id);
             Assert.Contains(ExternalLinkType.GitHubNoticeUrl, (IDictionary<ExternalLinkType, string>)resultModel.Links);
-            Assert.Equal(dbEntity.PublishedNotice.DashboardInfo?.Url, resultModel.Links[ExternalLinkType.GitHubNoticeUrl]);
+            Assert.Equal(dbEntity.PublishedNotice?.DashboardInfo?.Url, resultModel.Links[ExternalLinkType.GitHubNoticeUrl]);
             
             resultModel
                 .WithDeepEqual(dbEntity.DeprecationInfo)
-                .IgnoreDestinationProperty(x => x.AdditionalInformation)
+                .IgnoreDestinationProperty(x => x!.AdditionalInformation)
                 .IgnoreSourceProperty(x => x.Id)
                 .IgnoreSourceProperty(x => x.Links)
                 .Assert();

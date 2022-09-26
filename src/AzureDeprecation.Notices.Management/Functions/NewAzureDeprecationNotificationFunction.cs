@@ -45,10 +45,8 @@ namespace AzureDeprecation.Notices.Management.Functions
 
             if (!Enum.TryParse<MessageType>(messageTypeString, true, out var messageType))
             {
-                LogRejectedQueueMessageWithInvalidMessageType(messageTypeString,
-                    stopwatch.GetElapsedTotalMilliseconds());
-                throw new ArgumentException(
-                    $@"Invalid annotated message type. Currently supported types are: [""{nameof(MessageType.NewAzureDeprecationV1)}""].");
+                LogRejectedQueueMessageWithInvalidMessageType(messageTypeString, stopwatch.GetElapsedTotalMilliseconds());
+                throw new ArgumentException($@"Invalid annotated message type. Currently supported types are: [""{nameof(MessageType.NewAzureDeprecationV1)}""].");
             }
 
             try
