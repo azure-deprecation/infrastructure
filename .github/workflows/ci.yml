@@ -63,3 +63,13 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build Solution
       run: dotnet build src/AzureDeprecation.sln --configuration Release
+
+  openapi:
+    name: OpenAPI Specs
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Lint OpenAPI specs
+      uses: stoplightio/spectral-action@latest
+      with:
+        file_glob: 'specs/*.json'
