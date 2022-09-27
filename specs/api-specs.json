@@ -1,0 +1,388 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Azure Deprecation API",
+        "description": "APIs to explore the deprecations in Microsoft Azure.",
+        "contact": {
+            "url": "https://github.com/azure-deprecation/infrastructure"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://github.com/azure-deprecation/infrastructure/blob/main/LICENSE"
+        },
+        "version": "1.0.0"
+    },
+    "host": "localhost:7046",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/api/v1/deprecations": {
+            "get": {
+                "summary": "Get all deprecations",
+                "operationId": "GetDeprecations",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "filters.status",
+                        "description": "Filter to reduce deprecation notices by a given status.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "filters.year",
+                        "description": "Filter to reduce deprecation notices by the year of the deprecation.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "filters.service",
+                        "description": "Filter to reduce deprecation notices for a given Azure service.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "filters.impactType",
+                        "description": "Filter to reduce deprecation notices by a given impact type.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "filters.cloud",
+                        "description": "Filter to reduce deprecation notices for a given cloud.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pagination.offset",
+                        "description": "Specifies the amount of pages to skip.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pagination.limit",
+                        "description": "Specifies the amount of entries in the page.",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payload of DeprecationNoticesResponse",
+                        "schema": {
+                            "$ref": "#/definitions/deprecationNoticesResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/deprecations/{id}": {
+            "get": {
+                "summary": "Get deprecation details",
+                "operationId": "GetDeprecation",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The unique ID of the deprecation.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payload of DeprecationInfo",
+                        "schema": {
+                            "$ref": "#/definitions/deprecationInfo"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "contactEntry": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "default": "Unknown",
+                    "enum": [
+                        "Unknown",
+                        "NotAvailable",
+                        "Email",
+                        "Support",
+                        "MicrosoftQAndA"
+                    ],
+                    "type": "string"
+                },
+                "data": {
+                    "type": "string"
+                }
+            }
+        },
+        "deprecationInfo": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "timeline": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/timeLineEntry"
+                    }
+                },
+                "impact": {
+                    "$ref": "#/definitions/impact"
+                },
+                "notice": {
+                    "$ref": "#/definitions/notice"
+                },
+                "requiredAction": {
+                    "type": "string"
+                },
+                "contact": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/contactEntry"
+                    }
+                },
+                "links": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "deprecationNoticesResponse": {
+            "type": "object",
+            "properties": {
+                "deprecations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/deprecationInfo"
+                    }
+                }
+            }
+        },
+        "impact": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "type": {
+                    "default": "Unknown",
+                    "enum": [
+                        "Unknown",
+                        "None",
+                        "Limited",
+                        "UpgradeRequired",
+                        "MigrationRequired",
+                        "ShutdownWithoutAlternative"
+                    ],
+                    "type": "string"
+                },
+                "area": {
+                    "default": "Unknown",
+                    "enum": [
+                        "Unknown",
+                        "Sdk",
+                        "Certification",
+                        "Tooling",
+                        "Security",
+                        "ApiEndpoint",
+                        "Feature",
+                        "ServiceRuntime",
+                        "Region",
+                        "Sku"
+                    ],
+                    "type": "string"
+                },
+                "cloud": {
+                    "default": "Unknown",
+                    "enum": [
+                        "Unknown",
+                        "Public",
+                        "Sovereign",
+                        "China",
+                        "Government",
+                        "German"
+                    ],
+                    "type": "string"
+                },
+                "services": {
+                    "type": "array",
+                    "items": {
+                        "default": "ActiveDirectory",
+                        "enum": [
+                            "ActiveDirectory",
+                            "Advisor",
+                            "All",
+                            "AnalysisService",
+                            "AnomalyDetector",
+                            "ApiApps",
+                            "ApiForFhir",
+                            "ApiManagement",
+                            "AppConfiguration",
+                            "ApplicationGateway",
+                            "ApplicationInsights",
+                            "AppService",
+                            "Arc",
+                            "Automation",
+                            "Backup",
+                            "Bastion",
+                            "Batch",
+                            "BlockchainService",
+                            "BlockchainTokens",
+                            "BlockchainWorkbench",
+                            "Blueprints",
+                            "BotService",
+                            "CacheForRedis",
+                            "Cdn",
+                            "CloudServices",
+                            "CognitiveSearch",
+                            "CognitiveServices",
+                            "ContainerApps",
+                            "ContainerInstances",
+                            "ContainerRegistry",
+                            "CosmosDb",
+                            "CostManagement",
+                            "CycleCloud",
+                            "DatabaseForMariaDB",
+                            "DatabaseForMySQL",
+                            "DatabaseForPostgreSQL",
+                            "DatabaseMigrationService",
+                            "Databricks",
+                            "DataFactory",
+                            "DataLakeAnalytics",
+                            "DataLakeStorage",
+                            "DataShare",
+                            "DataScience",
+                            "DdosProtection",
+                            "DedicatedHost",
+                            "DevOps",
+                            "DevSpaces",
+                            "DevTestLabs",
+                            "DigitalTwins",
+                            "Dns",
+                            "EventGrid",
+                            "EventHubs",
+                            "ExpressRoute",
+                            "Firewall",
+                            "FirewallManager",
+                            "FormRecognizer",
+                            "FrontDoor",
+                            "Functions",
+                            "Genomics",
+                            "HDInsight",
+                            "InformationProtection",
+                            "InternetAnalyzer",
+                            "IotCentral",
+                            "IoTEdge",
+                            "IotHub",
+                            "IotHubDps",
+                            "KubernetesService",
+                            "LabServices",
+                            "Lighthouse",
+                            "LoadBalancer",
+                            "LogAnalytics",
+                            "LogicApps",
+                            "MachineLearning",
+                            "ManagedApplications",
+                            "Maps",
+                            "MediaServices",
+                            "Migrate",
+                            "MixedReality",
+                            "MobileApps",
+                            "Monitor",
+                            "NetworkWatcher",
+                            "NotificationHubs",
+                            "Other",
+                            "Policy",
+                            "Portal",
+                            "PowerBI",
+                            "PrivateLink",
+                            "RedHatOpenshift",
+                            "Relay",
+                            "RemoteRendering",
+                            "ReservedIp",
+                            "ResourceGraph",
+                            "ResourceManager",
+                            "SecurityCenter",
+                            "Sentinel",
+                            "ServiceBus",
+                            "ServiceFabric",
+                            "ServiceFabricMesh",
+                            "ServiceHealth",
+                            "SignalR",
+                            "SiteRecovery",
+                            "SpatialAnchors",
+                            "Sphere",
+                            "SpringCloud",
+                            "SqlDatabase",
+                            "SqlEdge",
+                            "SqlManagedInstance",
+                            "Stack",
+                            "Storage",
+                            "StoreSimple",
+                            "StreamAnalytics",
+                            "SynapseAnalytics",
+                            "TimeSeriesInsights",
+                            "TrafficManager",
+                            "VideoIndexer",
+                            "VirtualMachine",
+                            "VirtualMachineScaleSets",
+                            "VirtualNetwork",
+                            "VisualStudioCodespaces",
+                            "VMwareSolutions",
+                            "VpnGateway",
+                            "WebApp",
+                            "WebApplicationGateway",
+                            "WindowsVirtualDesktop"
+                        ],
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "notice": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "links": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "timeLineEntry": {
+            "type": "object",
+            "properties": {
+                "phase": {
+                    "type": "string"
+                },
+                "date": {
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
