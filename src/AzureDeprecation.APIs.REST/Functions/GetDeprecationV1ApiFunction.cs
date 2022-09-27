@@ -32,7 +32,7 @@ public partial class GetDeprecationV1ApiFunction
     }
 
     [FunctionName("apis-v1-get-deprecation")]
-    [OpenApiOperation("GetDeprecation", Summary = "Get deprecation details")]
+    [OpenApiOperation("GetDeprecation", tags: "deprecations", Summary = "Get deprecation details", Description = "Provides capability to get detailed about a specific deprecation")]
     [OpenApiParameter("id", Required = true, Description = "The unique ID of the deprecation.")]
     [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json", typeof(Presentation.DeprecationInfo))]
     public async Task<IActionResult> Run(
