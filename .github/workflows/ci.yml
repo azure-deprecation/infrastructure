@@ -70,6 +70,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Lint OpenAPI specs
-      uses: stoplightio/spectral-action@latest
+      uses: stoplightio/spectral-action@v0.8.8
       with:
         file_glob: 'specs/*.json'
