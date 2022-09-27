@@ -6,8 +6,26 @@ param eventGridTopicName string
 param logAnalyticsName string
 param serviceBusNamespaceName string
 param storageAccountName string
+param apiManagementInstanceName string
+param apiManagementSku string
+param apiManagementAdminEmail string
+param apiManagementAdminOrganization string
 
 param defaultLocation string = resourceGroup().location
+resource apiManagementInstance 'Microsoft.ApiManagement/service@2021-12-01-preview' = {
+  name: apiManagementInstanceName
+  location: defaultLocation
+  sku: {
+    name: apiManagementSku
+    capacity: 1
+  }
+  properties: {
+    publisherEmail: apiManagementAdminEmail
+    publisherName: apiManagementAdminOrganization
+    disableGateway: false
+    publicNetworkAccess: 'Enabled'
+  }
+}
 resource storageAccount 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   name: storageAccountName
   location: defaultLocation

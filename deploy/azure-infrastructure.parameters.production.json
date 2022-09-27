@@ -2,6 +2,18 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+      "apiManagementInstanceName": {
+        "value": "azure-deprecation-notices"
+      },
+      "apiManagementSku": {
+        "value": "Basic"
+      },
+      "apiManagementAdminEmail": {
+        "value": "tomkerkhove.opensource@gmail.com"
+      },
+      "apiManagementAdminOrganization": {
+        "value": "Azure Deprecation Notices"
+      },
       "applicationInsightsName": {
         "value": "azure-deprecation-notices-telemetry"
       },
