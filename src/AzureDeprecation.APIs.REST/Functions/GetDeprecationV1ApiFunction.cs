@@ -15,23 +15,23 @@ using Presentation = AzureDeprecation.APIs.REST.Contracts;
 
 namespace AzureDeprecation.APIs.REST.Functions;
 
-public partial class GetDeprecationFunction
+public partial class GetDeprecationV1ApiFunction
 {
     readonly IDeprecationsRepository _deprecationsRepository;
-    readonly ILogger<GetDeprecationFunction> _logger;
+    readonly ILogger<GetDeprecationV1ApiFunction> _logger;
     readonly IMapper _mapper;
 
-    public GetDeprecationFunction(
+    public GetDeprecationV1ApiFunction(
         IDeprecationsRepository deprecationsRepository,
         IMapper mapper,
-        ILogger<GetDeprecationFunction> logger)
+        ILogger<GetDeprecationV1ApiFunction> logger)
     {
         _deprecationsRepository = deprecationsRepository;
         _logger = logger;
         _mapper = mapper;
     }
 
-    [FunctionName("apis-get-deprecation")]
+    [FunctionName("apis-v1-get-deprecation")]
     [OpenApiOperation("GetDeprecation", Summary = "Get deprecation details")]
     [OpenApiParameter("id", Required = true, Description = "The unique ID of the deprecation.")]
     [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json", typeof(Presentation.DeprecationInfo))]
