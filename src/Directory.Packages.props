@@ -15,6 +15,12 @@
     <PackageVersion Include="Guard.NET" Version="3.0.0" />
     <PackageVersion Include="Humanizer" Version="2.14.1" />
     <PackageVersion Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
+    <PackageVersion Include="Microsoft.Azure.WebJobs.Extensions.OpenApi">
+      <Version>1.4.0</Version>
+    </PackageVersion>
+    <PackageVersion Include="Microsoft.Azure.WebJobs.Extensions.OpenApi.Core">
+      <Version>1.4.0</Version>
+    </PackageVersion>
     <PackageVersion Include="Microsoft.Azure.WebJobs.Extensions.ServiceBus" Version="5.7.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Binder">
