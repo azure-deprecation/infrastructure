@@ -5,7 +5,8 @@ namespace AzureDeprecation.APIs.REST.Mappings;
 
 using Presentation = Contracts;
 using Db = DataAccess.Models;
-using Messages = AzureDeprecation.Contracts.Messages.v1;
+using Shared = AzureDeprecation.Contracts.v1.Shared;
+using Docs = AzureDeprecation.Contracts.v1.Documents;
 
 public class DeprecationNoticeProfile : Profile
 {
@@ -13,13 +14,13 @@ public class DeprecationNoticeProfile : Profile
     {
         CreateMap<Db.DeprecationNoticesResult, Presentation.DeprecationNoticesResponse>();
         
-        CreateMap<Db.NoticeEntity, Presentation.DeprecationInfo>()
+        CreateMap<Docs.DeprecationNoticeDocument, Presentation.DeprecationInfo>()
             .IncludeMembers(i => i.DeprecationInfo)
             .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
             .ForMember(d => d.Links, o => 
                 o.MapFrom((x, _) =>
                 {
-                    if (x.PublishedNotice?.DashboardInfo?.Url.IsNullOrEmpty() == true)
+                    if (x.PublishedNotice?.DashboardInfo?.Url?.IsNullOrEmpty() == true)
                     {
                         return new Dictionary<Presentation.ExternalLinkType, string>();
                     }
@@ -30,14 +31,14 @@ public class DeprecationNoticeProfile : Profile
                     };
                 }));
         
-        CreateMap<Messages.DeprecationInfo, Presentation.DeprecationInfo>()
+        CreateMap<Shared.DeprecationInfo, Presentation.DeprecationInfo>()
             .ForMember(x => x.Id, opt => opt.Ignore())
             .ForMember(x => x.Links, opt => opt.Ignore());
         
-        CreateMap<Messages.Notice, Presentation.Notice>();
-        CreateMap<Messages.ContactEntry, Presentation.ContactEntry>();
-        CreateMap<Messages.Impact, Presentation.Impact>();
-        CreateMap<Messages.TimeLineEntry, Presentation.TimeLineEntry>();
+        CreateMap<Shared.Notice, Presentation.Notice>();
+        CreateMap<Shared.ContactEntry, Presentation.ContactEntry>();
+        CreateMap<Shared.Impact, Presentation.Impact>();
+        CreateMap<Shared.TimeLineEntry, Presentation.TimeLineEntry>();
 
     }
 }

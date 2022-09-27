@@ -5,14 +5,14 @@
     "applicationInsightsName": {
       "value": "#{ApplicationInsights.Name}#"
     },
-    "cosmosDbConnectionName": {
-      "value": "#{Connections.CosmosDb.Name}#"
-    },
-    "serviceBusConnectionName": {
-      "value": "#{Connections.ServiceBus.Name}#"
-    },
     "cosmosDbAccountName": {
       "value": "#{CosmosDb.Account.Name}#"
+    },
+    "cosmosDbDatabaseName": {
+      "value": "#{CosmosDb.Database.Name}#"
+    },
+    "cosmosDbCollectionName": {
+      "value": "#{CosmosDb.Collection.Name}#"
     },
     "functionAppName": {
       "value": "#{Function.App.Name}#"
@@ -34,9 +34,6 @@
     },
     "storageAccountName": {
       "value": "#{StorageAccount.Name}#"
-    },
-    "persistDeprecationWorkflowName": {
-      "value": "#{Workflow.Name}#"
     }
   }
 }

@@ -1,17 +1,19 @@
 ﻿using AzureDeprecation.APIs.REST.DataAccess.Models;
+using AzureDeprecation.Contracts.v1.Documents;
 
-namespace AzureDeprecation.APIs.REST.DataAccess.Interfaces;
-
-public interface IDeprecationsRepository
+namespace AzureDeprecation.APIs.REST.DataAccess.Interfaces
 {
-    /// <summary>
-    /// Get List of deprecations by filter
-    /// </summary>
-    IAsyncEnumerable<NoticeEntity> GetDeprecationsAsync(DeprecationsRequestModel deprecationsRequestModel,
-        CancellationToken cancellation = default);
+    public interface IDeprecationsRepository
+    {
+        /// <summary>
+        /// Get List of deprecations by filter
+        /// </summary>
+        IAsyncEnumerable<DeprecationNoticeDocument> GetDeprecationsAsync(DeprecationsRequestModel deprecationsRequestModel,
+            CancellationToken cancellation = default);
 
-    /// <summary>
-    /// Get deprecations by its id
-    /// </summary>
-    Task<NoticeEntity> GetDeprecationAsync(Guid id, CancellationToken cancellation = default);
+        /// <summary>
+        /// Get deprecations by its id
+        /// </summary>
+        Task<DeprecationNoticeDocument> GetDeprecationAsync(string id, CancellationToken cancellation = default);
+    }
 }

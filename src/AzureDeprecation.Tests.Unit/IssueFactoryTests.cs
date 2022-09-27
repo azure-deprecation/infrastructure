@@ -1,5 +1,5 @@
 ﻿using AzureDeprecation.Contracts.Enum;
-using AzureDeprecation.Contracts.Messages.v1;
+using AzureDeprecation.Contracts.v1.Shared;
 using AzureDeprecation.Notices.Management;
 using AzureDeprecation.Tests.Unit.Generator;
 using Xunit;

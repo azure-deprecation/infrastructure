@@ -1,5 +1,7 @@
 ﻿using AzureDeprecation.Integrations.GitHub.Repositories;
 using AzureDeprecation.Notices.Management.MessageHandlers;
+using AzureDeprecation.Notices.Management.Repositories;
+using AzureDeprecation.Notices.Management.Repositories.Interfaces;
 using AzureDeprecation.Runtimes.AzureFunctions;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,8 +15,18 @@ namespace AzureDeprecation.Notices.Management
 
         protected override void ConfigureDependencies(IServiceCollection services)
         {
+            base.ConfigureDependencies(services);
+
             services.AddAutoMapper(typeof(Startup));
+            
+            // Integration with Azure Cosmos DB for persistance
+            services.AddCosmosDbClient();
+            services.AddScoped<IDeprecationsRepository, AzureCosmosDbDeprecationsRepository>();
+
+            // Integration with GitHub
             services.AddScoped<GitHubRepository>();
+
+            // Message handling
             services.AddScoped<NewAzureDeprecationNotificationV1MessageHandler>();
         }
     }

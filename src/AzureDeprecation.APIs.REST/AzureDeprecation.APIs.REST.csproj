@@ -6,10 +6,10 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
     <PackageReference Include="CodeJam" />
-    <PackageReference Include="Microsoft.Azure.Cosmos" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AzureDeprecation.Integrations.Azure.CosmosDb\AzureDeprecation.Integrations.Azure.CosmosDb.csproj" />
     <ProjectReference Include="..\AzureDeprecation.Runtimes.AzureFunctions\AzureDeprecation.Runtimes.AzureFunctions.csproj" />
   </ItemGroup>
   <ItemGroup>

@@ -24,7 +24,7 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
 
         private static byte[] SerializeMessageBody(TOutputMessage outputMessage)
         {
-            var rawMessageBody=Serializer.Serialize(outputMessage);
+            var rawMessageBody = Serializer.Serialize(outputMessage);
             var messageBytes = Encoding.UTF8.GetBytes(rawMessageBody);
             return messageBytes;
         }

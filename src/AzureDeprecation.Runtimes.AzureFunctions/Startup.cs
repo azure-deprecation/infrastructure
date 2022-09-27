@@ -1,4 +1,6 @@
-﻿using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -49,12 +51,15 @@ namespace AzureDeprecation.Runtimes.AzureFunctions
 
         protected virtual void ConfigureDependencies(IServiceCollection services)
         {
+            services.AddMvcCore()
+                    .AddJsonOptions(jsonOptions => jsonOptions.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)));
+
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                Converters = new List<JsonConverter>
+                Converters = new List<Newtonsoft.Json.JsonConverter>
                 {
-                    new StringEnumConverter()
+                    new StringEnumConverter(new CamelCaseNamingStrategy())
                 }
             };
         }

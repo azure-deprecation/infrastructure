@@ -1,10 +1,11 @@
 ﻿using AzureDeprecation.APIs.REST.DataAccess.Models;
+using AzureDeprecation.Contracts.v1.Documents;
 
 namespace AzureDeprecation.APIs.REST.DataAccess.Utils;
 
 public static class QueryExtensions
 {
-    public static IQueryable<NoticeEntity> WithPagination(this IQueryable<NoticeEntity> queryBuilder,
+    public static IQueryable<DeprecationNoticeDocument> WithPagination(this IQueryable<DeprecationNoticeDocument> queryBuilder,
         PaginationNoticesRequest pagination)
     {
         return queryBuilder
@@ -12,34 +13,34 @@ public static class QueryExtensions
             .Take(pagination.Limit);
     }
 
-    public static IQueryable<NoticeEntity> WithFilters(this IQueryable<NoticeEntity> queryBuilder, FilterNoticesRequest filters)
+    public static IQueryable<DeprecationNoticeDocument> WithFilters(this IQueryable<DeprecationNoticeDocument> queryBuilder, FilterNoticesRequest filters)
     {
         if (filters.Status != null)
         {
             if (filters.Status == StatusFilter.Opened)
-                queryBuilder = queryBuilder.Where(it => it.PublishedNotice.ClosedAt == null);
+                queryBuilder = queryBuilder.Where(it => it.PublishedNotice != null && it.PublishedNotice.ClosedAt == null);
             else
-                queryBuilder = queryBuilder.Where(it => it.PublishedNotice.ClosedAt != null);
+                queryBuilder = queryBuilder.Where(it => it.PublishedNotice != null && it.PublishedNotice.ClosedAt != null);
         }
 
         if (filters.Area != null)
         {
-            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo.Impact!.Area == filters.Area.Value);
+            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo != null && it.DeprecationInfo.Impact!.Area == filters.Area.Value);
         }
         
         if (filters.Cloud != null)
         {
-            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo.Impact!.Cloud == filters.Cloud);
+            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo != null && it.DeprecationInfo.Impact!.Cloud == filters.Cloud);
         }
         
         if (filters.ImpactType != null)
         {
-            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo.Impact!.Type == filters.ImpactType);
+            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo != null && it.DeprecationInfo.Impact!.Type == filters.ImpactType);
         }
         
         if (filters.Service != null)
         {
-            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo.Impact!.Services.Contains(filters.Service.Value));
+            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo != null && it.DeprecationInfo.Impact!.Services.Contains(filters.Service.Value));
         }
 
         if (filters.Year != null)

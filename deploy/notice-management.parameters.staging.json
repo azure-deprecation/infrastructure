@@ -5,14 +5,14 @@
     "applicationInsightsName": {
       "value": "azure-deprecation-notices-telemetry-staging"
     },
-    "cosmosDbConnectionName": {
-      "value": "azure-deprecation-notices-connections-cosmos-db-staging"
-    },
-    "serviceBusConnectionName": {
-      "value": "azure-deprecation-notices-connections-service-bus-staging"
-    },
     "cosmosDbAccountName": {
       "value": "azure-deprecation-notices-staging"
+    },
+    "cosmosDbDatabaseName": {
+      "value": "deprecation-db"
+    },
+    "cosmosDbCollectionName": {
+      "value": "deprecations"
     },
     "functionAppName": {
       "value": "azure-deprecation-notices-notice-management-staging"
@@ -34,9 +34,6 @@
     },
     "storageAccountName": {
       "value": "azuredeprecationstaging"
-    },
-    "persistDeprecationWorkflowName": {
-      "value": "azure-deprecation-notices-persist-new-notice-staging"
     }
   }
 }

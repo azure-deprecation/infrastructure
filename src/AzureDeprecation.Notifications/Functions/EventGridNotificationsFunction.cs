@@ -1,6 +1,6 @@
 using Arcus.EventGrid.Publishing;
 using AzureDeprecation.Contracts;
-using AzureDeprecation.Contracts.Messages.v1;
+using AzureDeprecation.Contracts.v1.Messages;
 using AzureDeprecation.Runtimes.AzureFunctions;
 using CloudNative.CloudEvents;
 using Microsoft.Azure.WebJobs;
@@ -28,7 +28,7 @@ namespace AzureDeprecation.Notifications.Functions
             [ServiceBusTrigger("new-deprecation-notices", "event-grid-notifications", Connection = "ServiceBus_ConnectionString")]
             NewDeprecationNoticePublishedV1Message newDeprecationNoticePublishedV1Message)
         {
-            var sw = ValueStopwatch.StartNew();
+            var stopwatch = ValueStopwatch.StartNew();
 
             var eventGridTopicEndpoint = _configuration["EVENTGRID_ENDPOINT"];
             var eventGridAuthKey = _configuration["EVENTGRID_AUTH_KEY"];
@@ -41,7 +41,7 @@ namespace AzureDeprecation.Notifications.Functions
             var @event = new CloudEvent(
                 CloudEventsSpecVersion.V1_0,
                 "NewDeprecationNoticePublishedV1",
-                new Uri("https://github.com/azure-deprecation/dashboard"), // TODO: dev/staging dashboard
+                new Uri("https://github.com/azure-deprecation/dashboard"),
                 subject: $"/{newDeprecationNoticePublishedV1Message.DeprecationInfo!.Impact!.Services.First()}")
             {
                 Data = Serializer.Serialize(newDeprecationNoticePublishedV1Message),
@@ -50,7 +50,7 @@ namespace AzureDeprecation.Notifications.Functions
 
             await eventGridPublisher.PublishAsync(@event).ConfigureAwait(false);
 
-            LogTiming(sw.GetElapsedTotalMilliseconds());
+            LogTiming(stopwatch.GetElapsedTotalMilliseconds());
         }
 
         [LoggerMessage(EventId = 200, EventName = "Timing", Level = LogLevel.Debug,

@@ -1,0 +1,66 @@
+{
+  "Id": "example-id",
+  "DeprecationInfo": {
+    "Title": "Azure Synapse Analytics Compute Optimized data flows is retiring on 31 August 2024",
+    "Timeline": [
+      {
+        "Phase": "Announcement",
+        "Date": "2021-08-20T00:00:00+00:00",
+        "Description": "Deprecation was announced"
+      },
+      {
+        "Phase": "Deprecation",
+        "Date": "2024-08-31T00:00:00+00:00",
+        "Description": "Compute Optimized data flows will no longer work"
+      }
+    ],
+    "Impact": {
+      "Description": "Azure Synapse Analytics Compute Optimized data flows is retiring on 31 August 2024.",
+      "Type": "UpgradeRequired",
+      "Area": "Sku",
+      "Cloud": "Public",
+      "Services": [
+        "SynapseAnalytics"
+      ]
+    },
+    "Notice": {
+      "Description": "Here's the official report from Microsoft:\n\n> Because Azure Synapse data flows now provides better performance with General Purpose data flows, we’ll retire Compute Optimized data flows on 31 August 2024. Please transition to using General Purpose data flows by that date.\r\n> \r\n> We encourage you to make the switch early to gain the performance benefits of General Purpose data flows. In addition to current features you already use, here’s a quick comparison between Compute Optimized data flows and General Purpose data flows:\r\n> \r\n> | **Compute Optimized data flows** | **General Purpose data flows** |\r\n> |:-------------------------------:|:-------------------------------:|\r\n> | - Low memory/core ratio | - Improved memory/core ratio |\r\n> | - Suboptimal for ETL performance | - Optimized for data flow pipeline executions |\r\n> | - Generally used for testing | - Best option for most production workloads |\r\n> \r\n> From now through 31 August 2024, you can continue to use your existing Compute Optimized data flows. After 31 August 2024, existing workflows will not be supported.\n",
+      "Links": [
+        "https://azure.microsoft.com/en-au/updates/azure-synapse-analytics-compute-optimized-data-flows-will-be-retired-on-31-august-2024/"
+      ]
+    },
+    "RequiredAction": "A migration guide is available in the [documentation](https://docs.microsoft.com/en-us/azure/data-factory/compute-optimized-data-flow-retire).\n\nHere's the official report from Microsoft:\n\n> To avoid service disruption, please remove your existing Compute Optimized data flows before 31 August 2024. [Follow the steps in this document](https://docs.microsoft.com/en-us/azure/data-factory/compute-optimized-data-flow-retire) to create a new Azure Integration Runtime in Azure Data Factory and associate your existing data flows to the new General Purpose Azure Integration Runtime. Visit the [Azure Synapse Analytics pricing page](https://azure.microsoft.com/en-us/pricing/details/synapse-analytics/) for the latest pricing available for General Purpose and Memory Optimized data flows.\n",
+    "Contact": [
+      {
+        "Type": "MicrosoftQAndA",
+        "Data": "https://aka.ms/qna-azure-datafactory-synapse-data-flows"
+      },
+      {
+        "Type": "Support",
+        "Data": null
+      }
+    ],
+    "AdditionalInformation": ""
+  },
+  "PublishedNotice": {
+    "Title": "Azure Synapse Analytics Compute Optimized data flows is retiring on 31 August 2024",
+    "ApiInfo": {
+      "Url": "https://api.github.com/repos/azure-deprecation-automation/sandbox/issues/127",
+      "Id": 993797273
+    },
+    "DashboardInfo": {
+      "Url": "https://github.com/azure-deprecation-automation/sandbox/issues/127",
+      "Id": 127
+    },
+    "Labels": [
+      "area:sku",
+      "cloud:public",
+      "impact:upgrade-required",
+      "verified",
+      "services:synapse-analytics"
+    ],
+    "CreatedAt": "2021-09-11T09:32:13+00:00",
+    "UpdatedAt": "2021-09-11T09:32:14+00:00",
+    "ClosedAt": null
+  }
+}
