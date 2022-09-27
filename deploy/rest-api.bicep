@@ -155,7 +155,6 @@ resource getDeprecationRestOperation 'Microsoft.ApiManagement/service/apis/opera
                 }
               }
             }
-            schemaId: '6332de7a217d200c80856e4c'
             typeName: 'deprecationInfo'
           }
         ]
@@ -235,7 +234,6 @@ resource getDeprecationsRestOperation 'Microsoft.ApiManagement/service/apis/oper
                 }
               }
             }
-            schemaId: '6332de7a217d200c80856e4c'
             typeName: 'deprecationNoticesResponse'
           }
         ]
