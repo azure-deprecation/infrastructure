@@ -3,6 +3,7 @@ using System.Web.Http;
 using AutoMapper;
 using AzureDeprecation.APIs.REST.DataAccess.Interfaces;
 using AzureDeprecation.APIs.REST.DataAccess.Models;
+using AzureDeprecation.Contracts.v1.Documents;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -27,18 +28,17 @@ public class GetDeprecationFunction
 
     [FunctionName("get-deprecation")]
     public async Task<IActionResult> Run(
-        [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/v1/deprecations/{id:guid}")]
+        [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/v1/deprecations/{id}")]
         HttpRequest request,
-        Guid id,
+        string id,
         ILogger log,
         CancellationToken cancellationToken = default)
     {
-        NoticeEntity deprecation;
         Presentation.DeprecationInfo result;
         
         try
         {
-            deprecation = await _deprecationsRepository.GetDeprecationAsync(id, cancellationToken);
+            var deprecation = await _deprecationsRepository.GetDeprecationAsync(id, cancellationToken);
             result = _mapper.Map<Presentation.DeprecationInfo>(deprecation);
         }
         catch (Presentation.ServiceException exception) when (exception.HttpStatusCode == HttpStatusCode.NotFound)

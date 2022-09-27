@@ -49,14 +49,14 @@ internal class AzureCosmosDbDeprecationsRepository : AzureCosmosDbRepository, ID
         }
     }
 
-    public async Task<DeprecationNoticeDocument> GetDeprecationAsync(Guid id, CancellationToken cancellation)
+    public async Task<DeprecationNoticeDocument> GetDeprecationAsync(string id, CancellationToken cancellation)
     {
         var container = await GetContainerAsync(cancellation);
 
         try
         {
             return await container
-                .ReadItemAsync<DeprecationNoticeDocument>(id.ToString(), new PartitionKey(id.ToString()), cancellationToken: cancellation);
+                .ReadItemAsync<DeprecationNoticeDocument>(id, new PartitionKey(id), cancellationToken: cancellation);
         }
         catch (CosmosException ex)
         {
