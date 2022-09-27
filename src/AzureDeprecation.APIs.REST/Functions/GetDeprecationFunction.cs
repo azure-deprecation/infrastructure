@@ -2,8 +2,7 @@
 using System.Web.Http;
 using AutoMapper;
 using AzureDeprecation.APIs.REST.DataAccess.Interfaces;
-using AzureDeprecation.APIs.REST.DataAccess.Models;
-using AzureDeprecation.Contracts.v1.Documents;
+using AzureDeprecation.Runtimes.AzureFunctions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -13,43 +12,73 @@ using Presentation = AzureDeprecation.APIs.REST.Contracts;
 
 namespace AzureDeprecation.APIs.REST.Functions;
 
-public class GetDeprecationFunction
+public partial class GetDeprecationFunction
 {
     readonly IDeprecationsRepository _deprecationsRepository;
+    readonly ILogger<GetDeprecationFunction> _logger;
     readonly IMapper _mapper;
 
     public GetDeprecationFunction(
         IDeprecationsRepository deprecationsRepository,
-        IMapper mapper)
+        IMapper mapper,
+        ILogger<GetDeprecationFunction> logger)
     {
         _deprecationsRepository = deprecationsRepository;
+        _logger = logger;
         _mapper = mapper;
     }
 
-    [FunctionName("get-deprecation")]
+    [FunctionName("apis-get-deprecation")]
     public async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/v1/deprecations/{id}")]
         HttpRequest request,
         string id,
-        ILogger log,
         CancellationToken cancellationToken = default)
     {
+        var stopwatch = ValueStopwatch.StartNew();
+        using var loggerMessageScope = _logger.BeginScope(new Dictionary<string, object>()
+        {
+            ["RequestTraceIdentifier"] = request.HttpContext.TraceIdentifier,
+        });
         Presentation.DeprecationInfo result;
         
         try
         {
             var deprecation = await _deprecationsRepository.GetDeprecationAsync(id, cancellationToken);
             result = _mapper.Map<Presentation.DeprecationInfo>(deprecation);
+            LogDeprecationWasFound(id);
         }
         catch (Presentation.ServiceException exception) when (exception.HttpStatusCode == HttpStatusCode.NotFound)
         {
+            LogDeprecationNotFound(id);
             return new NotFoundResult();
         }
-        catch
+        catch(Exception exception)
         {
+            LogException(exception.Message);
             return new InternalServerErrorResult();
+        }
+        finally
+        {
+            LogTiming(stopwatch.GetElapsedTotalMilliseconds());
         }
 
         return new OkObjectResult(result);
     }
+
+    [LoggerMessage(EventId = 200, EventName = "Timing", Level = LogLevel.Debug,
+        Message = "Timing: {ElapsedMilliseconds} ms.")]
+    partial void LogTiming(double elapsedMilliseconds);
+
+    [LoggerMessage(EventId = 201, EventName = "Timing", Level = LogLevel.Debug,
+        Message = "Deprecation with ID {DeprecationId} was found.")]
+    partial void LogDeprecationWasFound(string deprecationId);
+
+    [LoggerMessage(EventId = 202, EventName = "Timing", Level = LogLevel.Debug,
+        Message = "Deprecation with ID {DeprecationId} was not found.")]
+    partial void LogDeprecationNotFound(string deprecationId);
+
+    [LoggerMessage(EventId = 203, EventName = "Timing", Level = LogLevel.Debug,
+        Message = "Unable to get deprecation information due to exception {exceptionMessage}.")]
+    partial void LogException(string exceptionMessage);
 }
