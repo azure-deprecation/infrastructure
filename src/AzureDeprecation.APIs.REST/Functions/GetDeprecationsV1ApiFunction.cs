@@ -10,30 +10,36 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Extensions.Logging;
-
+using Microsoft.OpenApi.Models;
 using Presentation = AzureDeprecation.APIs.REST.Contracts;
 
 namespace AzureDeprecation.APIs.REST.Functions
 {
-    public partial class GetDeprecationsFunction
+    public partial class GetDeprecationsV1ApiFunction
     {
         readonly IDeprecationsRepository _deprecationsRepository;
-        readonly ILogger<GetDeprecationsFunction> _logger;
+        readonly ILogger<GetDeprecationsV1ApiFunction> _logger;
         readonly IMapper _mapper;
 
-        public GetDeprecationsFunction(
+        public GetDeprecationsV1ApiFunction(
             IDeprecationsRepository deprecationsRepository,
             IMapper mapper,
-            ILogger<GetDeprecationsFunction> logger)
+            ILogger<GetDeprecationsV1ApiFunction> logger)
         {
             _deprecationsRepository = deprecationsRepository;
             _logger = logger;
             _mapper = mapper;
         }
         
-        [FunctionName("apis-get-deprecations")]
-        [OpenApiOperation("GetDeprecations", Summary = "Get all deprecations")]
-        [OpenApiRequestBody("application/json", typeof(DeprecationsRequestModel))]
+        [FunctionName("apis-v1-get-deprecations")]
+        [OpenApiOperation("GetDeprecations", tags: "deprecations", Summary = "Get all deprecations", Description = "Provides capability to browse all deprecations")]
+        [OpenApiParameter("filters.status", In = ParameterLocation.Query, Required = false, Description = "Filter to reduce deprecation notices by a given status.")]
+        [OpenApiParameter("filters.year", In = ParameterLocation.Query, Required = false, Description = "Filter to reduce deprecation notices by the year of the deprecation.")]
+        [OpenApiParameter("filters.service", In = ParameterLocation.Query, Required = false, Description = "Filter to reduce deprecation notices for a given Azure service.")]
+        [OpenApiParameter("filters.impactType", In = ParameterLocation.Query, Description = "Filter to reduce deprecation notices by a given impact type.")]
+        [OpenApiParameter("filters.cloud", In = ParameterLocation.Query, Required = false, Description = "Filter to reduce deprecation notices for a given cloud.")]
+        [OpenApiParameter("pagination.offset", In = ParameterLocation.Query, Required = false, Description = "Specifies the amount of pages to skip.")]
+        [OpenApiParameter("pagination.limit", In = ParameterLocation.Query, Required = false, Description = "Specifies the amount of entries in the page.")]
         [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json", typeof(Presentation.DeprecationNoticesResponse))]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/v1/deprecations")] HttpRequest request,

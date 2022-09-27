@@ -19,7 +19,9 @@ public class Startup : DefaultStartup
         services.AddAutoMapper(typeof(Startup));
 
         services.AddCosmosDbClient();
+#if DEBUG
         services.AddOpenApiSpecs();
+#endif
 
         services.AddTransient<IDeprecationsRepository, AzureCosmosDbDeprecationsRepository>();
     }
