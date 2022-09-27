@@ -1,0 +1,572 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Azure Deprecation API",
+        "description": "APIs to explore the deprecations in Microsoft Azure.",
+        "contact": {
+            "url": "https://github.com/azure-deprecation/infrastructure"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://github.com/azure-deprecation/infrastructure/blob/main/LICENSE"
+        },
+        "version": "1.0.0"
+    },
+    "host": "localhost:7046",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/api/v1/deprecations/{id}": {
+            "get": {
+                "summary": "Get deprecation details",
+                "operationId": "GetDeprecation",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The unique ID of the deprecation.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payload of DeprecationInfo",
+                        "schema": {
+                            "$ref": "#/definitions/deprecationInfo"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/deprecations": {
+            "get": {
+                "summary": "Get all deprecations",
+                "operationId": "GetDeprecations",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "schema": {
+                            "$ref": "#/definitions/deprecationsRequestModel"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payload of DeprecationNoticesResponse",
+                        "schema": {
+                            "$ref": "#/definitions/deprecationNoticesResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "contactEntry": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "default": "Unknown",
+                    "enum": [
+                        "Unknown",
+                        "NotAvailable",
+                        "Email",
+                        "Support",
+                        "MicrosoftQAndA"
+                    ],
+                    "type": "string"
+                },
+                "data": {
+                    "type": "string"
+                }
+            }
+        },
+        "deprecationInfo": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "timeline": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/timeLineEntry"
+                    }
+                },
+                "impact": {
+                    "$ref": "#/definitions/impact"
+                },
+                "notice": {
+                    "$ref": "#/definitions/notice"
+                },
+                "requiredAction": {
+                    "type": "string"
+                },
+                "contact": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/contactEntry"
+                    }
+                },
+                "links": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "deprecationNoticesResponse": {
+            "type": "object",
+            "properties": {
+                "deprecations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/deprecationInfo"
+                    }
+                }
+            }
+        },
+        "deprecationsRequestModel": {
+            "type": "object",
+            "properties": {
+                "filters": {
+                    "$ref": "#/definitions/filterNoticesRequest"
+                },
+                "pagination": {
+                    "$ref": "#/definitions/paginationNoticesRequest"
+                }
+            }
+        },
+        "filterNoticesRequest": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "format": "int32",
+                    "default": 0,
+                    "enum": [
+                        0,
+                        1
+                    ],
+                    "type": "integer"
+                },
+                "year": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "service": {
+                    "default": "ActiveDirectory",
+                    "enum": [
+                        "ActiveDirectory",
+                        "Advisor",
+                        "All",
+                        "AnalysisService",
+                        "AnomalyDetector",
+                        "ApiApps",
+                        "ApiForFhir",
+                        "ApiManagement",
+                        "AppConfiguration",
+                        "ApplicationGateway",
+                        "ApplicationInsights",
+                        "AppService",
+                        "Arc",
+                        "Automation",
+                        "Backup",
+                        "Bastion",
+                        "Batch",
+                        "BlockchainService",
+                        "BlockchainTokens",
+                        "BlockchainWorkbench",
+                        "Blueprints",
+                        "BotService",
+                        "CacheForRedis",
+                        "Cdn",
+                        "CloudServices",
+                        "CognitiveSearch",
+                        "CognitiveServices",
+                        "ContainerApps",
+                        "ContainerInstances",
+                        "ContainerRegistry",
+                        "CosmosDb",
+                        "CostManagement",
+                        "CycleCloud",
+                        "DatabaseForMariaDB",
+                        "DatabaseForMySQL",
+                        "DatabaseForPostgreSQL",
+                        "DatabaseMigrationService",
+                        "Databricks",
+                        "DataFactory",
+                        "DataLakeAnalytics",
+                        "DataLakeStorage",
+                        "DataShare",
+                        "DataScience",
+                        "DdosProtection",
+                        "DedicatedHost",
+                        "DevOps",
+                        "DevSpaces",
+                        "DevTestLabs",
+                        "DigitalTwins",
+                        "Dns",
+                        "EventGrid",
+                        "EventHubs",
+                        "ExpressRoute",
+                        "Firewall",
+                        "FirewallManager",
+                        "FormRecognizer",
+                        "FrontDoor",
+                        "Functions",
+                        "Genomics",
+                        "HDInsight",
+                        "InformationProtection",
+                        "InternetAnalyzer",
+                        "IotCentral",
+                        "IoTEdge",
+                        "IotHub",
+                        "IotHubDps",
+                        "KubernetesService",
+                        "LabServices",
+                        "Lighthouse",
+                        "LoadBalancer",
+                        "LogAnalytics",
+                        "LogicApps",
+                        "MachineLearning",
+                        "ManagedApplications",
+                        "Maps",
+                        "MediaServices",
+                        "Migrate",
+                        "MixedReality",
+                        "MobileApps",
+                        "Monitor",
+                        "NetworkWatcher",
+                        "NotificationHubs",
+                        "Other",
+                        "Policy",
+                        "Portal",
+                        "PowerBI",
+                        "PrivateLink",
+                        "RedHatOpenshift",
+                        "Relay",
+                        "RemoteRendering",
+                        "ReservedIp",
+                        "ResourceGraph",
+                        "ResourceManager",
+                        "SecurityCenter",
+                        "Sentinel",
+                        "ServiceBus",
+                        "ServiceFabric",
+                        "ServiceFabricMesh",
+                        "ServiceHealth",
+                        "SignalR",
+                        "SiteRecovery",
+                        "SpatialAnchors",
+                        "Sphere",
+                        "SpringCloud",
+                        "SqlDatabase",
+                        "SqlEdge",
+                        "SqlManagedInstance",
+                        "Stack",
+                        "Storage",
+                        "StoreSimple",
+                        "StreamAnalytics",
+                        "SynapseAnalytics",
+                        "TimeSeriesInsights",
+                        "TrafficManager",
+                        "VideoIndexer",
+                        "VirtualMachine",
+                        "VirtualMachineScaleSets",
+                        "VirtualNetwork",
+                        "VisualStudioCodespaces",
+                        "VMwareSolutions",
+                        "VpnGateway",
+                        "WebApp",
+                        "WebApplicationGateway",
+                        "WindowsVirtualDesktop"
+                    ],
+                    "type": "string"
+                },
+                "impactType": {
+                    "default": "Unknown",
+                    "enum": [
+                        "Unknown",
+                        "None",
+                        "Limited",
+                        "UpgradeRequired",
+                        "MigrationRequired",
+                        "ShutdownWithoutAlternative"
+                    ],
+                    "type": "string"
+                },
+                "cloud": {
+                    "default": "Unknown",
+                    "enum": [
+                        "Unknown",
+                        "Public",
+                        "Sovereign",
+                        "China",
+                        "Government",
+                        "German"
+                    ],
+                    "type": "string"
+                },
+                "area": {
+                    "default": "Unknown",
+                    "enum": [
+                        "Unknown",
+                        "Sdk",
+                        "Certification",
+                        "Tooling",
+                        "Security",
+                        "ApiEndpoint",
+                        "Feature",
+                        "ServiceRuntime",
+                        "Region",
+                        "Sku"
+                    ],
+                    "type": "string"
+                }
+            }
+        },
+        "impact": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "type": {
+                    "default": "Unknown",
+                    "enum": [
+                        "Unknown",
+                        "None",
+                        "Limited",
+                        "UpgradeRequired",
+                        "MigrationRequired",
+                        "ShutdownWithoutAlternative"
+                    ],
+                    "type": "string"
+                },
+                "area": {
+                    "default": "Unknown",
+                    "enum": [
+                        "Unknown",
+                        "Sdk",
+                        "Certification",
+                        "Tooling",
+                        "Security",
+                        "ApiEndpoint",
+                        "Feature",
+                        "ServiceRuntime",
+                        "Region",
+                        "Sku"
+                    ],
+                    "type": "string"
+                },
+                "cloud": {
+                    "default": "Unknown",
+                    "enum": [
+                        "Unknown",
+                        "Public",
+                        "Sovereign",
+                        "China",
+                        "Government",
+                        "German"
+                    ],
+                    "type": "string"
+                },
+                "services": {
+                    "type": "array",
+                    "items": {
+                        "default": "ActiveDirectory",
+                        "enum": [
+                            "ActiveDirectory",
+                            "Advisor",
+                            "All",
+                            "AnalysisService",
+                            "AnomalyDetector",
+                            "ApiApps",
+                            "ApiForFhir",
+                            "ApiManagement",
+                            "AppConfiguration",
+                            "ApplicationGateway",
+                            "ApplicationInsights",
+                            "AppService",
+                            "Arc",
+                            "Automation",
+                            "Backup",
+                            "Bastion",
+                            "Batch",
+                            "BlockchainService",
+                            "BlockchainTokens",
+                            "BlockchainWorkbench",
+                            "Blueprints",
+                            "BotService",
+                            "CacheForRedis",
+                            "Cdn",
+                            "CloudServices",
+                            "CognitiveSearch",
+                            "CognitiveServices",
+                            "ContainerApps",
+                            "ContainerInstances",
+                            "ContainerRegistry",
+                            "CosmosDb",
+                            "CostManagement",
+                            "CycleCloud",
+                            "DatabaseForMariaDB",
+                            "DatabaseForMySQL",
+                            "DatabaseForPostgreSQL",
+                            "DatabaseMigrationService",
+                            "Databricks",
+                            "DataFactory",
+                            "DataLakeAnalytics",
+                            "DataLakeStorage",
+                            "DataShare",
+                            "DataScience",
+                            "DdosProtection",
+                            "DedicatedHost",
+                            "DevOps",
+                            "DevSpaces",
+                            "DevTestLabs",
+                            "DigitalTwins",
+                            "Dns",
+                            "EventGrid",
+                            "EventHubs",
+                            "ExpressRoute",
+                            "Firewall",
+                            "FirewallManager",
+                            "FormRecognizer",
+                            "FrontDoor",
+                            "Functions",
+                            "Genomics",
+                            "HDInsight",
+                            "InformationProtection",
+                            "InternetAnalyzer",
+                            "IotCentral",
+                            "IoTEdge",
+                            "IotHub",
+                            "IotHubDps",
+                            "KubernetesService",
+                            "LabServices",
+                            "Lighthouse",
+                            "LoadBalancer",
+                            "LogAnalytics",
+                            "LogicApps",
+                            "MachineLearning",
+                            "ManagedApplications",
+                            "Maps",
+                            "MediaServices",
+                            "Migrate",
+                            "MixedReality",
+                            "MobileApps",
+                            "Monitor",
+                            "NetworkWatcher",
+                            "NotificationHubs",
+                            "Other",
+                            "Policy",
+                            "Portal",
+                            "PowerBI",
+                            "PrivateLink",
+                            "RedHatOpenshift",
+                            "Relay",
+                            "RemoteRendering",
+                            "ReservedIp",
+                            "ResourceGraph",
+                            "ResourceManager",
+                            "SecurityCenter",
+                            "Sentinel",
+                            "ServiceBus",
+                            "ServiceFabric",
+                            "ServiceFabricMesh",
+                            "ServiceHealth",
+                            "SignalR",
+                            "SiteRecovery",
+                            "SpatialAnchors",
+                            "Sphere",
+                            "SpringCloud",
+                            "SqlDatabase",
+                            "SqlEdge",
+                            "SqlManagedInstance",
+                            "Stack",
+                            "Storage",
+                            "StoreSimple",
+                            "StreamAnalytics",
+                            "SynapseAnalytics",
+                            "TimeSeriesInsights",
+                            "TrafficManager",
+                            "VideoIndexer",
+                            "VirtualMachine",
+                            "VirtualMachineScaleSets",
+                            "VirtualNetwork",
+                            "VisualStudioCodespaces",
+                            "VMwareSolutions",
+                            "VpnGateway",
+                            "WebApp",
+                            "WebApplicationGateway",
+                            "WindowsVirtualDesktop"
+                        ],
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "notice": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "links": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "paginationNoticesRequest": {
+            "type": "object",
+            "properties": {
+                "offset": {
+                    "format": "int32",
+                    "maximum": 2147483647,
+                    "minimum": 0,
+                    "type": "integer"
+                },
+                "limit": {
+                    "format": "int32",
+                    "maximum": 500,
+                    "minimum": 1,
+                    "type": "integer"
+                }
+            }
+        },
+        "timeLineEntry": {
+            "type": "object",
+            "properties": {
+                "phase": {
+                    "type": "string"
+                },
+                "date": {
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

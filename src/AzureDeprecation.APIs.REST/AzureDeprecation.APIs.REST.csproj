@@ -6,6 +6,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
     <PackageReference Include="CodeJam" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.OpenApi" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" />
   </ItemGroup>
   <ItemGroup>

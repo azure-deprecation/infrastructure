@@ -1,11 +1,10 @@
-﻿// ReSharper disable once CheckNamespace
-
-using AzureDeprecation.Integrations.Azure.CosmosDb.Configuration;
+﻿using AzureDeprecation.Integrations.Azure.CosmosDb.Configuration;
 using GuardNet;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
+// ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
 {
     public static class IServiceCollectionExtensions
