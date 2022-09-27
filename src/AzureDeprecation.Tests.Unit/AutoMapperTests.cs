@@ -38,20 +38,20 @@ namespace AzureDeprecation.Tests.Unit
         [Fact]
         public void AutoMapper_EnsureValidMappingConfiguration_Succeeds()
         {
-            //Assert
+            // Assert
             _mapper.ConfigurationProvider.AssertConfigurationIsValid();
         }
 
         [Fact]
         public void AutoMapper_MapRegisterDeviceRequestToLocation_IsValid()
         {
-            //Arrange
+            // Arrange
             var githubIssue = CreateBogusGitHubIssue();
 
-            //Act
+            // Act
             var publishedNotice = _mapper.Map<Issue, PublishedNotice>(githubIssue);
 
-            //Assert
+            // Assert
             Assert.NotNull(publishedNotice);
             Assert.NotNull(publishedNotice.ApiInfo);
             Assert.NotNull(publishedNotice.DashboardInfo);
@@ -74,13 +74,13 @@ namespace AzureDeprecation.Tests.Unit
         [Fact]
         public void AutoMapper_MapNewAzureDeprecationV1MessageToDeprecationInfo_IsValid()
         {
-            //Arrange
+            // Arrange
             var deprecationInfo = NewAzureDeprecationGenerator.GenerateSample(useAdvancedTimeline: true);
 
-            //Act
+            // Act
             var publishedNotice = _mapper.Map<NewAzureDeprecationV1Message, DeprecationInfo>(deprecationInfo);
 
-            //Assert
+            // Assert
             Assert.NotNull(publishedNotice);
             Assert.NotNull(publishedNotice.Contact);
             Assert.NotNull(publishedNotice.Timeline);
@@ -100,28 +100,52 @@ namespace AzureDeprecation.Tests.Unit
         [Fact]
         public void AutoMapper_MapNewDeprecationNoticePublishedV1MessageToDeprecationNoticeDocument_IsValid()
         {
-            // TODO: Implement test
-            ////Arrange
-            //var deprecationInfo = NewAzureDeprecationGenerator.GenerateSample(useAdvancedTimeline: true);
+            // Arrange
+            var deprecationInfo = NewAzureDeprecationGenerator.GenerateNewDeprecationNoticePublishedV1Message(useAdvancedTimeline: true);
 
-            ////Act
-            //var publishedNotice = _mapper.Map<NewDeprecationNoticePublishedV1Message, DeprecationNoticeDocument>(deprecationInfo);
+            // Act
+            var deprecationNoticeDocument = _mapper.Map<NewDeprecationNoticePublishedV1Message, DeprecationNoticeDocument>(deprecationInfo);
 
-            ////Assert
-            //Assert.NotNull(publishedNotice);
-            //Assert.NotNull(publishedNotice.Contact);
-            //Assert.NotNull(publishedNotice.Timeline);
-            //Assert.Equal(deprecationInfo.Title, publishedNotice.Title);
-            //Assert.Equal(deprecationInfo.RequiredAction?.Description, publishedNotice.RequiredAction);
-            //Assert.Equal(deprecationInfo.AdditionalInformation, publishedNotice.AdditionalInformation);
-            //Assert.Equal(deprecationInfo.Contact.Count, publishedNotice.Contact.Count);
-            //foreach (var contactEntry in deprecationInfo.Contact)
-            //{
-            //    Assert.Contains(publishedNotice.Contact, entry => entry.Type == contactEntry.Type && string.Equals(entry.Data, contactEntry.Data, StringComparison.InvariantCultureIgnoreCase));
-            //}
-            //HasSameNotice(publishedNotice, deprecationInfo);
-            //HasSameImpact(deprecationInfo, publishedNotice);
-            //HasSameTimeline(deprecationInfo, publishedNotice);
+            // Assert
+            Assert.NotNull(deprecationNoticeDocument);
+            Assert.Null(deprecationNoticeDocument.CreatedAt); // This is not mapped, only specifically assigned
+            Assert.Null(deprecationNoticeDocument.LastUpdatedAt); // This is not mapped, only specifically assigned
+            Assert.False(string.IsNullOrWhiteSpace(deprecationNoticeDocument.Id));
+            Assert.Equal("v1", deprecationNoticeDocument.SchemaVersion);
+            Assert.NotNull(deprecationNoticeDocument.DeprecationInfo);
+            Assert.NotNull(deprecationNoticeDocument.DeprecationInfo.Notice);
+            Assert.Equal(deprecationInfo!.DeprecationInfo!.Title, deprecationNoticeDocument.DeprecationInfo.Title);
+            Assert.Equal(deprecationInfo.DeprecationInfo.RequiredAction, deprecationNoticeDocument.DeprecationInfo.RequiredAction);
+            Assert.Equal(deprecationInfo.DeprecationInfo.AdditionalInformation, deprecationNoticeDocument.DeprecationInfo.AdditionalInformation);
+            Assert.Equal(deprecationInfo.DeprecationInfo.Contact.Count, deprecationNoticeDocument.DeprecationInfo.Contact.Count);
+            foreach (var contactEntry in deprecationNoticeDocument.DeprecationInfo.Contact)
+            {
+                Assert.Contains(deprecationInfo.DeprecationInfo.Contact, entry => entry.Type == contactEntry.Type && string.Equals(entry.Data, contactEntry.Data, StringComparison.InvariantCultureIgnoreCase));
+            }
+            Assert.Equal(deprecationInfo.DeprecationInfo!.Notice!.Description, deprecationNoticeDocument.DeprecationInfo.Notice.Description);
+            Assert.Equal(deprecationInfo.DeprecationInfo.Notice.Links, deprecationNoticeDocument.DeprecationInfo.Notice.Links);
+            Assert.NotNull(deprecationNoticeDocument.DeprecationInfo.Impact);
+            Assert.NotNull(deprecationNoticeDocument.DeprecationInfo.Impact.Services);
+            Assert.Equal(deprecationInfo.DeprecationInfo.Impact?.Area, deprecationNoticeDocument.DeprecationInfo.Impact.Area);
+            Assert.Equal(deprecationInfo.DeprecationInfo.Impact?.Cloud, deprecationNoticeDocument.DeprecationInfo.Impact.Cloud);
+            Assert.Equal(deprecationInfo.DeprecationInfo.Impact?.Description, deprecationNoticeDocument.DeprecationInfo.Impact.Description);
+            Assert.Equal(deprecationInfo.DeprecationInfo.Impact?.Type, deprecationNoticeDocument.DeprecationInfo.Impact.Type);
+            deprecationNoticeDocument.DeprecationInfo.Impact.Services.Should().BeEquivalentTo(deprecationInfo.DeprecationInfo.Impact?.Services, options => options.ComparingRecordsByValue());
+            Assert.NotNull(deprecationNoticeDocument.DeprecationInfo.Timeline);
+            Assert.Equal(deprecationNoticeDocument.DeprecationInfo.Timeline.Count, deprecationNoticeDocument.DeprecationInfo.Timeline.Count);
+            deprecationNoticeDocument.DeprecationInfo.Timeline.Should().BeEquivalentTo(deprecationNoticeDocument.DeprecationInfo.Timeline, options => options.ComparingRecordsByValue());
+            Assert.NotNull(deprecationNoticeDocument.PublishedNotice);
+            Assert.Equal(deprecationInfo.PublishedNotice!.Title, deprecationNoticeDocument.PublishedNotice.Title);
+            Assert.Equal(deprecationInfo.PublishedNotice.CreatedAt, deprecationNoticeDocument.PublishedNotice.CreatedAt);
+            Assert.Equal(deprecationInfo.PublishedNotice.UpdatedAt, deprecationNoticeDocument.PublishedNotice.UpdatedAt);
+            Assert.Equal(deprecationInfo.PublishedNotice.ClosedAt, deprecationNoticeDocument.PublishedNotice.ClosedAt);
+            Assert.NotNull(deprecationNoticeDocument.PublishedNotice.DashboardInfo);
+            Assert.Equal(deprecationInfo!.PublishedNotice!.DashboardInfo!.Id, deprecationNoticeDocument.PublishedNotice.DashboardInfo.Id);
+            Assert.Equal(deprecationInfo.PublishedNotice.DashboardInfo.Url, deprecationNoticeDocument.PublishedNotice.DashboardInfo.Url);
+            Assert.NotNull(deprecationNoticeDocument.PublishedNotice.ApiInfo);
+            Assert.Equal(deprecationInfo.PublishedNotice.ApiInfo!.Id, deprecationNoticeDocument.PublishedNotice.ApiInfo.Id);
+            Assert.Equal(deprecationInfo.PublishedNotice.ApiInfo.Url, deprecationNoticeDocument.PublishedNotice.ApiInfo.Url);
+            Assert.NotNull(deprecationNoticeDocument.PublishedNotice.Labels);
         }
 
         [Fact]
@@ -130,7 +154,7 @@ namespace AzureDeprecation.Tests.Unit
             var fixture = new Fixture();
             var dbEntity = fixture.Create<DeprecationNoticeDocument>();
 
-            var resultModel = _mapper.Map<AzureDeprecation.APIs.REST.Contracts.DeprecationInfo>(dbEntity);
+            var resultModel = _mapper.Map<APIs.REST.Contracts.DeprecationInfo>(dbEntity);
             
             Assert.Equal(dbEntity.Id, resultModel.Id);
             Assert.Contains(ExternalLinkType.GitHubNoticeUrl, (IDictionary<ExternalLinkType, string>)resultModel.Links);
@@ -140,6 +164,7 @@ namespace AzureDeprecation.Tests.Unit
                 .WithDeepEqual(dbEntity.DeprecationInfo)
                 .IgnoreDestinationProperty(x => x!.AdditionalInformation)
                 .IgnoreSourceProperty(x => x.Id)
+                .IgnoreDestinationProperty(x => x!.Timeline)
                 .IgnoreSourceProperty(x => x.Links)
                 .Assert();
         }
