@@ -117,6 +117,39 @@ resource deprecationNoticeProduct 'Microsoft.ApiManagement/service/products@2021
   }
 }
 
+resource restApiKeyNamedValue 'Microsoft.ApiManagement/service/namedValues@2021-12-01-preview' = {
+  parent: apiManagementInstance
+  name: 'rest-api-function-api-key'
+  properties: {
+    displayName: 'rest-api-function-api-key'
+    secret: true
+    value: listkeys('${functionAppResource.id}/host/default', '2016-08-01').masterKey
+  }
+}
+
+resource restApiOnFunctionsBackend 'Microsoft.ApiManagement/service/backends@2021-12-01-preview' = {
+  parent: apiManagementInstance
+  name: 'rest-api-on-azure-functions'
+  properties: {
+    url: 'https://${functionAppName}.azurewebsites.net'
+    protocol: 'https'
+    resourceId: functionAppResource.id
+    credentials: {
+      query: {
+      }
+      header: {
+        'x-functions-key': [
+          '{{${restApiKeyNamedValue.name}}}'
+        ]
+      }
+    }
+    tls: {
+      validateCertificateChain: true
+      validateCertificateName: true
+    }
+  }
+}
+
 resource deprecationsTag 'Microsoft.ApiManagement/service/tags@2021-12-01-preview' = {
   parent: apiManagementInstance
   name: 'deprecations'
@@ -275,7 +308,7 @@ resource getDeprecationRestOperationPolicy 'Microsoft.ApiManagement/service/apis
   parent: getDeprecationRestOperation
   name: 'policy'
   properties: {
-    value: '<policies>\r\n  <inbound>\r\n    <base />\r\n    <rewrite-uri template="{id}" copy-unmatched-params="true" />\r\n    <set-query-parameter name="code" exists-action="override">\r\n      <value>FUNC_KEY</value>\r\n    </set-query-parameter>\r\n    <cache-lookup vary-by-developer="false" vary-by-developer-groups="false" downstream-caching-type="none" />\r\n  </inbound>\r\n  <backend>\r\n    <base />\r\n  </backend>\r\n  <outbound>\r\n    <base />\r\n    <cache-store duration="3600" />\r\n  </outbound>\r\n  <on-error>\r\n    <base />\r\n  </on-error>\r\n</policies>'
+    value: '<policies>\r\n  <inbound>\r\n    <base />\r\n    <set-backend-service backend-id="${restApiOnFunctionsBackend.name}" />\r\n    <cache-lookup vary-by-developer="false" vary-by-developer-groups="false" downstream-caching-type="none" />\r\n  </inbound>\r\n  <backend>\r\n    <base />\r\n  </backend>\r\n  <outbound>\r\n    <base />\r\n    <cache-store duration="3600" />\r\n  </outbound>\r\n  <on-error>\r\n    <base />\r\n  </on-error>\r\n</policies>'
     format: 'xml'
   }
 }
@@ -284,7 +317,7 @@ resource getDeprecationsRestOperationPolicy 'Microsoft.ApiManagement/service/api
   parent: getDeprecationsRestOperation
   name: 'policy'
   properties: {
-    value: '<policies>\r\n  <inbound>\r\n    <base />\r\n  </inbound>\r\n  <backend>\r\n    <base />\r\n  </backend>\r\n  <outbound>\r\n    <base />\r\n  </outbound>\r\n  <on-error>\r\n    <base />\r\n  </on-error>\r\n</policies>'
+    value: '<policies>\r\n  <inbound>\r\n    <base />\r\n  <set-backend-service backend-id="${restApiOnFunctionsBackend.name}" />\r\n    <cache-lookup vary-by-developer="false" vary-by-developer-groups="false" downstream-caching-type="none" />\r\n  </inbound>\r\n  <backend>\r\n    <base />\r\n  </backend>\r\n  <outbound>\r\n    <base />\r\n    <cache-store duration="3600" />\r\n  </outbound>\r\n  <on-error>\r\n    <base />\r\n  </on-error>\r\n</policies>'
     format: 'xml'
   }
 }
