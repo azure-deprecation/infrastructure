@@ -42,7 +42,7 @@ namespace AzureDeprecation.APIs.REST.Functions
         [OpenApiParameter("pagination.limit", In = ParameterLocation.Query, Required = false, Description = "Specifies the amount of entries in the page.")]
         [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json", typeof(Presentation.DeprecationNoticesResponse))]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/v1/deprecations")] HttpRequest request,
+            [HttpTrigger(AuthorizationLevel.Admin, "get", Route = "api/v1/deprecations")] HttpRequest request,
             ILogger log,
             CancellationToken cancellationToken = default)
         {

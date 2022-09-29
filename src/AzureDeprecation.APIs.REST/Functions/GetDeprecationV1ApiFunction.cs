@@ -36,7 +36,7 @@ public partial class GetDeprecationV1ApiFunction
     [OpenApiParameter("id", Required = true, Description = "The unique ID of the deprecation.")]
     [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json", typeof(Presentation.DeprecationInfo))]
     public async Task<IActionResult> Run(
-        [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/v1/deprecations/{id}")]
+        [HttpTrigger(AuthorizationLevel.Admin, "get", Route = "api/v1/deprecations/{id}")]
         HttpRequest request,
         string id,
         CancellationToken cancellationToken = default)
