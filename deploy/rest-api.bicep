@@ -132,7 +132,7 @@ resource restApiOnFunctionsBackend 'Microsoft.ApiManagement/service/backends@202
   name: 'rest-api-on-azure-functions'
   properties: {
     url: 'https://${functionAppName}.azurewebsites.net'
-    protocol: 'https'
+    protocol: 'http'
     resourceId: functionAppResource.id
     credentials: {
       query: {
