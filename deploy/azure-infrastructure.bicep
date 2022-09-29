@@ -12,6 +12,19 @@ param apiManagementAdminEmail string
 param apiManagementAdminOrganization string
 
 param defaultLocation string = resourceGroup().location
+
+resource applicationInsightsNameResource 'microsoft.insights/components@2020-02-02' = {
+  name: applicationInsightsName
+  location: defaultLocation
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+    RetentionInDays: 30
+    WorkspaceResourceId: logAnalyticsWorkspace.id
+    IngestionMode: 'LogAnalytics'
+  }
+}
+
 resource apiManagementInstance 'Microsoft.ApiManagement/service@2021-12-01-preview' = {
   name: apiManagementInstanceName
   location: defaultLocation
@@ -26,6 +39,84 @@ resource apiManagementInstance 'Microsoft.ApiManagement/service@2021-12-01-previ
     publicNetworkAccess: 'Enabled'
   }
 }
+
+resource applicationInsightsGatewayLogger 'Microsoft.ApiManagement/service/loggers@2021-12-01-preview' = {
+  parent: apiManagementInstance
+  name: 'application-insights-logger'
+  properties: {
+    loggerType: 'applicationInsights'
+    credentials: {
+      instrumentationKey: '{{application-insights-connectionstring}}'
+    }
+    isBuffered: true
+    resourceId: applicationInsightsNameResource.id
+  }
+}
+
+resource applicationInsightsConnectionStringNamedValue 'Microsoft.ApiManagement/service/namedValues@2021-12-01-preview' = {
+  parent: apiManagementInstance
+  name: 'application-insights-connectionstring'
+  properties: {
+    displayName: 'application-insights-connectionstring'
+    value: applicationInsightsNameResource.properties.ConnectionString
+    secret: true
+  }
+}
+
+// resource Microsoft_ApiManagement_service_properties_applicationInsightsConnectionStringNamedValue 'Microsoft.ApiManagement/service/properties@2019-01-01' = {
+//   parent: apiManagementInstance
+//   name: 'application-insights-connectionstring'
+//   properties: {
+//     displayName: 'application-insights-connectionstring'
+//     value: 'ab27407d-df20-4102-a4fe-eb273d433280'
+//     secret: true
+//   }
+// }
+
+resource applicationsInsightsDiagnosticsInApiGateway 'Microsoft.ApiManagement/service/diagnostics@2021-12-01-preview' = {
+  parent: apiManagementInstance
+  name: 'applicationinsights'
+  properties: {
+    alwaysLog: 'allErrors'
+    httpCorrelationProtocol: 'W3C'
+    logClientIp: true
+    loggerId: applicationInsightsGatewayLogger.id
+    sampling: {
+      samplingType: 'fixed'
+      percentage: 100
+    }
+    frontend: {
+      request: {
+        dataMasking: {
+          queryParams: [
+            {
+              value: '*'
+              mode: 'Hide'
+            }
+          ]
+        }
+      }
+    }
+    backend: {
+      request: {
+        dataMasking: {
+          queryParams: [
+            {
+              value: '*'
+              mode: 'Hide'
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+resource applicationInsightsDiagnosticsLogger 'Microsoft.ApiManagement/service/diagnostics/loggers@2018-01-01' = {
+  parent: applicationsInsightsDiagnosticsInApiGateway
+  name: applicationInsightsName
+}
+
 resource storageAccount 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   name: storageAccountName
   location: defaultLocation
@@ -119,18 +210,6 @@ resource cosmosDbDatabase 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@20
     resource: {
       id: cosmosDbDatabaseName
     }
-  }
-}
-
-resource applicationInsightsNameResource 'microsoft.insights/components@2020-02-02' = {
-  name: applicationInsightsName
-  location: defaultLocation
-  kind: 'web'
-  properties: {
-    Application_Type: 'web'
-    RetentionInDays: 30
-    WorkspaceResourceId: logAnalyticsWorkspace.id
-    IngestionMode: 'LogAnalytics'
   }
 }
 
