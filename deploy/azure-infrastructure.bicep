@@ -46,7 +46,7 @@ resource applicationInsightsGatewayLogger 'Microsoft.ApiManagement/service/logge
   properties: {
     loggerType: 'applicationInsights'
     credentials: {
-      instrumentationKey: '{{application-insights-connectionstring}}'
+      instrumentationKey: '{{${applicationInsightsConnectionStringNamedValue.name}}}'
     }
     isBuffered: true
     resourceId: applicationInsightsNameResource.id
@@ -58,20 +58,10 @@ resource applicationInsightsConnectionStringNamedValue 'Microsoft.ApiManagement/
   name: 'application-insights-connectionstring'
   properties: {
     displayName: 'application-insights-connectionstring'
-    value: applicationInsightsNameResource.properties.ConnectionString
+    value: applicationInsightsNameResource.properties.InstrumentationKey
     secret: true
   }
 }
-
-// resource Microsoft_ApiManagement_service_properties_applicationInsightsConnectionStringNamedValue 'Microsoft.ApiManagement/service/properties@2019-01-01' = {
-//   parent: apiManagementInstance
-//   name: 'application-insights-connectionstring'
-//   properties: {
-//     displayName: 'application-insights-connectionstring'
-//     value: 'ab27407d-df20-4102-a4fe-eb273d433280'
-//     secret: true
-//   }
-// }
 
 resource applicationsInsightsDiagnosticsInApiGateway 'Microsoft.ApiManagement/service/diagnostics@2021-12-01-preview' = {
   parent: apiManagementInstance
