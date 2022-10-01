@@ -296,12 +296,12 @@ resource graphQlApiAllPolicy 'Microsoft.ApiManagement/service/apis/policies@2021
 
 resource deprecationNoticeProductWithRestApi 'Microsoft.ApiManagement/service/products/apis@2021-12-01-preview' = {
   parent: deprecationNoticeProduct
-  name: 'azure-deprecation-api-rest'
+  name: restApi.name
 }
 
 resource deprecationNoticeProductWithGraphQlApi 'Microsoft.ApiManagement/service/products/apis@2021-12-01-preview' = {
   parent: deprecationNoticeProduct
-  name: 'deprecation-notices-api-graphql'
+  name: graphQlApi.name
 }
 
 resource getDeprecationRestOperationPolicy 'Microsoft.ApiManagement/service/apis/operations/policies@2021-12-01-preview' = {
