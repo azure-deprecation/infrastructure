@@ -25,27 +25,32 @@ public static class QueryExtensions
 
         if (filters.Area != null)
         {
-            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo != null && it.DeprecationInfo.Impact!.Area == filters.Area.Value);
+            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo != null
+                                              && it.DeprecationInfo.Impact!.Area == filters.Area.Value);
         }
         
         if (filters.Cloud != null)
         {
-            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo != null && it.DeprecationInfo.Impact!.Cloud == filters.Cloud);
+            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo != null
+                                              && it.DeprecationInfo.Impact!.Cloud == filters.Cloud);
         }
-        
+
         if (filters.ImpactType != null)
         {
-            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo != null && it.DeprecationInfo.Impact!.Type == filters.ImpactType);
+            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo != null
+                                                    && it.DeprecationInfo.Impact!.Type == filters.ImpactType);
         }
-        
-        if (filters.Service != null)
+
+        if (filters.AzureService != null)
         {
-            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo != null && it.DeprecationInfo.Impact!.Services.Contains(filters.Service.Value));
+            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo != null
+                                                    && it.DeprecationInfo.Impact!.Services.Contains(filters.AzureService.Value));
         }
 
         if (filters.Year != null)
         {
-            // TODO: implement logic for filtering by year (maybe need to add additional field there)
+            queryBuilder = queryBuilder.Where(it => it.DeprecationInfo != null
+                                              && it.DeprecationInfo.Timeline!.Any(x => x.IsDueDate == true && x.Date.Year == filters.Year.Value));
         }
 
         return queryBuilder;

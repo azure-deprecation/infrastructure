@@ -1,7 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using AzureDeprecation.APIs.REST.Contracts;
 using AzureDeprecation.APIs.REST.DataAccess.Interfaces;
-using AzureDeprecation.APIs.REST.DataAccess.Models;
 using AzureDeprecation.APIs.REST.DataAccess.Utils;
 using AzureDeprecation.Contracts.v1.Documents;
 using AzureDeprecation.Integrations.Azure.CosmosDb.Configuration;
