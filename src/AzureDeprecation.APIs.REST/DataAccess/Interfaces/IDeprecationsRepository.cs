@@ -1,4 +1,4 @@
-﻿using AzureDeprecation.APIs.REST.DataAccess.Models;
+﻿using AzureDeprecation.APIs.REST.Contracts;
 using AzureDeprecation.Contracts.v1.Documents;
 
 namespace AzureDeprecation.APIs.REST.DataAccess.Interfaces

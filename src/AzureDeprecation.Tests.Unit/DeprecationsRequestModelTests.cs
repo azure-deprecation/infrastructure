@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using AzureDeprecation.APIs.REST.DataAccess.Models;
-using AzureDeprecation.APIs.REST.Utils;
+using AzureDeprecation.APIs.REST.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Xunit;
@@ -8,18 +7,18 @@ using Xunit;
 namespace AzureDeprecation.Tests.Unit;
 
 [Trait("Category", "Unit")]
-public class DeprecationRequestModelBinderTests
+public class DeprecationsRequestModelTests
 {
     [Fact]
     public void Parse_Pagination_Succeeds()
     {
         var queryParams = new QueryCollectionImpl
         {
-            ["limit"] = $"{100}",
-            ["offset"] = $"{15}"
+            [DeprecationsRequestModel.PageSizeQueryParameterName] = $"{100}",
+            [DeprecationsRequestModel.PageOffsetQueryParameterName] = $"{15}"
         };
 
-        var result = DeprecationRequestModelBinder.CreateModel(queryParams);
+        var result = DeprecationsRequestModel.Parse(queryParams);
        
         Assert.NotNull(result);
         Assert.NotNull(result.Pagination);
@@ -34,13 +33,13 @@ public class DeprecationRequestModelBinderTests
     {
         var queryParams = new QueryCollectionImpl
         {
-            ["limit"] = $"{100}",
-            ["offset"] = $"{15}",
-            ["filters.Status"] = "Opened",
-            ["filters.Year"] = "1990"
+            [DeprecationsRequestModel.PageSizeQueryParameterName] = $"{100}",
+            [DeprecationsRequestModel.PageOffsetQueryParameterName] = $"{15}",
+            [DeprecationsRequestModel.StatusQueryParameterName] = "Opened",
+            [DeprecationsRequestModel.YearQueryParameterName] = "1990"
         };
 
-        var result = DeprecationRequestModelBinder.CreateModel(queryParams);
+        var result = DeprecationsRequestModel.Parse(queryParams);
        
         Assert.NotNull(result);
         Assert.NotNull(result.Pagination);
@@ -59,10 +58,10 @@ public class DeprecationRequestModelBinderTests
     {
         var queryParams = new QueryCollectionImpl
         {
-            ["filters.Status"] = status
+            [DeprecationsRequestModel.StatusQueryParameterName] = status
         };
 
-        var result = DeprecationRequestModelBinder.CreateModel(queryParams);
+        var result = DeprecationsRequestModel.Parse(queryParams);
        
         Assert.NotNull(result);
         Assert.NotNull(result.Pagination);
@@ -78,10 +77,10 @@ public class DeprecationRequestModelBinderTests
     {
         var queryParams = new QueryCollectionImpl
         {
-            ["filters.Year"] = $"{year}"
+            [DeprecationsRequestModel.YearQueryParameterName] = $"{year}"
         };
 
-        var result = DeprecationRequestModelBinder.CreateModel(queryParams);
+        var result = DeprecationsRequestModel.Parse(queryParams);
        
         Assert.NotNull(result);
         Assert.NotNull(result.Pagination);
@@ -89,35 +88,16 @@ public class DeprecationRequestModelBinderTests
         
         Assert.Equal(year, result.Filters.Year);
     }
-    
-    [Theory]
-    [MemberData(nameof(EnumsData))]
-    public void Parse_EnumFilters_Succeeds(string propertyName, string value)
-    {
-        var queryParams = new QueryCollectionImpl
-        {
-            [$"filters.{propertyName}"] = $"{value}"
-        };
-
-        var result = DeprecationRequestModelBinder.CreateModel(queryParams);
-       
-        Assert.NotNull(result);
-        Assert.NotNull(result.Pagination);
-        Assert.NotNull(result.Filters);
-
-        var prop = result.Filters.GetType().GetProperties().Single(it => it.Name == propertyName);
-        Assert.Equal(value, prop.GetValue(result.Filters)?.ToString());
-    }
 
     [Fact]
     public void Parse_InvalidEnum_Error()
     {
         var queryParams = new QueryCollectionImpl
         {
-            ["filters.Status"] = "Invalid_Status"
+            [DeprecationsRequestModel.StatusQueryParameterName] = "Invalid_Status"
         };
 
-        Assert.Throws<ValidationException>(() => DeprecationRequestModelBinder.CreateModel(queryParams));
+        Assert.Throws<BadHttpRequestException>(() => DeprecationsRequestModel.Parse(queryParams));
     }
     
     [Fact]
@@ -125,10 +105,10 @@ public class DeprecationRequestModelBinderTests
     {
         var queryParams = new QueryCollectionImpl
         {
-            ["offset"] = "Invalid_Offset"
+            [DeprecationsRequestModel.PageOffsetQueryParameterName] = "Invalid_Offset"
         };
 
-        Assert.Throws<ValidationException>(() => DeprecationRequestModelBinder.CreateModel(queryParams));
+        Assert.Throws<BadHttpRequestException>(() => DeprecationsRequestModel.Parse(queryParams));
     }
     
     [Fact]
@@ -136,10 +116,10 @@ public class DeprecationRequestModelBinderTests
     {
         var queryParams = new QueryCollectionImpl
         {
-            ["limit"] = $"{10000}"
+            [DeprecationsRequestModel.PageSizeQueryParameterName] = $"{-1}"
         };
 
-        Assert.Throws<ValidationException>(() => DeprecationRequestModelBinder.CreateModel(queryParams));
+        Assert.Throws<BadHttpRequestException>(() => DeprecationsRequestModel.Parse(queryParams));
     }
     
     [Fact]
@@ -147,10 +127,10 @@ public class DeprecationRequestModelBinderTests
     {
         var queryParams = new QueryCollectionImpl
         {
-            ["limit"] = $"{-1}"
+            [DeprecationsRequestModel.PageSizeQueryParameterName] = $"{-1}"
         };
 
-        Assert.Throws<ValidationException>(() => DeprecationRequestModelBinder.CreateModel(queryParams));
+        Assert.Throws<BadHttpRequestException>(() => DeprecationsRequestModel.Parse(queryParams));
     }
     
     [Fact]
@@ -161,28 +141,10 @@ public class DeprecationRequestModelBinderTests
             ["unknownQueryName"] = "test_value"
         };
 
-        var result = DeprecationRequestModelBinder.CreateModel(queryParams);
+        var result = DeprecationsRequestModel.Parse(queryParams);
         Assert.NotNull(result);
         Assert.NotNull(result.Filters);
         Assert.NotNull(result.Pagination);
-    }
-
-    public static IEnumerable<object[]> EnumsData
-    {
-        get
-        {
-            var propNames = typeof(FilterNoticesRequest).GetProperties()
-                .Where(it => Nullable.GetUnderlyingType(it.PropertyType)?.IsEnum ?? false)
-                .Select(it => (it.Name, Nullable.GetUnderlyingType(it.PropertyType)!));
-            
-            foreach (var (propName, enumType) in propNames)
-            {
-                foreach (var enumValue in Enum.GetNames(enumType))
-                {
-                    yield return new object[] { propName, enumValue };
-                }
-            }
-        }
     }
 
     public class QueryCollectionImpl : Dictionary<string, StringValues>, IQueryCollection
