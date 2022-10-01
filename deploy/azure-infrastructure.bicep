@@ -104,7 +104,7 @@ resource applicationsInsightsDiagnosticsInApiGateway 'Microsoft.ApiManagement/se
 
 resource applicationInsightsDiagnosticsLogger 'Microsoft.ApiManagement/service/diagnostics/loggers@2018-01-01' = {
   parent: applicationsInsightsDiagnosticsInApiGateway
-  name: applicationInsightsName
+  name: applicationInsightsGatewayLogger.name
 }
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2021-04-01' = {
