@@ -8,10 +8,10 @@ public class FilterNoticesRequest
     
     public int? Year { get; set; }
     
-    public AzureService? Service { get; set; }
+    public AzureService? AzureService { get; set; }
     
     public ImpactType? ImpactType { get; set; }
-    
+
     public AzureCloud? Cloud { get; set; }
     
     public ImpactArea? Area { get; set; }
