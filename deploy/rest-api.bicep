@@ -74,7 +74,7 @@ resource restApi 'Microsoft.ApiManagement/service/apis@2021-12-01-preview' = {
   parent: apiManagementInstance
   name: 'azure-deprecation-api-rest'
   properties: {
-    displayName: 'Azure Deprecation API (REST)'
+    displayName: 'Azure Deprecation Notices API (REST)'
     apiRevision: '1'
     description: 'APIs to explore the deprecations in Microsoft Azure.'
     subscriptionRequired: true
@@ -92,7 +92,7 @@ resource graphQlApi 'Microsoft.ApiManagement/service/apis@2021-12-01-preview' = 
   parent: apiManagementInstance
   name: 'deprecation-notices-api-graphql'
   properties: {
-    displayName: 'Deprecation Notices API (GraphQL)'
+    displayName: 'Azure Deprecation Notices API (GraphQL)'
     apiRevision: '1'
     subscriptionRequired: true
     path: 'graphql/deprecations'
@@ -115,6 +115,16 @@ resource deprecationNoticeProduct 'Microsoft.ApiManagement/service/products@2021
     approvalRequired: true
     state: 'published'
   }
+}
+
+resource endUsersGroupResource 'Microsoft.ApiManagement/service/groups@2021-12-01-preview' existing = {
+  parent: apiManagementInstance
+  name: 'end-users'
+}
+
+resource endUsersGroupAccessToNoticeProduct 'Microsoft.ApiManagement/service/products/groups@2021-12-01-preview' = {
+  parent: deprecationNoticeProduct
+  name: endUsersGroupResource.name
 }
 
 resource restApiKeyNamedValue 'Microsoft.ApiManagement/service/namedValues@2021-12-01-preview' = {

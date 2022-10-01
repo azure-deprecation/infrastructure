@@ -40,6 +40,16 @@ resource apiManagementInstance 'Microsoft.ApiManagement/service@2021-12-01-previ
   }
 }
 
+resource endUsersGroupResource 'Microsoft.ApiManagement/service/groups@2021-12-01-preview' = {
+  parent: apiManagementInstance
+  name: 'end-users'
+  properties: {
+    displayName: 'End-Users'
+    description: 'A group to which all end-users will be added that have access to our APIs.'
+    type: 'custom'
+  }
+}
+
 resource applicationInsightsGatewayLogger 'Microsoft.ApiManagement/service/loggers@2021-12-01-preview' = {
   parent: apiManagementInstance
   name: 'application-insights-logger'
