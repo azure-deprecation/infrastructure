@@ -27,8 +27,11 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
 
         protected override async Task<NewDeprecationNoticePublishedV1Message> ProcessMessageAsync(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage)
         {
+            // Create unique deprecation ID
+            var uniqueNoticeId = Guid.NewGuid().ToString();
+
             // Create notice issue
-            var createdIssue = await CreateDeprecationNoticeAsync(newNoticeV1MessageQueueMessage);
+            var createdIssue = await CreateDeprecationNoticeAsync(uniqueNoticeId, newNoticeV1MessageQueueMessage);
 
             // Post discussion message
             await PostCommentToSteerPeopleToGitHubDiscussionsAsync(createdIssue);
@@ -36,7 +39,7 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
             // Lock conversation
             await LockConversationAsync(createdIssue);
 
-            var uniqueNoticeId = Guid.NewGuid().ToString();
+            // Generate published notice message
             var messageToPublish = GenerateNewDeprecationNoticePublishedV1Message(uniqueNoticeId, newNoticeV1MessageQueueMessage, createdIssue);
 
             // Provide logging
@@ -56,7 +59,7 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
             await _gitHubRepository.LockIssueAsync(createdIssue.Number);
         }
 
-        private async Task<Issue> CreateDeprecationNoticeAsync(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage)
+        private async Task<Issue> CreateDeprecationNoticeAsync(string uniqueDeprecationId, NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage)
         {
             // Determine deprecation year
             var deprecationYear = newNoticeV1MessageQueueMessage.GetDueDate().Year;
@@ -70,7 +73,7 @@ namespace AzureDeprecation.Notices.Management.MessageHandlers
             var project = await _gitHubRepository.GetOrCreateProjectAsync("Deprecation Notice Timeline");
 
             // Generate issue content
-            var issueContent = IssueFactory.GenerateNewDeprecationNotice(newNoticeV1MessageQueueMessage);
+            var issueContent = IssueFactory.GenerateNewDeprecationNotice(uniqueDeprecationId, newNoticeV1MessageQueueMessage);
 
             // Determine all required labels
             var labels = DetermineRequiredLabels(newNoticeV1MessageQueueMessage);

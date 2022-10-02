@@ -8,11 +8,11 @@ namespace AzureDeprecation.Notices.Management
 {
     public class IssueFactory
     {        
-        public static string GenerateNewDeprecationNotice(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage)
+        public static string GenerateNewDeprecationNotice(string uniqueDeprecationId, NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage)
         {
             var issueBuilder = new StringBuilder();
 
-            WriteIntro(newNoticeV1MessageQueueMessage, issueBuilder);
+            WriteIntro(uniqueDeprecationId, newNoticeV1MessageQueueMessage, issueBuilder);
             WriteNotice(newNoticeV1MessageQueueMessage, issueBuilder);
             WriteTimeline(newNoticeV1MessageQueueMessage.Timeline, issueBuilder);
             WriteImpact(newNoticeV1MessageQueueMessage, issueBuilder);
@@ -23,11 +23,12 @@ namespace AzureDeprecation.Notices.Management
             return issueBuilder.ToString();
         }
 
-        private static void WriteIntro(NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage, StringBuilder issueBuilder)
+        private static void WriteIntro(string uniqueDeprecationId, NewAzureDeprecationV1Message newNoticeV1MessageQueueMessage, StringBuilder issueBuilder)
         {
             var dueDate = newNoticeV1MessageQueueMessage.GetDueDate();
             issueBuilder.AppendLine(newNoticeV1MessageQueueMessage.Title);
             issueBuilder.AppendLine();
+            issueBuilder.AppendLine($"**Deprecation ID:** {uniqueDeprecationId}");
             issueBuilder.AppendLine($"**Deadline:** {dueDate:MMM dd, yyyy}");
             issueBuilder.AppendLine("**Impacted Services:**");
 

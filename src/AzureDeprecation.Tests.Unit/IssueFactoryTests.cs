@@ -13,8 +13,10 @@ namespace AzureDeprecation.Tests.Unit
         public void GenerateNewDeprecationNotice_ValidMessageWithBasicTimeline_GeneratesExpectedIssue()
         {
             // Arrange
+            var uniqueDeprecationId = "ABC-DEF-XYZ";
             const string ExpectedIssueContent = @"Azure Cognitive Services Translator v2 is deprecated by 24 May 2021.
 
+**Deprecation ID:** ABC-DEF-XYZ
 **Deadline:** May 24, 2021
 **Impacted Services:**
 - Azure Cognitive Services
@@ -62,7 +64,7 @@ https://docs.microsoft.com/en-us/azure/cognitive-services/translator/migrate-to-
             var newAzureDeprecationV1Message = NewAzureDeprecationGenerator.GenerateSample();
 
             // Act
-            var issueContent = IssueFactory.GenerateNewDeprecationNotice(newAzureDeprecationV1Message).ReplaceLineEndings();
+            var issueContent = IssueFactory.GenerateNewDeprecationNotice(uniqueDeprecationId, newAzureDeprecationV1Message).ReplaceLineEndings();
 
             // Assert
             Assert.Equal(ExpectedIssueContent, issueContent);
@@ -72,8 +74,10 @@ https://docs.microsoft.com/en-us/azure/cognitive-services/translator/migrate-to-
         public void GenerateNewDeprecationNotice_ValidMessageWithMultipleSupportOptions_GeneratesExpectedIssue()
         {
             // Arrange
+            var uniqueDeprecationId = "ABC-DEF-XYZ";
             const string ExpectedIssueContent = @"Azure Cognitive Services Translator v2 is deprecated by 24 May 2021.
 
+**Deprecation ID:** ABC-DEF-XYZ
 **Deadline:** May 24, 2021
 **Impacted Services:**
 - Azure Cognitive Services
@@ -128,7 +132,7 @@ https://docs.microsoft.com/en-us/azure/cognitive-services/translator/migrate-to-
             };
 
             // Act
-            var issueContent = IssueFactory.GenerateNewDeprecationNotice(newAzureDeprecationV1Message).ReplaceLineEndings();
+            var issueContent = IssueFactory.GenerateNewDeprecationNotice(uniqueDeprecationId, newAzureDeprecationV1Message).ReplaceLineEndings();
 
             // Assert
             Assert.Equal(ExpectedIssueContent, issueContent);
@@ -138,8 +142,10 @@ https://docs.microsoft.com/en-us/azure/cognitive-services/translator/migrate-to-
         public void GenerateNewDeprecationNotice_ValidMessageWithAdvancedTimeline_GeneratesExpectedIssue()
         {
             // Arrange
+            var uniqueDeprecationId = "ABC-DEF-XYZ";
             const string ExpectedIssueContent = @"Azure Cognitive Services Translator v2 is deprecated by 24 May 2021.
 
+**Deprecation ID:** ABC-DEF-XYZ
 **Deadline:** May 24, 2021
 **Impacted Services:**
 - Azure Cognitive Services
@@ -188,7 +194,7 @@ https://docs.microsoft.com/en-us/azure/cognitive-services/translator/migrate-to-
             var newAzureDeprecationV1Message = NewAzureDeprecationGenerator.GenerateSample(useAdvancedTimeline: true);
 
             // Act
-            var issueContent = IssueFactory.GenerateNewDeprecationNotice(newAzureDeprecationV1Message).ReplaceLineEndings();
+            var issueContent = IssueFactory.GenerateNewDeprecationNotice(uniqueDeprecationId, newAzureDeprecationV1Message).ReplaceLineEndings();
 
             // Assert
             Assert.Equal(ExpectedIssueContent, issueContent);
