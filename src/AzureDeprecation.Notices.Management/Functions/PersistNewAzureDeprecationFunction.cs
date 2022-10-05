@@ -24,7 +24,7 @@ namespace AzureDeprecation.Notices.Management.Functions
 
         [FunctionName("persist-new-notice")]
         public async Task Run(
-            [ServiceBusTrigger("new-deprecation-notices-tom", "persist-new-notice", Connection = "ServiceBus_ConnectionString")]
+            [ServiceBusTrigger("new-deprecation-notices", "persist-new-notice", Connection = "ServiceBus_ConnectionString")]
             ServiceBusReceivedMessage receivedSubscriptionMessage)
         {
             var stopwatch = ValueStopwatch.StartNew();
