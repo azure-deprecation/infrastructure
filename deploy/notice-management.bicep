@@ -54,7 +54,7 @@ resource functionAppNameResource 'Microsoft.Web/sites@2021-01-15' = {
           value: 'dotnet'
         }
         {
-          name: 'githubOwner'
+          name: 'GitHub_Owner'
           value: githubOwner
         }
         {
@@ -62,7 +62,7 @@ resource functionAppNameResource 'Microsoft.Web/sites@2021-01-15' = {
           value: githubRepoName
         }
         {
-          name: 'githubPersonalAccessToken'
+          name: 'GitHub_Token'
           value: githubPersonalAccessToken
         }
         {
