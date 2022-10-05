@@ -1,23 +1,24 @@
-﻿using AzureDeprecation.Contracts.Enum;
+﻿using System.Text.Json.Serialization;
+using AzureDeprecation.Contracts.Enum;
 using Newtonsoft.Json;
 
 namespace AzureDeprecation.Contracts.v1.Shared
 {
     public class Impact
     {
-        [JsonProperty("description")]
+        [JsonProperty("description"), JsonPropertyName("description")]
         public string? Description { get; set; }
-
-        [JsonProperty("type")]
+        
+        [JsonProperty("type"), JsonPropertyName("type")]
         public ImpactType Type { get; set; }
-
-        [JsonProperty("area")]
+        
+        [JsonProperty("area"), JsonPropertyName("area")]
         public ImpactArea Area { get; set; }
-
-        [JsonProperty("cloud")]
+        
+        [JsonProperty("cloud"), JsonPropertyName("cloud")]
         public AzureCloud Cloud { get; set; }
-
-        [JsonProperty("services")]
+        
+        [JsonProperty("services"), JsonPropertyName("services")]
         public List<AzureService> Services { get; set; } = new();
     }
 }

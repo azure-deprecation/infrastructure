@@ -1,28 +1,29 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace AzureDeprecation.Contracts.v1.Shared
 {
     public class DeprecationInfo
     {
-        [JsonProperty("title")]
+        [JsonProperty("title"), JsonPropertyName("title")]
         public string? Title { get; set; }
 
-        [JsonProperty("timeline")]
+        [JsonProperty("timeline"), JsonPropertyName("timeline")]
         public List<TimeLineEntry> Timeline { get; set; } = new();
 
-        [JsonProperty("impact")]
+        [JsonProperty("impact"), JsonPropertyName("impact")]
         public Impact? Impact { get; set; }
 
-        [JsonProperty("notice")]
+        [JsonProperty("notice"), JsonPropertyName("notice")]
         public Notice? Notice { get; set; }
 
-        [JsonProperty("requiredAction")]
+        [JsonProperty("requiredAction"), JsonPropertyName("requiredAction")]
         public string? RequiredAction { get; set; }
 
-        [JsonProperty("contact")]
+        [JsonProperty("contact"), JsonPropertyName("contact")]
         public List<ContactEntry> Contact { get; set; } = new();
 
-        [JsonProperty("additionalInformation")]
+        [JsonProperty("additionalInformation"), JsonPropertyName("additionalInformation")]
         public string? AdditionalInformation { get; set; }
     }
 }

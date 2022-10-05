@@ -1,13 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace AzureDeprecation.Contracts.v1.Shared
 {
     public class Notice
     {
-        [JsonProperty("description")]
+        [JsonProperty("description"), JsonPropertyName("description")]
         public string? Description { get; set; }
-
-        [JsonProperty("links")]
+        
+        [JsonProperty("links"), JsonPropertyName("links")]
         public List<string> Links { get; set; } = new();
     }
 }
