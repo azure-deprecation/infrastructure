@@ -115,6 +115,7 @@ namespace AzureDeprecation.Contracts.Enum
         SqlEdge,
         SqlManagedInstance,
         Stack,
+        StaticWebApp,
         Storage,
         StoreSimple,
         StreamAnalytics,
