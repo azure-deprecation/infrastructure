@@ -214,6 +214,8 @@ namespace AzureDeprecation.Notices.Management
                     return "services:sql-mi";
                 case AzureService.Stack:
                     return "services:stack";
+                case AzureService.StaticWebApp:
+                    return "services:static-web-app";
                 case AzureService.Storage:
                     return "services:storage";
                 case AzureService.StreamAnalytics:
