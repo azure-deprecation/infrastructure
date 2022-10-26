@@ -112,7 +112,8 @@ resource deprecationNoticeProduct 'Microsoft.ApiManagement/service/products@2021
     displayName: 'Deprecation Notices'
     description: 'All APIs around deprecation notices.'
     subscriptionRequired: true
-    approvalRequired: true
+    approvalRequired: false
+    subscriptionsLimit: 1
     state: 'published'
   }
 }
@@ -476,10 +477,11 @@ resource deprecationNoticeProductWithRestApi 'Microsoft.ApiManagement/service/pr
   name: restApi.name
 }
 
-resource deprecationNoticeProductWithGraphQlApi 'Microsoft.ApiManagement/service/products/apis@2021-12-01-preview' = {
-  parent: deprecationNoticeProduct
-  name: graphQlApi.name
-}
+// We're not adding graphql for now as it's not ready yet.
+// resource deprecationNoticeProductWithGraphQlApi 'Microsoft.ApiManagement/service/products/apis@2021-12-01-preview' = {
+//   parent: deprecationNoticeProduct
+//   name: graphQlApi.name
+// }
 
 resource getDeprecationRestOperationPolicy 'Microsoft.ApiManagement/service/apis/operations/policies@2021-12-01-preview' = {
   parent: getDeprecationRestOperation
