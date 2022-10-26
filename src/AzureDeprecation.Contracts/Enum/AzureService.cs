@@ -90,6 +90,7 @@ namespace AzureDeprecation.Contracts.Enum
         NetworkWatcher,
         NotificationHubs,
         Other,
+        Percept,
         Policy,
         Portal,
         PowerBI,

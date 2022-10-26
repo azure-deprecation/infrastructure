@@ -168,6 +168,8 @@ namespace AzureDeprecation.Notices.Management
                     return "services:notification-hubs";
                 case AzureService.Other:
                     return "services:other";
+                case AzureService.Percept:
+                    return "services:percept"; 
                 case AzureService.Policy:
                     return "services:policy"; 
                 case AzureService.Portal:
