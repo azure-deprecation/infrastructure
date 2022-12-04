@@ -118,9 +118,29 @@ resource deprecationNoticeProduct 'Microsoft.ApiManagement/service/products@2021
   }
 }
 
+resource developersGroupResource 'Microsoft.ApiManagement/service/groups@2021-12-01-preview' existing = {
+  parent: apiManagementInstance
+  name: 'developers'
+}
+
+resource guestsGroupResource 'Microsoft.ApiManagement/service/groups@2021-12-01-preview' existing = {
+  parent: apiManagementInstance
+  name: 'guests'
+}
+
 resource endUsersGroupResource 'Microsoft.ApiManagement/service/groups@2021-12-01-preview' existing = {
   parent: apiManagementInstance
   name: 'end-users'
+}
+
+resource developersGroupAccessToNoticeProduct 'Microsoft.ApiManagement/service/products/groups@2021-12-01-preview' = {
+  parent: deprecationNoticeProduct
+  name: developersGroupResource.name
+}
+
+resource guestsGroupAccessToNoticeProduct 'Microsoft.ApiManagement/service/products/groups@2021-12-01-preview' = {
+  parent: deprecationNoticeProduct
+  name: guestsGroupResource.name
 }
 
 resource endUsersGroupAccessToNoticeProduct 'Microsoft.ApiManagement/service/products/groups@2021-12-01-preview' = {
