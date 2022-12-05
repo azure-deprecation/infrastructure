@@ -1,0 +1,249 @@
+type Query {
+  """
+  Provides capability to get detailed about a specific deprecation
+  
+  Equivalent to GET /api/v1/deprecations/{id}
+  """
+  deprecationInfo(
+    """The unique ID of the deprecation."""
+    id: String!
+  ): DeprecationInfo
+
+  """
+  Provides capability to browse all deprecations
+  
+  Equivalent to GET /api/v1/deprecations
+  """
+  deprecationNoticesResponse(
+    """Filter to reduce deprecation notices for a given cloud."""
+    filtersCloud: String
+
+    """Filter to reduce deprecation notices by a given impact type."""
+    filtersImpactType: String
+
+    """Filter to reduce deprecation notices for a given Azure service."""
+    filtersService: String
+
+    """Filter to reduce deprecation notices by a given status."""
+    filtersStatus: String
+
+    """Filter to reduce deprecation notices by the year of the deprecation."""
+    filtersYear: String
+
+    """Specifies the amount of entries in the page."""
+    paginationLimit: String
+
+    """Specifies the amount of pages to skip."""
+    paginationOffset: String
+  ): DeprecationNoticesResponse
+}
+
+type DeprecationInfo {
+  contact: [ContactEntry]
+  id: String
+  impact: Impact
+  links: JSON
+  notice: Notice
+  requiredAction: String
+  timeline: [TimeLineEntry]
+  title: String
+}
+
+type ContactEntry {
+  data: String
+  type: Type2
+}
+
+enum Type2 {
+  UNKNOWN
+  NOTAVAILABLE
+  EMAIL
+  SUPPORT
+  MICROSOFTQANDA
+}
+
+type Impact {
+  area: Area
+  cloud: Cloud
+  description: String
+  services: [ServicesListItem]
+  type: Type
+}
+
+enum Area {
+  UNKNOWN
+  SDK
+  CERTIFICATION
+  TOOLING
+  SECURITY
+  APIENDPOINT
+  FEATURE
+  SERVICERUNTIME
+  REGION
+  SKU
+}
+
+enum Cloud {
+  UNKNOWN
+  PUBLIC
+  SOVEREIGN
+  CHINA
+  GOVERNMENT
+  GERMAN
+}
+
+enum ServicesListItem {
+  ACTIVEDIRECTORY
+  ADVISOR
+  ALL
+  ANALYSISSERVICE
+  ANOMALYDETECTOR
+  APIAPPS
+  APIFORFHIR
+  APIMANAGEMENT
+  APPCONFIGURATION
+  APPLICATIONGATEWAY
+  APPLICATIONINSIGHTS
+  APPSERVICE
+  ARC
+  AUTOMATION
+  BACKUP
+  BASTION
+  BATCH
+  BLOCKCHAINSERVICE
+  BLOCKCHAINTOKENS
+  BLOCKCHAINWORKBENCH
+  BLUEPRINTS
+  BOTSERVICE
+  CACHEFORREDIS
+  CDN
+  CLOUDSERVICES
+  COGNITIVESEARCH
+  COGNITIVESERVICES
+  CONTAINERAPPS
+  CONTAINERINSTANCES
+  CONTAINERREGISTRY
+  COSMOSDB
+  COSTMANAGEMENT
+  CYCLECLOUD
+  DATABASEFORMARIADB
+  DATABASEFORMYSQL
+  DATABASEFORPOSTGRESQL
+  DATABASEMIGRATIONSERVICE
+  DATABRICKS
+  DATAFACTORY
+  DATALAKEANALYTICS
+  DATALAKESTORAGE
+  DATASHARE
+  DATASCIENCE
+  DDOSPROTECTION
+  DEDICATEDHOST
+  DEVOPS
+  DEVSPACES
+  DEVTESTLABS
+  DIGITALTWINS
+  DNS
+  EVENTGRID
+  EVENTHUBS
+  EXPRESSROUTE
+  FIREWALL
+  FIREWALLMANAGER
+  FORMRECOGNIZER
+  FRONTDOOR
+  FUNCTIONS
+  GENOMICS
+  HDINSIGHT
+  INFORMATIONPROTECTION
+  INTERNETANALYZER
+  IOTCENTRAL
+  IOTEDGE
+  IOTHUB
+  IOTHUBDPS
+  KUBERNETESSERVICE
+  LABSERVICES
+  LIGHTHOUSE
+  LOADBALANCER
+  LOGANALYTICS
+  LOGICAPPS
+  MACHINELEARNING
+  MANAGEDAPPLICATIONS
+  MAPS
+  MEDIASERVICES
+  MIGRATE
+  MIXEDREALITY
+  MOBILEAPPS
+  MONITOR
+  NETWORKWATCHER
+  NOTIFICATIONHUBS
+  OTHER
+  POLICY
+  PORTAL
+  POWERBI
+  PRIVATELINK
+  REDHATOPENSHIFT
+  RELAY
+  REMOTERENDERING
+  RESERVEDIP
+  RESOURCEGRAPH
+  RESOURCEMANAGER
+  SECURITYCENTER
+  SENTINEL
+  SERVICEBUS
+  SERVICEFABRIC
+  SERVICEFABRICMESH
+  SERVICEHEALTH
+  SIGNALR
+  SITERECOVERY
+  SPATIALANCHORS
+  SPHERE
+  SPRINGCLOUD
+  SQLDATABASE
+  SQLEDGE
+  SQLMANAGEDINSTANCE
+  STACK
+  STORAGE
+  STORESIMPLE
+  STREAMANALYTICS
+  SYNAPSEANALYTICS
+  TIMESERIESINSIGHTS
+  TRAFFICMANAGER
+  VIDEOINDEXER
+  VIRTUALMACHINE
+  VIRTUALMACHINESCALESETS
+  VIRTUALNETWORK
+  VISUALSTUDIOCODESPACES
+  VMWARESOLUTIONS
+  VPNGATEWAY
+  WEBAPP
+  WEBAPPLICATIONGATEWAY
+  WINDOWSVIRTUALDESKTOP
+}
+
+enum Type {
+  UNKNOWN
+  NONE
+  LIMITED
+  UPGRADEREQUIRED
+  MIGRATIONREQUIRED
+  SHUTDOWNWITHOUTALTERNATIVE
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type Notice {
+  description: String
+  links: [String]
+}
+
+type TimeLineEntry {
+  date: String
+  description: String
+  phase: String
+}
+
+type DeprecationNoticesResponse {
+  deprecations: [DeprecationInfo]
+}
