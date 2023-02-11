@@ -6,7 +6,7 @@
         "value": "azure-deprecation-notices"
       },
       "apiManagementSku": {
-        "value": "Consumption"
+        "value": "Basic"
       },
       "apiManagementAdminEmail": {
         "value": "tomkerkhove.opensource@gmail.com"
